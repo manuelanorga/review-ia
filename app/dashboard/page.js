@@ -49,13 +49,13 @@ const BUSINESSES = [
 ];
 
 const TOUR_STEPS = [
-  { icon: "👋", title: "Bienvenido a Revora.ai", desc: "En los próximos pasos te mostramos todo lo que puedes hacer desde tu panel. Es rápido, te lo prometemos.", highlight: null },
+  { icon: "👋", title: "Bienvenido a RevGo.app", desc: "En los próximos pasos te mostramos todo lo que puedes hacer desde tu panel. Es rápido, te lo prometemos.", highlight: null },
   { icon: "▦", title: "Dashboard — tu vista general", desc: "Aquí verás un resumen de todo: reseñas recientes, el estado de tu autopiloto, alertas urgentes y tus métricas más importantes de un vistazo.", highlight: "dashboard" },
   { icon: "★", title: "Reseñas — gestiona cada opinión", desc: "Aquí aparecen todas las reseñas de Google de tu negocio. Puedes filtrarlas, generar respuestas con IA en segundos y publicarlas directamente en Google.", highlight: "reviews" },
-  { icon: "⚡", title: "Autopiloto — responde sin esfuerzo", desc: "Activa el autopiloto y Revora responderá automáticamente cada nueva reseña. Tú eliges el tono: cercano, formal o profesional.", highlight: "autopilot" },
+  { icon: "⚡", title: "Autopiloto — responde sin esfuerzo", desc: "Activa el autopiloto y RevGo responderá automáticamente cada nueva reseña. Tú eliges el tono: cercano, formal o profesional.", highlight: "autopilot" },
   { icon: "◎", title: "Analytics — conoce tu reputación", desc: "Mira la evolución de tu rating, qué días recibes más reseñas, qué palabras mencionan más tus clientes y cuánto ha mejorado tu tasa de respuesta.", highlight: "analytics" },
   { icon: "◈", title: "Configuración — ajusta todo a tu medida", desc: "Personaliza el nombre de tu negocio, el email de notificaciones y el tono por defecto. También puedes gestionar tu conexión con Google aquí.", highlight: "settings" },
-  { icon: "🚀", title: "¡Listo para empezar!", desc: "Ya conoces todo lo que Revora tiene para ti. Tu primera reseña está esperando una respuesta. ¡Empieza ahora!", highlight: null },
+  { icon: "🚀", title: "¡Listo para empezar!", desc: "Ya conoces todo lo que RevGo tiene para ti. Tu primera reseña está esperando una respuesta. ¡Empieza ahora!", highlight: null },
 ];
 
 function Stars({ count, size = 12 }) {
@@ -373,7 +373,7 @@ export default function Dashboard() {
             <div style={{ width: 30, height: 30, background: d.accent, borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center" }}>
               <span style={{ color: d.accentFg, fontSize: 13, fontWeight: 700 }}>R</span>
             </div>
-            <span style={{ fontSize: 15, fontWeight: 700, color: d.text }}>Revora<span style={{ color: d.accent }}>.ai</span></span>
+            <span style={{ fontSize: 15, fontWeight: 700, color: d.text }}>RevGo<span style={{ color: d.accent }}>.ai</span></span>
           </div>
         </div>
 
@@ -806,7 +806,7 @@ export default function Dashboard() {
               </div>
               {[
                 { title: "Nombre del negocio", value: currentBusiness?.name, type: "text" },
-                { title: "Email de notificaciones", value: "manu@revora.ai", type: "text" },
+                { title: "Email de notificaciones", value: "manu@revgo.app", type: "text" },
                 { title: "Tono por defecto", value: tone, type: "select" },
               ].map((item, i) => (
                 <div key={i} style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 12, padding: "16px 18px", marginBottom: 10, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -830,7 +830,7 @@ export default function Dashboard() {
             <div style={{ animation: "fadeIn 0.4s ease both" }}>
               <div style={{ marginBottom: 20 }}>
                 <h2 style={{ fontSize: 18, fontWeight: 700, color: d.text, marginBottom: 4 }}>Configuración de Autopiloto</h2>
-                <p style={{ fontSize: 13, color: d.muted }}>Decide cómo responde Revora y previsualiza el tono en tiempo real</p>
+                <p style={{ fontSize: 13, color: d.muted }}>Decide cómo responde RevGo y previsualiza el tono en tiempo real</p>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "380px 1fr", gap: 16 }}>
 
@@ -920,11 +920,11 @@ export default function Dashboard() {
                           </div>
                         </div>
 
-                        {/* Respuesta de Revora */}
+                        {/* Respuesta de RevGo */}
                         <div style={{ display: "flex", gap: 10, paddingLeft: 20 }}>
                           <div style={{ width: 28, height: 28, borderRadius: 7, background: d.accent, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: d.accentFg, flexShrink: 0 }}>R</div>
                           <div style={{ flex: 1, background: dark ? "rgba(255,230,0,0.05)" : "#fefce8", borderRadius: "0 10px 10px 10px", padding: "10px 12px", border: `1px solid ${dark ? "rgba(255,230,0,0.15)" : "#fde68a"}` }}>
-                            <div style={{ fontSize: 10, fontWeight: 700, color: d.accent, marginBottom: 5, letterSpacing: "0.06em" }}>REVORA AI · {tone.toUpperCase()}</div>
+                            <div style={{ fontSize: 10, fontWeight: 700, color: d.accent, marginBottom: 5, letterSpacing: "0.06em" }}>RevGo AI · {tone.toUpperCase()}</div>
                             <p style={{ fontSize: 12, color: dark ? "#c0b870" : "#713f12", lineHeight: 1.6 }}>{preview.response}</p>
                           </div>
                         </div>
