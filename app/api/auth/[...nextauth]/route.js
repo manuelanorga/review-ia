@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
-const handler = NextAuth({
+export const authOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -9,6 +9,8 @@ const handler = NextAuth({
       authorization: {
         params: {
           scope: "openid email profile https://www.googleapis.com/auth/business.manage",
+          access_type: "offline",
+          prompt: "consent",
         },
       },
     }),
@@ -26,6 +28,7 @@ const handler = NextAuth({
       return session;
     },
   },
-});
+};
 
+const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
