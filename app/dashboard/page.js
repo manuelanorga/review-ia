@@ -426,7 +426,7 @@ export default function Dashboard() {
         {/* Nav */}
         <nav style={{ padding: "4px 8px", display: "flex", flexDirection: "column", gap: 2 }}>
           {NAV.map(item => (
-            <button key={item.id} ref={navRefs[item.id]} onClick={() => setActiveNav(item.id)} style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 10px", borderRadius: 7, cursor: "pointer", background: activeNav === item.id ? (dark ? "#262626" : "#f1f5f9") : "transparent", border: "none", color: activeNav === item.id ? d.text : d.muted, fontSize: 13, fontWeight: activeNav === item.id ? 600 : 400, width: "100%", textAlign: "left", transition: "all 0.15s" }}>
+            <button key={item.id} ref={navRefs[item.id]} onClick={() => { setActiveNav(item.id); setAccountSection(null); }} style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 10px", borderRadius: 7, cursor: "pointer", background: activeNav === item.id ? (dark ? "#262626" : "#f1f5f9") : "transparent", border: "none", color: activeNav === item.id ? d.text : d.muted, fontSize: 13, fontWeight: activeNav === item.id ? 600 : 400, width: "100%", textAlign: "left", transition: "all 0.15s" }}>
               <span style={{ fontSize: 14, width: 16, textAlign: "center" }}>{item.icon}</span>
               <span style={{ flex: 1 }}>{item.label}</span>
               {item.badge > 0 && <span style={{ background: d.accent, color: d.accentFg, fontSize: 10, fontWeight: 700, padding: "1px 6px", borderRadius: 10 }}>{item.badge}</span>}
