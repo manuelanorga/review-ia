@@ -6,7 +6,7 @@ const client = new Anthropic({
 
 export async function POST(request) {
   try {
-    const { reviewText, reviewerName, stars, tone } = await request.json();
+    const { reviewText, reviewerName, stars, tone, plan } = await request.json();
 
     const toneInstructions = {
       cercano: "Usa un tono cálido, cercano y amigable. Incluye emojis ocasionalmente. Habla de tú.",
@@ -14,11 +14,17 @@ export async function POST(request) {
       profesional: "Usa un tono profesional y directo. Sé conciso y claro. Sin emojis.",
     };
 
-    const prompt = `Eres el community manager de un negocio en Lima, Perú. 
-    
+    const languageInstruction = plan === "starter"
+      ? "Responde SIEMPRE en español, sin importar el idioma de la reseña."
+      : "Detecta el idioma de la reseña y responde en ese mismo idioma. Si la reseña es en inglés, responde en inglés. Si es en español, responde en español.";
+
+    const prompt = `Eres el community manager de un negocio en Lima, Perú.
+
 Debes responder la siguiente reseña de Google de manera ${tone}.
 
-${toneInstructions[tone] || toneInstructions.cercano}
+${toneInstructions[tone] || toneInstructions.formal}
+
+Idioma: ${languageInstruction}
 
 Información de la reseña:
 - Nombre del cliente: ${reviewerName}
@@ -26,30 +32,21 @@ Información de la reseña:
 - Reseña: "${reviewText}"
 
 Reglas importantes:
-- La respuesta debe ser en español
 - Máximo 3 oraciones
 - Si la reseña es negativa (1-2 estrellas), muestra empatía y ofrece solución
-- Si es positiva (4-5 estrellas), agradece y invita a volver
+- Si es positiva (4-5 estrellas), agradece e invita a volver
 - Si es neutral (3 estrellas), agradece y menciona que mejorarán
 - No menciones que eres una IA
-- Firma como "El equipo de [nombre del negocio]" solo si es natural
 
 Responde SOLO con el texto de la respuesta, sin explicaciones adicionales.`;
 
     const message = await client.messages.create({
       model: "claude-sonnet-4-6",
       max_tokens: 300,
-      messages: [
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
+      messages: [{ role: "user", content: prompt }],
     });
 
-    const response = message.content[0].text;
-
-    return Response.json({ response });
+    return Response.json({ response: message.content[0].text });
 
   } catch (error) {
     console.error("Error generando respuesta:", error);

@@ -30,9 +30,64 @@ const FEATURES = [
 ];
 
 const PLANS = [
-  { name: "Starter", price: "79", desc: "1 local · 50 respuestas/mes", features: ["50 respuestas AI/mes", "1 negocio conectado", "Autopiloto activable", "Soporte por email"], highlight: false },
-  { name: "Pro", price: "149", desc: "3 locales · Respuestas ilimitadas", features: ["Respuestas ilimitadas", "Hasta 3 locales", "Autopiloto + tono personalizado", "Reporte mensual", "Soporte prioritario"], highlight: true },
-  { name: "Business", price: "349", desc: "10 locales · Todo incluido", features: ["Todo ilimitado", "Hasta 10 locales", "Multi-idioma automático", "API access", "Account manager"], highlight: false },
+  {
+    name: "Starter", price: "29", tagline: "Empieza a responder",
+    desc: "Ideal para negocios pequeños",
+    features: [
+      "1 negocio conectado",
+      "Hasta 50 reseñas/mes",
+      "Respuestas con IA en español",
+      "🤖 Autopiloto · Solo tono Formal",
+      "📊 Analytics básico (solo visualizar)",
+      "Soporte por email",
+    ],
+    highlight: false,
+    badge: null,
+  },
+  {
+    name: "Growth", price: "79", tagline: "Crece en Google",
+    desc: "Ideal para negocios en crecimiento",
+    features: [
+      "1-3 negocios conectados",
+      "Hasta 300 reseñas/mes",
+      "🌎 Español, inglés y 50 idiomas más",
+      "🤖 Autopiloto · 3 tonos disponibles",
+      "📊 Analytics completo + exportar PDF",
+      "Soporte prioritario",
+    ],
+    highlight: true,
+    badge: "⭐ Más popular",
+  },
+  {
+    name: "Pro", price: "149", tagline: "Domina tu reputación",
+    desc: "Ideal para empresas multi-sucursal",
+    features: [
+      "Negocios ilimitados",
+      "Reseñas ilimitadas",
+      "🌎 Español, inglés y 50 idiomas más",
+      "🤖 Autopiloto · 3 tonos disponibles",
+      "📊 Analytics completo + exportar PDF",
+      "Branding avanzado",
+      "API access",
+    ],
+    highlight: false,
+    badge: null,
+  },
+  {
+    name: "Agencia", price: "349", tagline: "Escala con tus clientes",
+    desc: "Ideal para agencias y revendedores",
+    features: [
+      "Clientes ilimitados",
+      "Multi-cuenta · White label",
+      "🌎 Español, inglés y 50 idiomas más",
+      "🤖 Autopiloto · 3 tonos disponibles",
+      "📊 Analytics completo + exportar PDF",
+      "Reportes avanzados",
+      "Account manager dedicado",
+    ],
+    highlight: false,
+    badge: null,
+  },
 ];
 
 const FAQS = [
@@ -512,34 +567,36 @@ export default function Landing() {
           </div>
           <div className="tgrid" style={{ alignItems: "start" }}>
             {PLANS.map((p, i) => (
-              <div key={i} className="hl" style={{ background: p.highlight ? "#131200" : SURF2, border: p.highlight ? "1px solid #FFE60055" : "1px solid #2a2800", borderRadius: 16, padding: "32px 26px", position: "relative" }}>
-                {p.highlight && (
-                  <div style={{ position: "absolute", top: -12, left: "50%", transform: "translateX(-50%)", background: Y, color: BG, fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", padding: "4px 14px", borderRadius: 20, whiteSpace: "nowrap" }}>Más popular</div>
-                )}
-                <div style={{ marginBottom: 18 }}>
-                  <div style={{ fontSize: 16, fontWeight: 700, color: TEXT, marginBottom: 4 }}>{p.name}</div>
-                  <div style={{ fontSize: 12, color: MUTED }}>{p.desc}</div>
-                </div>
-                <div style={{ marginBottom: 22 }}>
-                  <span style={{ fontSize: 46, fontWeight: 700, color: p.highlight ? Y : TEXT, letterSpacing: "-0.04em", lineHeight: 1 }}>S/{p.price}</span>
-                  <span style={{ fontSize: 13, color: MUTED }}>/mes</span>
-                </div>
-                <div style={{ marginBottom: 24, display: "flex", flexDirection: "column", gap: 10 }}>
-                  {p.features.map((feat, j) => (
-                    <div key={j} style={{ display: "flex", gap: 9, alignItems: "flex-start" }}>
-                      <span style={{ color: Y, fontSize: 11, flexShrink: 0, marginTop: 2 }}>✓</span>
-                      <span style={{ fontSize: 13, color: LIGHT, lineHeight: 1.4 }}>{feat}</span>
-                    </div>
-                  ))}
-                </div>
-                <button onClick={open} style={{ width: "100%", padding: "12px", background: p.highlight ? Y : "transparent", border: p.highlight ? "none" : "1px solid #2a2800", borderRadius: 9, color: p.highlight ? BG : MUTED, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", fontFamily: "'DM Sans', sans-serif" }}
-                  onMouseOver={e => { if (p.highlight) { e.currentTarget.style.background = "#fff176"; } else { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; } }}
-                  onMouseOut={e => { if (p.highlight) { e.currentTarget.style.background = Y; } else { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; } }}
-                >
-                  {i === 2 ? "Hablar con ventas" : "Empezar gratis"}
-                </button>
-              </div>
-            ))}
+  <div key={i} className="hl" style={{ background: p.highlight ? "#131200" : SURF2, border: p.highlight ? "1px solid #FFE60055" : "1px solid #2a2800", borderRadius: 16, padding: "32px 26px", position: "relative" }}>
+    {p.highlight && (
+      <div style={{ position: "absolute", top: -12, left: "50%", transform: "translateX(-50%)", background: Y, color: BG, fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", padding: "4px 14px", borderRadius: 20, whiteSpace: "nowrap" }}>{p.badge}</div>
+    )}
+    <div style={{ marginBottom: 6 }}>
+      <div style={{ fontSize: 16, fontWeight: 700, color: TEXT, marginBottom: 2 }}>{p.name}</div>
+      <div style={{ fontSize: 12, color: p.highlight ? Y : MUTED, fontWeight: p.highlight ? 600 : 400 }}>{p.tagline}</div>
+      <div style={{ fontSize: 11, color: MUTED, marginTop: 2 }}>{p.desc}</div>
+    </div>
+    <div style={{ margin: "16px 0" }}>
+      <span style={{ fontSize: 46, fontWeight: 700, color: p.highlight ? Y : TEXT, letterSpacing: "-0.04em", lineHeight: 1 }}>S/{p.price}</span>
+      <span style={{ fontSize: 13, color: MUTED }}>/mes</span>
+    </div>
+    <div style={{ marginBottom: 24, display: "flex", flexDirection: "column", gap: 10 }}>
+      {p.features.map((feat, j) => (
+        <div key={j} style={{ display: "flex", gap: 9, alignItems: "flex-start" }}>
+          <span style={{ color: Y, fontSize: 11, flexShrink: 0, marginTop: 2 }}>✓</span>
+          <span style={{ fontSize: 13, color: LIGHT, lineHeight: 1.4 }}>{feat}</span>
+        </div>
+      ))}
+    </div>
+    <button onClick={open}
+      style={{ width: "100%", padding: "12px", background: p.highlight ? Y : "transparent", border: p.highlight ? "none" : "1px solid #2a2800", borderRadius: 9, color: p.highlight ? BG : MUTED, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", fontFamily: "'DM Sans', sans-serif" }}
+      onMouseOver={e => { if (p.highlight) { e.currentTarget.style.background = "#fff176"; } else { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; } }}
+      onMouseOut={e => { if (p.highlight) { e.currentTarget.style.background = Y; } else { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; } }}
+    >
+      {i === 3 ? "Hablar con ventas" : "Empezar gratis"}
+    </button>
+  </div>
+))}
           </div>
           <p style={{ textAlign: "center", color: "#444430", fontSize: 13, marginTop: 24 }}>
             ¿Más de 10 locales?{" "}<span style={{ color: Y, cursor: "pointer" }}>Contáctanos para un plan a medida →</span>
