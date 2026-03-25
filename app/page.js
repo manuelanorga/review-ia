@@ -24,7 +24,7 @@ const REVIEWS = [
 
 const FEATURES = [
   { icon: "🤖", title: "Respuestas inteligentes", desc: "Cada reseña recibe una respuesta única, personalizada y coherente con el tono de tu marca.", extra: null },
-  { icon: "⚙️", title: "Control total", desc: "Tú decides cómo opera Revora.", extra: ["Auto-publicar directamente en Google", "Revisar antes de publicar", "Editar cada respuesta a tu gusto"] },
+  { icon: "⚙️", title: "Control total", desc: "Tú decides cómo opera RevGo.", extra: ["Auto-publicar directamente en Google", "Revisar antes de publicar", "Editar cada respuesta a tu gusto"] },
   { icon: "📩", title: "Genera más reseñas", desc: "Envía campañas para pedir reseñas a tus clientes.", extra: ["Los felices → Google ⭐", "Los insatisfechos → feedback privado 🔒"] },
   { icon: "🌎", title: "Multilenguaje automático", desc: "Detecta el idioma de cada reseña y responde en el mismo idioma.", extra: ["Español → respuesta en español", "Inglés → respuesta en inglés", "Más de 50 idiomas soportados"] },
 ];
@@ -108,7 +108,7 @@ function SignupModal({ onClose }) {
           <div style={{ width: 32, height: 32, background: Y, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center" }}>
             <span style={{ color: BG, fontSize: 15, fontWeight: 700 }}>R</span>
           </div>
-          <span style={{ fontSize: 17, fontWeight: 700, color: TEXT }}>Revora<span style={{ color: Y }}>.ai</span></span>
+          <span style={{ fontSize: 17, fontWeight: 700, color: TEXT }}>RevGo<span style={{ color: Y }}>.ai</span></span>
         </div>
         <h2 style={{ fontSize: 24, fontWeight: 700, color: TEXT, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 8 }}>Crea tu cuenta gratis</h2>
         <p style={{ fontSize: 14, color: MUTED, lineHeight: 1.6, marginBottom: 22 }}>Empieza a responder tus reseñas de Google con IA en menos de 3 minutos.</p>
@@ -222,7 +222,7 @@ export default function Landing() {
           <div style={{ width: 30, height: 30, background: Y, borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center" }}>
             <span style={{ color: BG, fontSize: 14, fontWeight: 700 }}>R</span>
           </div>
-          <span style={{ fontSize: 16, fontWeight: 700, color: TEXT, letterSpacing: "-0.01em" }}>Revora<span style={{ color: Y }}>.ai</span></span>
+          <span style={{ fontSize: 16, fontWeight: 700, color: TEXT, letterSpacing: "-0.01em" }}>RevGo<span style={{ color: Y }}>.ai</span></span>
         </div>
         <div className="navlinks" style={{ display: "flex" }}>
           <a href="#precios" style={{ fontSize: 13, color: MUTED, textDecoration: "none", transition: "color 0.2s" }} onMouseOver={e => e.target.style.color = TEXT} onMouseOut={e => e.target.style.color = MUTED}>Precios</a>
@@ -244,7 +244,7 @@ export default function Landing() {
             </div>
             <h1 style={{ fontSize: "clamp(32px, 4vw, 54px)", fontWeight: 700, lineHeight: 1.12, letterSpacing: "-0.03em", marginBottom: 20, color: TEXT }}>
               Estás ocupado haciendo<br />crecer tu negocio.<br />
-              <span style={{ color: Y }}>Revora se encarga<br />de tus reseñas.</span>
+              <span style={{ color: Y }}>RevGo se encarga<br />de tus reseñas.</span>
             </h1>
             <p style={{ fontSize: 16, color: MUTED, lineHeight: 1.75, maxWidth: 460, marginBottom: 24 }}>
               Convierte cada reseña de Google en una oportunidad de crecimiento con inteligencia artificial.
@@ -294,7 +294,7 @@ export default function Landing() {
                 </div>
                 <div style={{ background: "#1a1700", border: "1px solid #2a2800", borderRadius: 8, padding: "3px 9px", display: "flex", alignItems: "center", gap: 5, flexShrink: 0 }}>
                   <span style={{ width: 5, height: 5, borderRadius: "50%", background: Y, display: "inline-block", animation: "pulse 2s infinite" }} />
-                  <span style={{ color: Y, fontSize: 9, fontWeight: 700 }}>REVORA ACTIVO</span>
+                  <span style={{ color: Y, fontSize: 9, fontWeight: 700 }}>RevGo ACTIVO</span>
                 </div>
               </div>
 
@@ -328,7 +328,7 @@ export default function Landing() {
                     {!r.replied && (
                       <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 8, padding: "6px 10px", background: "#1a1700", borderRadius: 6, width: "fit-content" }}>
                         <div style={{ width: 6, height: 6, borderRadius: "50%", background: Y, animation: "pulse 1s infinite" }} />
-                        <span style={{ fontSize: 10, color: Y, fontFamily: "'Roboto', sans-serif", fontWeight: 500 }}>Revora generando respuesta...</span>
+                        <span style={{ fontSize: 10, color: Y, fontFamily: "'Roboto', sans-serif", fontWeight: 500 }}>RevGo generando respuesta...</span>
                       </div>
                     )}
                   </div>
@@ -437,7 +437,7 @@ export default function Landing() {
                   💡 Hasta un 35% más de ingresos.
                 </p>
                 <p style={{ fontSize: 14, color: LIGHT, lineHeight: 1.6 }}>
-                  👉 Revora hace posible ese 100% sin esfuerzo.
+                  👉 RevGo hace posible ese 100% sin esfuerzo.
                 </p>
               </div>
             </div>
@@ -584,7 +584,7 @@ export default function Landing() {
             <div style={{ width: 26, height: 26, background: Y, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center" }}>
               <span style={{ color: BG, fontSize: 12, fontWeight: 700 }}>R</span>
             </div>
-            <span style={{ fontSize: 14, color: "#555540" }}>Revora.ai</span>
+            <span style={{ fontSize: 14, color: "#555540" }}>RevGo.app</span>
           </div>
 
           {/* Social buttons */}
@@ -602,7 +602,7 @@ export default function Landing() {
             {["Privacidad", "Términos", "Contacto"].map(l => (
               <span key={l} style={{ color: "#2a2810", fontSize: 12, cursor: "pointer", transition: "color 0.2s" }} onMouseOver={e => e.target.style.color = MUTED} onMouseOut={e => e.target.style.color = "#2a2810"}>{l}</span>
             ))}
-            <span style={{ color: "#1a1808", fontSize: 12 }}>© 2026 Revora · Lima, Perú</span>
+            <span style={{ color: "#1a1808", fontSize: 12 }}>© 2026 RevGo · Lima, Perú</span>
           </div>
         </div>
       </footer>
