@@ -1,66 +1,611 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+import { useState, useEffect, useRef } from "react";
 
-export default function Home() {
+const Y = "#FFE600";
+const BG = "#0A0A0A";
+const SURF = "#111100";
+const SURF2 = "#161608";
+const BORDER = "#2a2800";
+const TEXT = "#F0F0EC";
+const MUTED = "#A0A090";
+const LIGHT = "#D8D8D0";
+
+const STEPS = [
+  { n: "01", title: "Conecta tu Google Business", desc: "Un clic. Google abre su ventana oficial. Nosotros jamás vemos tu contraseña.", icon: "○" },
+  { n: "02", title: "Define el tono de tu marca", desc: "Cercano, formal o profesional. La IA aprende cómo habla tu negocio.", icon: "◇" },
+  { n: "03", title: "Responde en autopiloto", desc: "Cada reseña nueva recibe una respuesta personalizada en segundos, 24/7.", icon: "△" },
+];
+
+const REVIEWS = [
+  { stars: 5, name: "María González", avatar: "MG", avatarBg: "#4285F4", time: "Hace 2 horas", text: "Increíble experiencia, el personal súper atento y la habitación impecable. Definitivamente regreso.", response: "¡Gracias María! Nos alegra que hayas disfrutado tu estadía. ¡Te esperamos pronto!", replied: true },
+  { stars: 2, name: "Carlos Mendoza", avatar: "CM", avatarBg: "#EA4335", time: "Hace 5 horas", text: "El servicio fue lento y la comida llegó fría. Esperaba más por el precio.", response: "Hola Carlos, lamentamos tu experiencia. Escríbenos directamente para compensarte.", replied: true },
+  { stars: 4, name: "Lucía Fernández", avatar: "LF", avatarBg: "#34A853", time: "Hace 1 día", text: "Muy buen lugar, ambiente agradable y el personal atento. Solo faltó más rapidez.", response: null, replied: false },
+];
+
+const FEATURES = [
+  { icon: "🤖", title: "Respuestas inteligentes", desc: "Cada reseña recibe una respuesta única, personalizada y coherente con el tono de tu marca.", extra: null },
+  { icon: "⚙️", title: "Control total", desc: "Tú decides cómo opera Revora.", extra: ["Auto-publicar directamente en Google", "Revisar antes de publicar", "Editar cada respuesta a tu gusto"] },
+  { icon: "📩", title: "Genera más reseñas", desc: "Envía campañas para pedir reseñas a tus clientes.", extra: ["Los felices → Google ⭐", "Los insatisfechos → feedback privado 🔒"] },
+  { icon: "🌎", title: "Multilenguaje automático", desc: "Detecta el idioma de cada reseña y responde en el mismo idioma.", extra: ["Español → respuesta en español", "Inglés → respuesta en inglés", "Más de 50 idiomas soportados"] },
+];
+
+const PLANS = [
+  { name: "Starter", price: "79", desc: "1 local · 50 respuestas/mes", features: ["50 respuestas AI/mes", "1 negocio conectado", "Autopiloto activable", "Soporte por email"], highlight: false },
+  { name: "Pro", price: "149", desc: "3 locales · Respuestas ilimitadas", features: ["Respuestas ilimitadas", "Hasta 3 locales", "Autopiloto + tono personalizado", "Reporte mensual", "Soporte prioritario"], highlight: true },
+  { name: "Business", price: "349", desc: "10 locales · Todo incluido", features: ["Todo ilimitado", "Hasta 10 locales", "Multi-idioma automático", "API access", "Account manager"], highlight: false },
+];
+
+const FAQS = [
+  { q: "¿Necesito dar mi contraseña de Google?", a: "No. Usamos OAuth — el mismo botón de 'Continuar con Google'. Google actúa como intermediario y nosotros jamás vemos tu contraseña." },
+  { q: "¿Las respuestas suenan robóticas?", a: "No. La IA analiza cada reseña y genera una respuesta única con el nombre del cliente y detalles específicos. Puedes editar antes de publicar." },
+  { q: "¿Puedo cancelar en cualquier momento?", a: "Sí, sin penalidades. Cancelas desde tu dashboard en 30 segundos, sin llamadas ni formularios." },
+  { q: "¿Funciona para TripAdvisor y Booking?", a: "Actualmente soportamos Google Business Profile. TripAdvisor y Booking están en el roadmap del plan Business." },
+];
+
+const SOCIAL = [
+  { name: "Instagram", href: "https://instagram.com", svg: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg> },
+  { name: "LinkedIn", href: "https://linkedin.com", svg: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg> },
+  { name: "WhatsApp", href: "https://wa.me", svg: <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg> },
+  { name: "TikTok", href: "https://tiktok.com", svg: <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.74a4.85 4.85 0 0 1-1.01-.05z"/></svg> },
+];
+
+function StarRow({ count }) {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div style={{ display: "flex", gap: 1 }}>
+      {[1,2,3,4,5].map(s => (
+        <span key={s} style={{ color: s <= count ? "#FBBC04" : "#5a5a5a", fontSize: 12 }}>★</span>
+      ))}
+    </div>
+  );
+}
+
+function FAQItem({ q, a }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div onClick={() => setOpen(!open)} style={{ borderBottom: "1px solid #2a2800", padding: "22px 0", cursor: "pointer", userSelect: "none" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
+        <span style={{ fontSize: 15, color: LIGHT, fontFamily: "'DM Sans', sans-serif" }}>{q}</span>
+        <span style={{ color: Y, fontSize: 22, flexShrink: 0, display: "inline-block", transform: open ? "rotate(45deg)" : "rotate(0)", transition: "transform 0.2s", lineHeight: 1 }}>+</span>
+      </div>
+      {open && <p style={{ color: MUTED, fontSize: 14, lineHeight: 1.7, marginTop: 12, fontFamily: "'DM Sans', sans-serif" }}>{a}</p>}
+    </div>
+  );
+}
+
+function AnimatedBar({ pct, color, label, delay = 0 }) {
+  const [width, setWidth] = useState(0);
+  const ref = useRef(null);
+  const fired = useRef(false);
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !fired.current) {
+        fired.current = true;
+        setTimeout(() => setWidth(pct), delay);
+      }
+    }, { threshold: 0.5 });
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, [pct, delay]);
+  return (
+    <div ref={ref} style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 12, padding: "18px 20px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+        <span style={{ fontSize: 13, color: LIGHT }}>{label}</span>
+        <span style={{ fontSize: 26, fontWeight: 700, color, letterSpacing: "-0.03em" }}>{pct}%</span>
+      </div>
+      <div style={{ height: 5, background: "#2a2800", borderRadius: 4, overflow: "hidden" }}>
+        <div style={{ height: "100%", width: `${width}%`, background: color, borderRadius: 4, transition: "width 1.2s cubic-bezier(0.4,0,0.2,1)" }} />
+      </div>
+    </div>
+  );
+}
+
+function SignupModal({ onClose }) {
+  return (
+    <div onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 999, background: "rgba(0,0,0,0.88)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
+      <div onClick={e => e.stopPropagation()} style={{ background: "#111100", border: "1px solid #3a3800", borderRadius: 20, padding: "40px 36px", maxWidth: 420, width: "100%", position: "relative", animation: "fadeUp 0.25s ease both" }}>
+        <button onClick={onClose} style={{ position: "absolute", top: 14, right: 18, background: "none", border: "none", color: MUTED, fontSize: 24, cursor: "pointer", lineHeight: 1 }}>×</button>
+        <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 24 }}>
+          <div style={{ width: 32, height: 32, background: Y, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <span style={{ color: BG, fontSize: 15, fontWeight: 700 }}>R</span>
+          </div>
+          <span style={{ fontSize: 17, fontWeight: 700, color: TEXT }}>Revora<span style={{ color: Y }}>.ai</span></span>
+        </div>
+        <h2 style={{ fontSize: 24, fontWeight: 700, color: TEXT, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 8 }}>Crea tu cuenta gratis</h2>
+        <p style={{ fontSize: 14, color: MUTED, lineHeight: 1.6, marginBottom: 22 }}>Empieza a responder tus reseñas de Google con IA en menos de 3 minutos.</p>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, background: "#1a1700", border: "1px solid #3a3400", borderRadius: 10, padding: "11px 14px", marginBottom: 22 }}>
+          <span style={{ fontSize: 18 }}>🎉</span>
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: Y }}>14 días completamente gratis</div>
+            <div style={{ fontSize: 11, color: MUTED, marginTop: 2 }}>No necesitas tarjeta de crédito · Cancela cuando quieras</div>
+          </div>
+        </div>
+        <button style={{ width: "100%", padding: "14px 20px", background: "#fff", border: "1.5px solid #e0e0e0", borderRadius: 10, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 12, fontSize: 14, fontWeight: 600, color: "#1a1a1a", fontFamily: "'DM Sans', sans-serif", marginBottom: 14, transition: "box-shadow 0.2s" }}
+          onMouseOver={e => { e.currentTarget.style.boxShadow = "0 0 0 2px " + Y; }}
+          onMouseOut={e => { e.currentTarget.style.boxShadow = "none"; }}
+        >
+          <svg width="18" height="18" viewBox="0 0 48 48" style={{ flexShrink: 0 }}>
+            <path fill="#FFC107" d="M43.6 20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.7-.4-4z" />
+            <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z" />
+            <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2A12 12 0 0 1 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z" />
+            <path fill="#1976D2" d="M43.6 20H24v8h11.3a12 12 0 0 1-4.1 5.6l6.2 5.2C40.9 35.2 44 30 44 24c0-1.3-.1-2.7-.4-4z" />
+          </svg>
+          Registrarme con Google
+        </button>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
+          <div style={{ flex: 1, height: 1, background: BORDER }} />
+          <span style={{ fontSize: 11, color: "#555540" }}>o con tu email</span>
+          <div style={{ flex: 1, height: 1, background: BORDER }} />
+        </div>
+        <input placeholder="tu@negocio.com" style={{ width: "100%", padding: "13px 16px", background: SURF2, border: "1px solid #2a2800", borderRadius: 9, color: TEXT, fontSize: 14, fontFamily: "'DM Sans', sans-serif", outline: "none", marginBottom: 10 }}
+          onFocus={e => { e.target.style.borderColor = Y + "80"; }}
+          onBlur={e => { e.target.style.borderColor = BORDER; }}
         />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.js file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
+        <button style={{ width: "100%", padding: "13px", background: Y, border: "none", borderRadius: 9, color: BG, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', sans-serif", transition: "background 0.2s" }}
+          onMouseOver={e => { e.currentTarget.style.background = "#fff176"; }}
+          onMouseOut={e => { e.currentTarget.style.background = Y; }}
+        >Crear cuenta gratis →</button>
+        <p style={{ fontSize: 11, color: "#333320", textAlign: "center", marginTop: 14, lineHeight: 1.6 }}>
+          Al registrarte aceptas nuestros <span style={{ color: "#666650", cursor: "pointer" }}>Términos</span> y <span style={{ color: "#666650", cursor: "pointer" }}>Privacidad</span>
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export default function Landing() {
+  const [tick, setTick] = useState(0);
+  const [scrolled, setScrolled] = useState(false);
+  const [showSignup, setShowSignup] = useState(false);
+
+  useEffect(() => {
+    const t = setInterval(() => setTick(p => p + 1), 3000);
+    return () => clearInterval(t);
+  }, []);
+
+  useEffect(() => {
+    const fn = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", fn);
+    return () => window.removeEventListener("scroll", fn);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = showSignup ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [showSignup]);
+
+  const activeReview = tick % REVIEWS.length;
+  const open = () => setShowSignup(true);
+
+  return (
+    <div style={{ background: BG, minHeight: "100vh", color: TEXT, fontFamily: "'DM Sans', sans-serif" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Roboto:wght@400;500&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        .fade1 { animation: fadeUp 0.7s ease both; }
+        .fade2 { animation: fadeUp 0.7s ease 0.15s both; }
+        .hl { transition: transform 0.2s, border-color 0.2s; }
+        .hl:hover { transform: translateY(-3px); border-color: #3a3800 !important; }
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-thumb { background: #2a2800; border-radius: 4px; }
+        .hgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
+        .sgrid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: #2a2800; }
+        .tgrid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+        .fgrid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+        .bgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .social-btn { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 9px; border: 1px solid #2a2800; color: #555540; text-decoration: none; transition: all 0.2s; }
+        .social-btn:hover { border-color: #FFE600; color: #FFE600; }
+        @media (max-width: 1000px) {
+          .fgrid { grid-template-columns: repeat(2,1fr) !important; }
+        }
+        @media (max-width: 900px) {
+          .hgrid { grid-template-columns: 1fr !important; gap: 36px !important; }
+          .sgrid { grid-template-columns: repeat(2,1fr) !important; }
+          .tgrid { grid-template-columns: 1fr !important; }
+          .bgrid { grid-template-columns: 1fr !important; gap: 32px !important; }
+        }
+        @media (max-width: 600px) {
+          .navlinks { display: none !important; }
+          .fgrid { grid-template-columns: 1fr !important; }
+          .ctarow { flex-direction: column !important; }
+          .footer-inner { flex-direction: column !important; align-items: flex-start !important; gap: 20px !important; }
+        }
+      `}</style>
+
+      {showSignup && <SignupModal onClose={() => setShowSignup(false)} />}
+
+      {/* NAV */}
+      <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, background: scrolled ? "rgba(10,10,10,0.95)" : "transparent", backdropFilter: scrolled ? "blur(12px)" : "none", borderBottom: scrolled ? "1px solid #2a2800" : "1px solid transparent", transition: "all 0.3s", padding: "0 6%", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+          <div style={{ width: 30, height: 30, background: Y, borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <span style={{ color: BG, fontSize: 14, fontWeight: 700 }}>R</span>
+          </div>
+          <span style={{ fontSize: 16, fontWeight: 700, color: TEXT, letterSpacing: "-0.01em" }}>Revora<span style={{ color: Y }}>.ai</span></span>
+        </div>
+        <div className="navlinks" style={{ display: "flex" }}>
+          <a href="#precios" style={{ fontSize: 13, color: MUTED, textDecoration: "none", transition: "color 0.2s" }} onMouseOver={e => e.target.style.color = TEXT} onMouseOut={e => e.target.style.color = MUTED}>Precios</a>
+        </div>
+        <button onClick={open} style={{ padding: "8px 18px", background: Y, border: "none", borderRadius: 7, color: BG, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "background 0.2s" }} onMouseOver={e => e.currentTarget.style.background = "#fff176"} onMouseOut={e => e.currentTarget.style.background = Y}>
+          Empezar gratis
+        </button>
+      </nav>
+
+      {/* ── HERO ── */}
+      <section style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: "100px 6% 80px" }}>
+        <div className="hgrid" style={{ maxWidth: 1160, margin: "0 auto", width: "100%" }}>
+
+          {/* Copy */}
+          <div className="fade1">
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#1a1700", border: "1px solid #3a3400", borderRadius: 20, padding: "5px 14px", marginBottom: 28 }}>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: Y, display: "inline-block", animation: "pulse 2s infinite" }} />
+              <span style={{ color: Y, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>Nuevo en Lima · 14 días gratis · Sin tarjeta</span>
+            </div>
+            <h1 style={{ fontSize: "clamp(32px, 4vw, 54px)", fontWeight: 700, lineHeight: 1.12, letterSpacing: "-0.03em", marginBottom: 20, color: TEXT }}>
+              Estás ocupado haciendo<br />crecer tu negocio.<br />
+              <span style={{ color: Y }}>Revora se encarga<br />de tus reseñas.</span>
+            </h1>
+            <p style={{ fontSize: 16, color: MUTED, lineHeight: 1.75, maxWidth: 460, marginBottom: 24 }}>
+              Convierte cada reseña de Google en una oportunidad de crecimiento con inteligencia artificial.
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 11, marginBottom: 26 }}>
+              {["Responde automáticamente — 24 horas, 7 días", "Mejora tu reputación y sube en Google Maps", "Aumenta tus clientes sin esfuerzo extra"].map((item, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div style={{ width: 20, height: 20, borderRadius: "50%", background: "#1a1700", border: "1px solid #FFE60050", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <span style={{ color: Y, fontSize: 10 }}>✓</span>
+                  </div>
+                  <span style={{ fontSize: 14, color: LIGHT }}>{item}</span>
+                </div>
+              ))}
+            </div>
+            <p style={{ fontSize: 15, fontWeight: 700, color: Y, marginBottom: 28 }}>👉 Sin esfuerzo. Sin contratar a nadie.</p>
+            <div className="ctarow" style={{ display: "flex", gap: 12, marginBottom: 24, flexWrap: "wrap" }}>
+              <button onClick={open} style={{ padding: "14px 30px", background: Y, border: "none", borderRadius: 10, color: BG, fontSize: 15, fontWeight: 700, cursor: "pointer", transition: "background 0.2s", whiteSpace: "nowrap" }} onMouseOver={e => e.currentTarget.style.background = "#fff176"} onMouseOut={e => e.currentTarget.style.background = Y}>
+                Empieza Gratis →
+              </button>
+              <a href="#como-funciona" style={{ textDecoration: "none" }}>
+                <button style={{ padding: "14px 30px", background: "transparent", border: "1px solid #2a2800", borderRadius: 10, color: MUTED, fontSize: 15, fontWeight: 500, cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap" }} onMouseOver={e => { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; }} onMouseOut={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; }}>
+                  Mira cómo funciona ↓
+                </button>
+              </a>
+            </div>
+            <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
+              {["Sin tarjeta de crédito", "14 días gratis", "Cancela cuando quieras"].map(t => (
+                <div key={t} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <span style={{ color: Y, fontSize: 11 }}>✓</span>
+                  <span style={{ color: MUTED, fontSize: 12 }}>{t}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ── GOOGLE MAPS STYLE PREVIEW (visible en todos los tamaños) ── */}
+          <div className="fade2" style={{ width: "100%" }}>
+            <div style={{ background: "#202124", border: "1px solid #303134", borderRadius: 16, overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.6)" }}>
+              {/* Header */}
+              <div style={{ background: "#292a2d", padding: "12px 16px", borderBottom: "1px solid #303134", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#4285F4", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#fff", flexShrink: 0 }}>H</div>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: "#e8eaed", fontFamily: "'Roboto', sans-serif" }}>Hotel Miraflores Boutique</div>
+                    <div style={{ fontSize: 10, color: "#9aa0a6", marginTop: 1 }}>4.6 ★★★★★ · 847 reseñas</div>
+                  </div>
+                </div>
+                <div style={{ background: "#1a1700", border: "1px solid #2a2800", borderRadius: 8, padding: "3px 9px", display: "flex", alignItems: "center", gap: 5, flexShrink: 0 }}>
+                  <span style={{ width: 5, height: 5, borderRadius: "50%", background: Y, display: "inline-block", animation: "pulse 2s infinite" }} />
+                  <span style={{ color: Y, fontSize: 9, fontWeight: 700 }}>REVORA ACTIVO</span>
+                </div>
+              </div>
+
+              {/* Reviews */}
+              <div style={{ padding: "12px 14px", display: "flex", flexDirection: "column", gap: 10 }}>
+                {REVIEWS.map((r, i) => (
+                  <div key={i} style={{ background: i === activeReview ? "#292a2d" : "#26272b", border: i === activeReview ? "1px solid #404144" : "1px solid #303134", borderRadius: 12, padding: "13px 14px", transition: "all 0.4s" }}>
+                    <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 8 }}>
+                      <div style={{ width: 32, height: 32, borderRadius: "50%", background: r.avatarBg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#fff", flexShrink: 0, fontFamily: "'Roboto', sans-serif" }}>{r.avatar}</div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 13, fontWeight: 500, color: "#e8eaed", fontFamily: "'Roboto', sans-serif" }}>{r.name}</div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 2, flexWrap: "wrap" }}>
+                          <StarRow count={r.stars} />
+                          <span style={{ fontSize: 10, color: "#9aa0a6" }}>{r.time}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <p style={{ fontSize: 12, color: "#bdc1c6", lineHeight: 1.55, marginBottom: r.replied ? 10 : 0, fontFamily: "'Roboto', sans-serif" }}>{r.text}</p>
+                    {r.replied && r.response && (
+                      <div style={{ background: "#1e1f23", borderRadius: 8, padding: "10px 12px", borderLeft: "3px solid #FFE600" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 5, flexWrap: "wrap" }}>
+                          <div style={{ width: 16, height: 16, background: Y, borderRadius: 3, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                            <span style={{ fontSize: 8, fontWeight: 700, color: BG }}>R</span>
+                          </div>
+                          <span style={{ fontSize: 10, fontWeight: 700, color: Y, fontFamily: "'Roboto', sans-serif" }}>Respuesta del propietario</span>
+                          <span style={{ fontSize: 10, color: "#9aa0a6" }}>· hace un momento</span>
+                        </div>
+                        <p style={{ fontSize: 11, color: "#bdc1c6", lineHeight: 1.55, fontFamily: "'Roboto', sans-serif" }}>{r.response}</p>
+                      </div>
+                    )}
+                    {!r.replied && (
+                      <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 8, padding: "6px 10px", background: "#1a1700", borderRadius: 6, width: "fit-content" }}>
+                        <div style={{ width: 6, height: 6, borderRadius: "50%", background: Y, animation: "pulse 1s infinite" }} />
+                        <span style={{ fontSize: 10, color: Y, fontFamily: "'Roboto', sans-serif", fontWeight: 500 }}>Revora generando respuesta...</span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Bottom stats */}
+              <div style={{ background: "#1e1f23", padding: "10px 14px", borderTop: "1px solid #303134", display: "flex", justifyContent: "space-around" }}>
+                {[["100%", "respondidas"], ["4.8★", "rating actual"], ["↑0.5", "esta semana"]].map(([v, l]) => (
+                  <div key={l} style={{ textAlign: "center" }}>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: Y }}>{v}</div>
+                    <div style={{ fontSize: 9, color: "#9aa0a6", marginTop: 2 }}>{l}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* LOGOS BAR */}
+      <div style={{ borderTop: "1px solid #2a2800", borderBottom: "1px solid #2a2800", padding: "18px 6%" }}>
+        <div style={{ maxWidth: 1160, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+          <span style={{ fontSize: 11, color: "#444430", letterSpacing: "0.12em", textTransform: "uppercase" }}>Diseñado para</span>
+          {["🏨 Hoteles", "🍽️ Restaurantes", "🦷 Clínicas", "💆 Spas", "🏠 Inmobiliarias"].map(t => (
+            <span key={t} style={{ fontSize: 13, color: MUTED }}>{t}</span>
+          ))}
+        </div>
+      </div>
+
+      {/* STATS */}
+      <section style={{ padding: "80px 6%" }}>
+        <div style={{ maxWidth: 1160, margin: "0 auto" }}>
+          <div className="sgrid">
+            {[["63%","negocios nunca responden sus reseñas"],["35%","más ingresos al responder el 100%"],["10+","reseñas por día en hoteles premium"],["3 min","para conectar tu Google Business"]].map(([v,l],i) => (
+              <div key={i} style={{ background: BG, padding: "36px 28px", textAlign: "center" }}>
+                <div style={{ fontSize: 44, fontWeight: 700, color: Y, letterSpacing: "-0.04em", lineHeight: 1, marginBottom: 10 }}>{v}</div>
+                <div style={{ fontSize: 13, color: MUTED, lineHeight: 1.5 }}>{l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── EL PROBLEMA ── */}
+      <section style={{ padding: "70px 6% 80px", background: SURF }}>
+        <div style={{ maxWidth: 760, margin: "0 auto", textAlign: "center" }}>
+          <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>El problema</span>
+          <h2 style={{ fontSize: "clamp(24px, 3.5vw, 42px)", fontWeight: 700, lineHeight: 1.2, letterSpacing: "-0.03em", margin: "16px 0 16px", color: TEXT }}>
+            Cada día, tus clientes dejan reseñas en Google.
+          </h2>
+          <p style={{ fontSize: 16, color: LIGHT, lineHeight: 1.85, marginBottom: 36 }}>
+            Algunas son buenas. Otras no tanto. <strong style={{ color: TEXT }}>Todas necesitan una respuesta.</strong><br />
+            Cada reseña sin responder le cuesta dinero a tu negocio.
+          </p>
+          <p style={{ fontSize: 15, fontWeight: 600, color: LIGHT, marginBottom: 20 }}>Pero en la realidad:</p>
+          <div className="tgrid" style={{ marginBottom: 32 }}>
+            {[
+              ["⏰", "No tienes tiempo", "El día a día de tu negocio te consume. Responder reseñas se queda siempre para después."],
+              ["😣", "No sabes qué responder", "Especialmente las negativas. Una mala respuesta puede empeorar las cosas."],
+              ["📉", "Te cuesta clientes", "El silencio habla por ti. Y lo que dice no es bueno para tu reputación."],
+            ].map(([icon, title, desc], i) => (
+              <div key={i} className="hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 12, padding: "24px 20px", textAlign: "left" }}>
+                <div style={{ fontSize: 28, marginBottom: 12 }}>{icon}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: TEXT, marginBottom: 8 }}>{title}</div>
+                <div style={{ fontSize: 13, color: MUTED, lineHeight: 1.65 }}>{desc}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ background: "#1a1700", border: "1px solid #3a3400", borderRadius: 14, padding: "20px 24px" }}>
+            <p style={{ fontSize: 15, color: LIGHT, lineHeight: 1.8 }}>
+              👉 <strong style={{ color: Y }}>Los clientes leen tus respuestas antes de decidir comprar.</strong><br />
+              No responder no es una opción. Es perder ventas en silencio.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── BENEFICIOS ── */}
+      <section style={{ padding: "70px 6% 80px" }}>
+        <div style={{ maxWidth: 960, margin: "0 auto" }}>
+          <div className="bgrid">
+            <div>
+              <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>Beneficios</span>
+              <h2 style={{ fontSize: "clamp(24px, 3vw, 40px)", fontWeight: 700, lineHeight: 1.2, letterSpacing: "-0.03em", margin: "14px 0 24px", color: TEXT }}>
+                Los negocios que responden <span style={{ color: Y }}>todas</span> sus reseñas:
+              </h2>
+              <div style={{ display: "flex", flexDirection: "column", gap: 18, marginBottom: 32 }}>
+                {[
+                  ["⭐", "Generan más confianza", "Los clientes potenciales ven que te importa su opinión."],
+                  ["📈", "Mejoran su posicionamiento en Google", "Google premia a los negocios activos en Maps."],
+                  ["💰", "Aumentan sus ventas", "Más confianza = más conversiones = más clientes."],
+                ].map(([icon, title, desc], i) => (
+                  <div key={i} style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
+                    <div style={{ width: 40, height: 40, background: "#1a1700", border: "1px solid #3a3400", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>{icon}</div>
+                    <div>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: TEXT, marginBottom: 3 }}>{title}</div>
+                      <div style={{ fontSize: 13, color: MUTED, lineHeight: 1.5 }}>{desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {/* CTA destacado centrado */}
+              <div style={{ background: "#1a1700", border: "1px solid #3a3400", borderRadius: 14, padding: "22px 24px", textAlign: "center" }}>
+                <p style={{ fontSize: 22, fontWeight: 800, color: Y, marginBottom: 8, letterSpacing: "-0.02em" }}>
+                  💡 Hasta un 35% más de ingresos.
+                </p>
+                <p style={{ fontSize: 14, color: LIGHT, lineHeight: 1.6 }}>
+                  👉 Revora hace posible ese 100% sin esfuerzo.
+                </p>
+              </div>
+            </div>
+
+            {/* Animated bars */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              <AnimatedBar pct={97} color={Y} label="de los clientes leen las respuestas" delay={0} />
+              <AnimatedBar pct={88} color="#4ade80" label="prefieren negocios que responden" delay={200} />
+              <AnimatedBar pct={79} color="#60a5fa" label="regresan si solucionas su problema" delay={400} />
+              <p style={{ fontSize: 11, color: "#333320", textAlign: "right", marginTop: 4 }}>Fuente: Harvard Business School · ReviewTrackers</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section id="como-funciona" style={{ padding: "70px 6% 80px", background: SURF }}>
+        <div style={{ maxWidth: 1160, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 52 }}>
+            <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>Cómo funciona</span>
+            <h2 style={{ fontSize: "clamp(24px, 3vw, 40px)", fontWeight: 700, letterSpacing: "-0.03em", margin: "14px 0 0", color: TEXT }}>Listo en 3 minutos</h2>
+          </div>
+          <div className="tgrid">
+            {STEPS.map((s, i) => (
+              <div key={i} className="hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 14, padding: "32px 28px", position: "relative", overflow: "hidden" }}>
+                <div style={{ position: "absolute", top: 18, right: 20, fontSize: 56, fontWeight: 700, color: "#1a1800", lineHeight: 1, userSelect: "none" }}>{s.n}</div>
+                <div style={{ width: 36, height: 36, background: "#1a1700", border: "1px solid #2a2800", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20, color: Y, fontSize: 16 }}>{s.icon}</div>
+                <h3 style={{ fontSize: 17, fontWeight: 700, color: TEXT, marginBottom: 10, letterSpacing: "-0.02em", lineHeight: 1.3 }}>{s.title}</h3>
+                <p style={{ fontSize: 13, color: MUTED, lineHeight: 1.65 }}>{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FEATURES ── */}
+      <section style={{ padding: "70px 6% 80px" }}>
+        <div style={{ maxWidth: 1160, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 48 }}>
+            <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>Features</span>
+            <h2 style={{ fontSize: "clamp(24px, 3vw, 40px)", fontWeight: 700, letterSpacing: "-0.03em", margin: "14px 0 0", color: TEXT }}>Todo lo que necesita tu negocio</h2>
+          </div>
+          <div className="fgrid">
+            {FEATURES.map((f, i) => (
+              <div key={i} className="hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 14, padding: "28px 24px", display: "flex", flexDirection: "column", gap: 12 }}>
+                <div style={{ fontSize: 32 }}>{f.icon}</div>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: TEXT, letterSpacing: "-0.02em", lineHeight: 1.3 }}>{f.title}</h3>
+                <p style={{ fontSize: 13, color: MUTED, lineHeight: 1.65 }}>{f.desc}</p>
+                {f.extra && (
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 4, paddingTop: 12, borderTop: "1px solid #2a2800" }}>
+                    {f.extra.map((item, j) => (
+                      <div key={j} style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+                        <span style={{ color: Y, fontSize: 11, marginTop: 2, flexShrink: 0 }}>→</span>
+                        <span style={{ fontSize: 12, color: LIGHT, lineHeight: 1.4 }}>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PRICING */}
+      <section id="precios" style={{ padding: "70px 6% 80px", background: SURF }}>
+        <div style={{ maxWidth: 1160, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 48 }}>
+            <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>Precios</span>
+            <h2 style={{ fontSize: "clamp(24px, 3vw, 40px)", fontWeight: 700, letterSpacing: "-0.03em", margin: "14px 0 10px", color: TEXT }}>Simple y transparente</h2>
+            <p style={{ fontSize: 14, color: MUTED }}>14 días gratis en cualquier plan · Sin tarjeta · Cancela cuando quieras</p>
+          </div>
+          <div className="tgrid" style={{ alignItems: "start" }}>
+            {PLANS.map((p, i) => (
+              <div key={i} className="hl" style={{ background: p.highlight ? "#131200" : SURF2, border: p.highlight ? "1px solid #FFE60055" : "1px solid #2a2800", borderRadius: 16, padding: "32px 26px", position: "relative" }}>
+                {p.highlight && (
+                  <div style={{ position: "absolute", top: -12, left: "50%", transform: "translateX(-50%)", background: Y, color: BG, fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", padding: "4px 14px", borderRadius: 20, whiteSpace: "nowrap" }}>Más popular</div>
+                )}
+                <div style={{ marginBottom: 18 }}>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: TEXT, marginBottom: 4 }}>{p.name}</div>
+                  <div style={{ fontSize: 12, color: MUTED }}>{p.desc}</div>
+                </div>
+                <div style={{ marginBottom: 22 }}>
+                  <span style={{ fontSize: 46, fontWeight: 700, color: p.highlight ? Y : TEXT, letterSpacing: "-0.04em", lineHeight: 1 }}>S/{p.price}</span>
+                  <span style={{ fontSize: 13, color: MUTED }}>/mes</span>
+                </div>
+                <div style={{ marginBottom: 24, display: "flex", flexDirection: "column", gap: 10 }}>
+                  {p.features.map((feat, j) => (
+                    <div key={j} style={{ display: "flex", gap: 9, alignItems: "flex-start" }}>
+                      <span style={{ color: Y, fontSize: 11, flexShrink: 0, marginTop: 2 }}>✓</span>
+                      <span style={{ fontSize: 13, color: LIGHT, lineHeight: 1.4 }}>{feat}</span>
+                    </div>
+                  ))}
+                </div>
+                <button onClick={open} style={{ width: "100%", padding: "12px", background: p.highlight ? Y : "transparent", border: p.highlight ? "none" : "1px solid #2a2800", borderRadius: 9, color: p.highlight ? BG : MUTED, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", fontFamily: "'DM Sans', sans-serif" }}
+                  onMouseOver={e => { if (p.highlight) { e.currentTarget.style.background = "#fff176"; } else { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; } }}
+                  onMouseOut={e => { if (p.highlight) { e.currentTarget.style.background = Y; } else { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; } }}
+                >
+                  {i === 2 ? "Hablar con ventas" : "Empezar gratis"}
+                </button>
+              </div>
+            ))}
+          </div>
+          <p style={{ textAlign: "center", color: "#444430", fontSize: 13, marginTop: 24 }}>
+            ¿Más de 10 locales?{" "}<span style={{ color: Y, cursor: "pointer" }}>Contáctanos para un plan a medida →</span>
           </p>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* FAQ */}
+      <section style={{ padding: "70px 6% 80px" }}>
+        <div style={{ maxWidth: 640, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 40 }}>
+            <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>FAQ</span>
+            <h2 style={{ fontSize: "clamp(22px, 3vw, 36px)", fontWeight: 700, letterSpacing: "-0.03em", margin: "14px 0 0", color: TEXT }}>Preguntas frecuentes</h2>
+          </div>
+          <div style={{ borderTop: "1px solid #2a2800" }}>
+            {FAQS.map((f, i) => <FAQItem key={i} q={f.q} a={f.a} />)}
+          </div>
         </div>
-      </main>
+      </section>
+
+      {/* FINAL CTA */}
+      <section style={{ padding: "90px 6%", textAlign: "center", background: SURF }}>
+        <div style={{ maxWidth: 560, margin: "0 auto" }}>
+          <h2 style={{ fontSize: "clamp(30px, 4vw, 52px)", fontWeight: 700, letterSpacing: "-0.03em", lineHeight: 1.1, marginBottom: 18, color: TEXT }}>
+            Tu reputación<br /><span style={{ color: Y }}>empieza hoy</span>
+          </h2>
+          <p style={{ fontSize: 16, color: MUTED, lineHeight: 1.7, marginBottom: 32 }}>
+            Únete a los negocios en Lima que ya responden el 100% de sus reseñas automáticamente.
+          </p>
+          <button onClick={open} style={{ padding: "15px 44px", background: Y, border: "none", borderRadius: 10, color: BG, fontSize: 15, fontWeight: 700, cursor: "pointer", transition: "background 0.2s" }} onMouseOver={e => e.currentTarget.style.background = "#fff176"} onMouseOut={e => e.currentTarget.style.background = Y}>
+            Empieza gratis 14 días →
+          </button>
+          <p style={{ color: "#333320", fontSize: 12, marginTop: 14 }}>Sin compromisos · Sin tarjeta de crédito</p>
+        </div>
+      </section>
+
+      {/* ── FOOTER ── */}
+      <footer style={{ borderTop: "1px solid #2a2800", padding: "32px 6%" }}>
+        <div className="footer-inner" style={{ maxWidth: 1160, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 20 }}>
+          {/* Brand */}
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ width: 26, height: 26, background: Y, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <span style={{ color: BG, fontSize: 12, fontWeight: 700 }}>R</span>
+            </div>
+            <span style={{ fontSize: 14, color: "#555540" }}>Revora.ai</span>
+          </div>
+
+          {/* Social buttons */}
+          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            <span style={{ fontSize: 11, color: "#333320", marginRight: 4 }}>Síguenos</span>
+            {SOCIAL.map(s => (
+              <a key={s.name} href={s.href} title={s.name} className="social-btn" target="_blank" rel="noopener noreferrer">
+                {s.svg}
+              </a>
+            ))}
+          </div>
+
+          {/* Links */}
+          <div style={{ display: "flex", gap: 20, alignItems: "center", flexWrap: "wrap" }}>
+            {["Privacidad", "Términos", "Contacto"].map(l => (
+              <span key={l} style={{ color: "#2a2810", fontSize: 12, cursor: "pointer", transition: "color 0.2s" }} onMouseOver={e => e.target.style.color = MUTED} onMouseOut={e => e.target.style.color = "#2a2810"}>{l}</span>
+            ))}
+            <span style={{ color: "#1a1808", fontSize: 12 }}>© 2026 Revora · Lima, Perú</span>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
