@@ -566,8 +566,8 @@ export default function Dashboard() {
         {/* ── CONTENT ── */}
         <div style={{ flex: 1, overflow: "auto", padding: "20px 24px" }}>
 
-          {/* ════ DASHBOARD ════ */}
-          {activeNav === "dashboard" && (
+          {/* ════ NAV CONTENT — solo visible si no hay sección de cuenta activa ════ */}
+          {!accountSection && activeNav === "dashboard" && (
             <div style={{ animation: "fadeIn 0.4s ease both" }}>
 
               {/* Alerta urgente */}
@@ -695,7 +695,7 @@ export default function Dashboard() {
           )}
 
           {/* ════ REVIEWS ════ */}
-          {activeNav === "reviews" && (
+          {!accountSection && activeNav === "reviews" && (
             <div style={{ display: "grid", gridTemplateColumns: selected ? "1fr 380px" : "1fr", gap: 16, animation: "fadeIn 0.4s ease both" }}>
               <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 14, overflow: "hidden" }}>
                 <div style={{ display: "flex", alignItems: "center", padding: "0 16px", borderBottom: `1px solid ${d.border}`, gap: 4 }}>
@@ -802,7 +802,7 @@ export default function Dashboard() {
           )}
 
           {/* ════ ANALYTICS ════ */}
-          {activeNav === "analytics" && (
+          {!accountSection && activeNav === "analytics" && (
             <UpgradeOverlay dark={dark} d={d} blur={!isPro}>
               <div style={{ animation: "fadeIn 0.4s ease both" }}>
                 <div style={{ marginBottom: 20 }}>
@@ -885,7 +885,7 @@ export default function Dashboard() {
           )}
 
           {/* ════ AUTOPILOT PAGE ════ */}
-          {activeNav === "autopilot" && (
+          {!accountSection && activeNav === "autopilot" && (
             <div style={{ animation: "fadeIn 0.4s ease both" }}>
               <div style={{ marginBottom: 20 }}>
                 <h2 style={{ fontSize: 18, fontWeight: 700, color: d.text, marginBottom: 4 }}>Configuración de Autopiloto</h2>
