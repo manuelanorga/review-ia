@@ -172,15 +172,28 @@ export default function Dashboard() {
     setTimeout(() => setToast(null), 3000);
   };
 
-  const generateAI = (review) => {
-    setGenerating(true);
-    setEditText("");
-    setTimeout(() => {
-      const r = AI_RESPONSES[review.id] || `Hola ${review.name.split(" ")[0]}, muchas gracias por tu reseña. Tu opinión es muy valiosa. ¡Esperamos verte pronto!`;
-      setEditText(r);
-      setGenerating(false);
-    }, 1600);
-  };
+  const generateAI = async (review) => {
+  setGenerating(true);
+  setEditText("");
+  try {
+    const res = await fetch("/api/generate-response", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        reviewText: review.text,
+        reviewerName: review.name,
+        stars: review.stars,
+        tone: tone,
+      }),
+    });
+    const data = await res.json();
+    setEditText(data.response || "Error generando respuesta");
+  } catch (error) {
+    setEditText("Error conectando con la IA");
+  } finally {
+    setGenerating(false);
+  }
+};
 
   const publish = (id) => {
     setReviews(prev => prev.map(r => r.id === id ? { ...r, status: "responded", response: editText } : r));
