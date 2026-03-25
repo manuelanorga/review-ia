@@ -49,13 +49,13 @@ const BUSINESSES = [
 ];
 
 const TOUR_STEPS = [
-  { icon: "👋", title: "Bienvenido a RevGo.app", desc: "En los próximos pasos te mostramos todo lo que puedes hacer desde tu panel. Es rápido, te lo prometemos.", highlight: null },
+  { icon: "👋", title: "Bienvenido a Revora.ai", desc: "En los próximos pasos te mostramos todo lo que puedes hacer desde tu panel. Es rápido, te lo prometemos.", highlight: null },
   { icon: "▦", title: "Dashboard — tu vista general", desc: "Aquí verás un resumen de todo: reseñas recientes, el estado de tu autopiloto, alertas urgentes y tus métricas más importantes de un vistazo.", highlight: "dashboard" },
   { icon: "★", title: "Reseñas — gestiona cada opinión", desc: "Aquí aparecen todas las reseñas de Google de tu negocio. Puedes filtrarlas, generar respuestas con IA en segundos y publicarlas directamente en Google.", highlight: "reviews" },
-  { icon: "⚡", title: "Autopiloto — responde sin esfuerzo", desc: "Activa el autopiloto y RevGo responderá automáticamente cada nueva reseña. Tú eliges el tono: cercano, formal o profesional.", highlight: "autopilot" },
+  { icon: "⚡", title: "Autopiloto — responde sin esfuerzo", desc: "Activa el autopiloto y Revora responderá automáticamente cada nueva reseña. Tú eliges el tono: cercano, formal o profesional.", highlight: "autopilot" },
   { icon: "◎", title: "Analytics — conoce tu reputación", desc: "Mira la evolución de tu rating, qué días recibes más reseñas, qué palabras mencionan más tus clientes y cuánto ha mejorado tu tasa de respuesta.", highlight: "analytics" },
   { icon: "◈", title: "Configuración — ajusta todo a tu medida", desc: "Personaliza el nombre de tu negocio, el email de notificaciones y el tono por defecto. También puedes gestionar tu conexión con Google aquí.", highlight: "settings" },
-  { icon: "🚀", title: "¡Listo para empezar!", desc: "Ya conoces todo lo que RevGo tiene para ti. Tu primera reseña está esperando una respuesta. ¡Empieza ahora!", highlight: null },
+  { icon: "🚀", title: "¡Listo para empezar!", desc: "Ya conoces todo lo que Revora tiene para ti. Tu primera reseña está esperando una respuesta. ¡Empieza ahora!", highlight: null },
 ];
 
 function Stars({ count, size = 12 }) {
@@ -98,6 +98,8 @@ export default function Dashboard() {
   const [activeNav, setActiveNav] = useState("dashboard");
   const [activeBusiness, setActiveBusiness] = useState(1);
   const [showBusinessMenu, setShowBusinessMenu] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const [accountSection, setAccountSection] = useState(null); // 'config' | 'billing' | 'invoices' | null
   const [isPro] = useState(true); // cambiar a false para simular plan free
   const [showTour, setShowTour] = useState(true);
   const [tourStep, setTourStep] = useState(0);
@@ -200,11 +202,10 @@ export default function Dashboard() {
     { id: "reviews", label: "Reseñas", icon: "★", badge: pendingCount },
     { id: "autopilot", label: "Autopiloto", icon: "⚡" },
     { id: "analytics", label: "Analytics", icon: "◎", pro: true },
-    { id: "settings", label: "Configuración", icon: "◈" },
   ];
 
   return (
-    <div style={{ display: "flex", height: "100vh", background: d.bg, fontFamily: "'DM Sans', sans-serif", overflow: "hidden", color: d.text }} onClick={() => showBusinessMenu && setShowBusinessMenu(false)}>
+    <div style={{ display: "flex", height: "100vh", background: d.bg, fontFamily: "'DM Sans', sans-serif", overflow: "hidden", color: d.text }} onClick={() => { showBusinessMenu && setShowBusinessMenu(false); showUserMenu && setShowUserMenu(false); }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -373,7 +374,7 @@ export default function Dashboard() {
             <div style={{ width: 30, height: 30, background: d.accent, borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center" }}>
               <span style={{ color: d.accentFg, fontSize: 13, fontWeight: 700 }}>R</span>
             </div>
-            <span style={{ fontSize: 15, fontWeight: 700, color: d.text }}>RevGo<span style={{ color: d.accent }}>.ai</span></span>
+            <span style={{ fontSize: 15, fontWeight: 700, color: d.text }}>Revora<span style={{ color: d.accent }}>.ai</span></span>
           </div>
         </div>
 
@@ -471,18 +472,22 @@ export default function Dashboard() {
         <header style={{ height: 56, borderBottom: `1px solid ${d.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px", background: d.sidebar, flexShrink: 0 }}>
           <div>
             <h1 style={{ fontSize: 15, fontWeight: 700, color: d.text }}>
-              {activeNav === "dashboard" && "Resumen"}
-              {activeNav === "reviews" && "Reseñas"}
-              {activeNav === "analytics" && "Analytics"}
-              {activeNav === "autopilot" && "Autopiloto"}
-              {activeNav === "settings" && "Configuración"}
+              {accountSection === "config" && "Mi cuenta"}
+              {accountSection === "billing" && "Pagos y planes"}
+              {accountSection === "invoices" && "Facturas"}
+              {!accountSection && activeNav === "dashboard" && "Resumen"}
+              {!accountSection && activeNav === "reviews" && "Reseñas"}
+              {!accountSection && activeNav === "analytics" && "Analytics"}
+              {!accountSection && activeNav === "autopilot" && "Autopiloto"}
             </h1>
             <p style={{ fontSize: 11, color: d.muted, marginTop: 1 }}>
-              {activeNav === "dashboard" && `${pendingCount} pendientes · ${respondedToday} respondidas`}
-              {activeNav === "reviews" && `${pendingCount} sin responder`}
-              {activeNav === "analytics" && "Últimos 30 días"}
-              {activeNav === "autopilot" && (autopilot ? `Activo · Tono ${tone}` : "Inactivo")}
-              {activeNav === "settings" && currentBusiness?.name}
+              {accountSection === "config" && "Gestiona tu información personal y conexiones"}
+              {accountSection === "billing" && "Plan actual y método de pago"}
+              {accountSection === "invoices" && "Historial de pagos"}
+              {!accountSection && activeNav === "dashboard" && `${pendingCount} pendientes · ${respondedToday} respondidas`}
+              {!accountSection && activeNav === "reviews" && `${pendingCount} sin responder`}
+              {!accountSection && activeNav === "analytics" && "Últimos 30 días"}
+              {!accountSection && activeNav === "autopilot" && (autopilot ? `Activo · Tono ${tone}` : "Inactivo")}
             </p>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -500,7 +505,61 @@ export default function Dashboard() {
             <button onClick={() => setDark(!dark)} style={{ width: 36, height: 36, borderRadius: 8, border: `1px solid ${d.border}`, background: d.surface, color: d.muted, fontSize: 16, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}>
               {dark ? "☀️" : "🌙"}
             </button>
-            <div style={{ width: 32, height: 32, borderRadius: "50%", background: d.accent, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: d.accentFg, cursor: "pointer" }}>M</div>
+            <div style={{ position: "relative" }}>
+              <div onClick={e => { e.stopPropagation(); setShowUserMenu(!showUserMenu); }} style={{ width: 32, height: 32, borderRadius: "50%", background: d.accent, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: d.accentFg, cursor: "pointer", border: showUserMenu ? `2px solid ${d.text}` : "2px solid transparent", transition: "border 0.15s" }}>M</div>
+
+              {showUserMenu && (
+                <div onClick={e => e.stopPropagation()} style={{ position: "absolute", top: 42, right: 0, width: 220, background: d.card, border: `1px solid ${d.border}`, borderRadius: 12, zIndex: 200, overflow: "hidden", animation: "slideDown 0.2s ease", boxShadow: "0 8px 24px rgba(0,0,0,0.3)" }}>
+                  {/* User info */}
+                  <div style={{ padding: "14px 16px", borderBottom: `1px solid ${d.border}` }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: d.text }}>Manuel Añorga</div>
+                    <div style={{ fontSize: 11, color: d.muted, marginTop: 2 }}>manu@revgo.app</div>
+                    <div style={{ marginTop: 6, display: "inline-block", fontSize: 10, fontWeight: 700, color: d.accent, background: dark ? "rgba(255,230,0,0.1)" : "#fefce8", border: `1px solid ${dark ? "rgba(255,230,0,0.2)" : "#fde68a"}`, borderRadius: 6, padding: "2px 8px" }}>Plan Pro</div>
+                  </div>
+
+                  {/* Configuración */}
+                  <div style={{ padding: "6px 8px", borderBottom: `1px solid ${d.border}` }}>
+                    <div style={{ fontSize: 10, color: d.muted, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", padding: "6px 8px 4px" }}>Configuración</div>
+                    {[
+                      { icon: "🏢", label: "Mi cuenta", section: "config" },
+                    ].map(item => (
+                      <button key={item.section} onClick={() => { setAccountSection(item.section); setShowUserMenu(false); }} style={{ width: "100%", display: "flex", alignItems: "center", gap: 9, padding: "8px 10px", borderRadius: 7, border: "none", background: "transparent", color: d.text, fontSize: 13, cursor: "pointer", textAlign: "left", transition: "background 0.15s" }}
+                        onMouseOver={e => e.currentTarget.style.background = d.hover}
+                        onMouseOut={e => e.currentTarget.style.background = "transparent"}
+                      >
+                        <span>{item.icon}</span><span>{item.label}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Pagos */}
+                  <div style={{ padding: "6px 8px", borderBottom: `1px solid ${d.border}` }}>
+                    <div style={{ fontSize: 10, color: d.muted, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", padding: "6px 8px 4px" }}>Pagos y planes</div>
+                    {[
+                      { icon: "💳", label: "Facturación", section: "billing" },
+                      { icon: "🧾", label: "Pedidos y facturas", section: "invoices" },
+                    ].map(item => (
+                      <button key={item.section} onClick={() => { setAccountSection(item.section); setShowUserMenu(false); }} style={{ width: "100%", display: "flex", alignItems: "center", gap: 9, padding: "8px 10px", borderRadius: 7, border: "none", background: "transparent", color: d.text, fontSize: 13, cursor: "pointer", textAlign: "left", transition: "background 0.15s" }}
+                        onMouseOver={e => e.currentTarget.style.background = d.hover}
+                        onMouseOut={e => e.currentTarget.style.background = "transparent"}
+                      >
+                        <span>{item.icon}</span><span>{item.label}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Cerrar sesión */}
+                  <div style={{ padding: "6px 8px" }}>
+                    <button onClick={() => setShowUserMenu(false)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 9, padding: "8px 10px", borderRadius: 7, border: "none", background: "transparent", color: "#f87171", fontSize: 13, cursor: "pointer", textAlign: "left", transition: "background 0.15s" }}
+                      onMouseOver={e => e.currentTarget.style.background = dark ? "rgba(248,113,113,0.08)" : "#fef2f2"}
+                      onMouseOut={e => e.currentTarget.style.background = "transparent"}
+                    >
+                      <span>🚪</span><span>Cerrar sesión</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </header>
 
@@ -806,7 +865,7 @@ export default function Dashboard() {
               </div>
               {[
                 { title: "Nombre del negocio", value: currentBusiness?.name, type: "text" },
-                { title: "Email de notificaciones", value: "manu@revgo.app", type: "text" },
+                { title: "Email de notificaciones", value: "manu@revora.ai", type: "text" },
                 { title: "Tono por defecto", value: tone, type: "select" },
               ].map((item, i) => (
                 <div key={i} style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 12, padding: "16px 18px", marginBottom: 10, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -830,7 +889,7 @@ export default function Dashboard() {
             <div style={{ animation: "fadeIn 0.4s ease both" }}>
               <div style={{ marginBottom: 20 }}>
                 <h2 style={{ fontSize: 18, fontWeight: 700, color: d.text, marginBottom: 4 }}>Configuración de Autopiloto</h2>
-                <p style={{ fontSize: 13, color: d.muted }}>Decide cómo responde RevGo y previsualiza el tono en tiempo real</p>
+                <p style={{ fontSize: 13, color: d.muted }}>Decide cómo responde Revora y previsualiza el tono en tiempo real</p>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "380px 1fr", gap: 16 }}>
 
@@ -920,11 +979,11 @@ export default function Dashboard() {
                           </div>
                         </div>
 
-                        {/* Respuesta de RevGo */}
+                        {/* Respuesta de Revora */}
                         <div style={{ display: "flex", gap: 10, paddingLeft: 20 }}>
                           <div style={{ width: 28, height: 28, borderRadius: 7, background: d.accent, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: d.accentFg, flexShrink: 0 }}>R</div>
                           <div style={{ flex: 1, background: dark ? "rgba(255,230,0,0.05)" : "#fefce8", borderRadius: "0 10px 10px 10px", padding: "10px 12px", border: `1px solid ${dark ? "rgba(255,230,0,0.15)" : "#fde68a"}` }}>
-                            <div style={{ fontSize: 10, fontWeight: 700, color: d.accent, marginBottom: 5, letterSpacing: "0.06em" }}>RevGo AI · {tone.toUpperCase()}</div>
+                            <div style={{ fontSize: 10, fontWeight: 700, color: d.accent, marginBottom: 5, letterSpacing: "0.06em" }}>REVORA AI · {tone.toUpperCase()}</div>
                             <p style={{ fontSize: 12, color: dark ? "#c0b870" : "#713f12", lineHeight: 1.6 }}>{preview.response}</p>
                           </div>
                         </div>
@@ -934,6 +993,174 @@ export default function Dashboard() {
                     ))}
                   </div>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* ════ ACCOUNT — MI CUENTA ════ */}
+          {accountSection === "config" && (
+            <div style={{ animation: "fadeIn 0.4s ease both", maxWidth: 560 }}>
+              <button onClick={() => setAccountSection(null)} style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", color: d.muted, fontSize: 13, cursor: "pointer", marginBottom: 20, padding: 0 }}
+                onMouseOver={e => e.currentTarget.style.color = d.text}
+                onMouseOut={e => e.currentTarget.style.color = d.muted}
+              >← Volver</button>
+
+              {/* Datos personales */}
+              <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 14, padding: "20px", marginBottom: 14 }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: d.text, marginBottom: 16 }}>Información personal</div>
+                {[
+                  { label: "Nombre completo", value: "Manuel Añorga" },
+                  { label: "Correo electrónico", value: "manu@revgo.app" },
+                  { label: "Nombre del negocio", value: currentBusiness?.name },
+                ].map((item, i) => (
+                  <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 0", borderBottom: i < 2 ? `1px solid ${d.border}` : "none" }}>
+                    <div>
+                      <div style={{ fontSize: 12, color: d.muted, marginBottom: 2 }}>{item.label}</div>
+                      <div style={{ fontSize: 14, color: d.text, fontWeight: 500 }}>{item.value}</div>
+                    </div>
+                    <button style={{ fontSize: 12, color: d.accent, background: "none", border: `1px solid ${d.border}`, borderRadius: 7, padding: "6px 12px", cursor: "pointer", fontWeight: 600 }}>Editar</button>
+                  </div>
+                ))}
+              </div>
+
+              {/* Servicios conectados */}
+              <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 14, padding: "20px", marginBottom: 14 }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: d.text, marginBottom: 16 }}>Servicios conectados</div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <div style={{ width: 36, height: 36, borderRadius: 9, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #e0e0e0" }}>
+                      <svg width="18" height="18" viewBox="0 0 48 48">
+                        <path fill="#FFC107" d="M43.6 20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.7-.4-4z"/>
+                        <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
+                        <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2A12 12 0 0 1 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/>
+                        <path fill="#1976D2" d="M43.6 20H24v8h11.3a12 12 0 0 1-4.1 5.6l6.2 5.2C40.9 35.2 44 30 44 24c0-1.3-.1-2.7-.4-4z"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: d.text }}>Google Business Profile</div>
+                      <div style={{ fontSize: 11, color: "#4ade80", marginTop: 1 }}>✓ Conectado · Hotel Miraflores</div>
+                    </div>
+                  </div>
+                  <button style={{ fontSize: 12, color: "#f87171", background: "none", border: `1px solid ${dark ? "rgba(248,113,113,0.3)" : "#fca5a5"}`, borderRadius: 7, padding: "6px 12px", cursor: "pointer" }}>Desconectar</button>
+                </div>
+              </div>
+
+              {/* Zona de peligro */}
+              <div style={{ background: dark ? "rgba(248,113,113,0.06)" : "#fef2f2", border: `1px solid ${dark ? "rgba(248,113,113,0.2)" : "#fecaca"}`, borderRadius: 14, padding: "18px 20px" }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "#f87171", marginBottom: 4 }}>Zona de peligro</div>
+                <div style={{ fontSize: 12, color: d.muted, marginBottom: 12 }}>Eliminar tu cuenta borrará todos tus datos permanentemente.</div>
+                <button style={{ fontSize: 12, color: "#f87171", background: "none", border: `1px solid ${dark ? "rgba(248,113,113,0.3)" : "#fca5a5"}`, borderRadius: 7, padding: "7px 14px", cursor: "pointer", fontWeight: 600 }}>Eliminar cuenta</button>
+              </div>
+            </div>
+          )}
+
+          {/* ════ ACCOUNT — FACTURACIÓN ════ */}
+          {accountSection === "billing" && (
+            <div style={{ animation: "fadeIn 0.4s ease both", maxWidth: 640 }}>
+              <button onClick={() => setAccountSection(null)} style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", color: d.muted, fontSize: 13, cursor: "pointer", marginBottom: 20, padding: 0 }}
+                onMouseOver={e => e.currentTarget.style.color = d.text}
+                onMouseOut={e => e.currentTarget.style.color = d.muted}
+              >← Volver</button>
+
+              {/* Plan actual */}
+              <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 14, padding: "22px", marginBottom: 14 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
+                  <div>
+                    <div style={{ fontSize: 11, color: d.muted, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 600 }}>Plan activo</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <span style={{ fontSize: 22 }}>👑</span>
+                      <span style={{ fontSize: 22, fontWeight: 700, color: d.text }}>RevGo Pro</span>
+                    </div>
+                  </div>
+                  <button style={{ padding: "8px 16px", background: "transparent", border: `1px solid ${d.border}`, borderRadius: 9, color: d.muted, fontSize: 12, cursor: "pointer", fontWeight: 500 }}>Cancelar plan</button>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                  <div style={{ background: d.surface, borderRadius: 10, padding: "14px" }}>
+                    <div style={{ fontSize: 11, color: d.muted, marginBottom: 4 }}>📅 Se renueva el</div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: d.text }}>5 de abril de 2026</div>
+                    <div style={{ fontSize: 11, color: d.accent, marginTop: 4, cursor: "pointer" }}>Cambiar a anual (ahorra 28%)</div>
+                  </div>
+                  <div style={{ background: d.surface, borderRadius: 10, padding: "14px" }}>
+                    <div style={{ fontSize: 11, color: d.muted, marginBottom: 4 }}>💰 Precio</div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: d.text }}>S/149 al mes</div>
+                    <div style={{ fontSize: 11, color: d.muted, marginTop: 4 }}>Se renueva automáticamente</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Capacidad IA */}
+              <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 14, padding: "22px", marginBottom: 14 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: d.text }}>Capacidad de uso IA</div>
+                  <div style={{ fontSize: 11, color: d.muted }}>Se restablece el 31 de mar</div>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+                  <span style={{ fontSize: 12, color: d.muted }}>Respuestas generadas este mes</span>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: d.text }}>12 / ∞</span>
+                </div>
+                <div style={{ height: 6, background: d.surface, borderRadius: 4, overflow: "hidden" }}>
+                  <div style={{ height: "100%", width: "1%", background: d.accent, borderRadius: 4 }} />
+                </div>
+                <div style={{ fontSize: 11, color: d.muted, marginTop: 6 }}>1% de uso mensual</div>
+              </div>
+
+              {/* Método de pago */}
+              <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 14, padding: "22px" }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: d.text, marginBottom: 16 }}>Método de pago</div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: d.surface, borderRadius: 10, padding: "14px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <div style={{ width: 40, height: 28, background: dark ? "#2a2a2a" : "#e2e8f0", borderRadius: 5, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>💳</div>
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: d.text }}>Tarjeta •••• 8609</div>
+                      <div style={{ fontSize: 11, color: d.muted }}>Vence noviembre 2027</div>
+                    </div>
+                  </div>
+                  <button style={{ fontSize: 12, color: d.accent, background: "none", border: `1px solid ${d.border}`, borderRadius: 7, padding: "6px 12px", cursor: "pointer", fontWeight: 600 }}>Cambiar</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ════ ACCOUNT — FACTURAS ════ */}
+          {accountSection === "invoices" && (
+            <div style={{ animation: "fadeIn 0.4s ease both" }}>
+              <button onClick={() => setAccountSection(null)} style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", color: d.muted, fontSize: 13, cursor: "pointer", marginBottom: 20, padding: 0 }}
+                onMouseOver={e => e.currentTarget.style.color = d.text}
+                onMouseOut={e => e.currentTarget.style.color = d.muted}
+              >← Volver</button>
+
+              <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 14, overflow: "hidden" }}>
+                {/* Header tabla */}
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 160px 120px 120px 100px", gap: 0, padding: "12px 20px", borderBottom: `1px solid ${d.border}`, background: d.surface }}>
+                  {["Descripción", "Fecha", "Estado", "Total", "Acciones"].map(h => (
+                    <div key={h} style={{ fontSize: 11, fontWeight: 700, color: d.muted, textTransform: "uppercase", letterSpacing: "0.06em" }}>{h}</div>
+                  ))}
+                </div>
+
+                {[
+                  { id: "04811-49982808", date: "5 mar 2026", amount: "S/149.00" },
+                  { id: "04783-48690067", date: "5 feb 2026", amount: "S/149.00" },
+                  { id: "04752-39196969", date: "5 ene 2026", amount: "S/149.00" },
+                  { id: "04721-43596554", date: "5 dic 2025", amount: "S/149.00" },
+                  { id: "04691-43136295", date: "5 nov 2025", amount: "S/149.00" },
+                  { id: "04660-31602700", date: "5 oct 2025", amount: "S/149.00" },
+                ].map((inv, i) => (
+                  <div key={i} style={{ display: "grid", gridTemplateColumns: "1fr 160px 120px 120px 100px", padding: "14px 20px", borderBottom: i < 5 ? `1px solid ${d.border}` : "none", alignItems: "center", transition: "background 0.15s" }}
+                    onMouseOver={e => e.currentTarget.style.background = d.hover}
+                    onMouseOut={e => e.currentTarget.style.background = "transparent"}
+                  >
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 500, color: d.text }}>Suscripción RevGo Pro</div>
+                      <div style={{ fontSize: 11, color: d.muted, marginTop: 2 }}>{inv.id}</div>
+                    </div>
+                    <div style={{ fontSize: 13, color: d.muted }}>{inv.date}</div>
+                    <div>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: "#4ade80", background: dark ? "rgba(74,222,128,0.1)" : "#f0fdf4", padding: "3px 9px", borderRadius: 20 }}>Pagado</span>
+                    </div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: d.text }}>{inv.amount}</div>
+                    <button style={{ fontSize: 12, color: d.accent, background: "none", border: "none", cursor: "pointer", fontWeight: 600, textAlign: "left" }}>Ver factura</button>
+                  </div>
+                ))}
               </div>
             </div>
           )}
