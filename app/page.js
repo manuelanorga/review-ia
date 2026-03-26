@@ -27,6 +27,17 @@ const FEATURES = [
   { icon: "⚙️", title: "Control total", desc: "Tú decides cómo opera RevGo.", extra: ["Auto-publicar directamente en Google", "Revisar antes de publicar", "Editar cada respuesta a tu gusto"] },
   { icon: "📩", title: "Genera más reseñas", desc: "Envía campañas para pedir reseñas a tus clientes.", extra: ["Los felices → Google ⭐", "Los insatisfechos → feedback privado 🔒"] },
   { icon: "🌎", title: "Multilenguaje automático", desc: "Detecta el idioma de cada reseña y responde en el mismo idioma.", extra: ["Español → respuesta en español", "Inglés → respuesta en inglés", "Más de 50 idiomas soportados"] },
+{
+  icon: "📱",
+  title: "Kit de reseñas listo para imprimir",
+  desc: "Genera tu QR personalizado y ponlo donde tus clientes felices puedan verlo.",
+  extra: [
+    "QR directo a tu página de reseñas en Google",
+    "Cartel y tarjeta de mesa listos para imprimir",
+    "Kit PDF completo con tu marca",
+    "👉 El 72% de clientes dejan reseñas cuando se lo piden",
+  ],
+},
 ];
 
 const PLANS = [
@@ -563,7 +574,7 @@ export default function Landing() {
           <div style={{ textAlign: "center", marginBottom: 48 }}>
             <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>Precios</span>
             <h2 style={{ fontSize: "clamp(24px, 3vw, 40px)", fontWeight: 700, letterSpacing: "-0.03em", margin: "14px 0 10px", color: TEXT }}>Simple y transparente</h2>
-            <p style={{ fontSize: 14, color: MUTED }}>14 días gratis en cualquier plan · Sin tarjeta · Cancela cuando quieras</p>
+            <p style={{ fontSize: 14, color: MUTED }}>07 días gratis en el plan Starter · Cancela cuando quieras</p>
           </div>
           <div className="tgrid" style={{ alignItems: "start" }}>
             {PLANS.map((p, i) => (
@@ -593,8 +604,12 @@ export default function Landing() {
       onMouseOver={e => { if (p.highlight) { e.currentTarget.style.background = "#fff176"; } else { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; } }}
       onMouseOut={e => { if (p.highlight) { e.currentTarget.style.background = Y; } else { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; } }}
     >
-      {i === 3 ? "Hablar con ventas" : "Empezar gratis"}
-    </button>
+      {i === 0 ? "Empezar gratis 7 días →" : i === 3 ? "Hablar con ventas →" : `Suscribirme a ${p.name} →`}
+    </button>{i === 0 && (
+  <p style={{ fontSize: 11, color: MUTED, textAlign: "center", marginTop: 8 }}>
+    Se requiere tarjeta · Cancela antes del día 7 sin costo
+  </p>
+)}
   </div>
 ))}
           </div>

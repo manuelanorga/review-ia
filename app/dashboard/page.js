@@ -99,7 +99,7 @@ export default function Dashboard() {
   const [showBusinessMenu, setShowBusinessMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [accountSection, setAccountSection] = useState(null);
-  const [plan] = useState("starter"); // opciones: "starter", "growth", "pro", "agencia"
+  const [plan] = useState("growth"); // opciones: "starter", "growth", "pro", "agencia"
   const isPro = plan !== "starter";
   const canDownloadPDF = plan !== "starter";
   const availableTones = plan === "starter" ? ["formal"] : ["cercano", "formal", "profesional"];
@@ -188,6 +188,7 @@ export default function Dashboard() {
     { id: "reviews", label: "Reseñas", icon: "★", badge: pendingCount },
     { id: "autopilot", label: "Autopiloto", icon: "⚡" },
     { id: "analytics", label: "Analytics", icon: "◎", pro: true },
+    { id: "qr", label: "Mi QR", icon: "📱", pro: true },
   ];
 
   return (
@@ -348,6 +349,7 @@ export default function Dashboard() {
               {!accountSection && activeNav === "reviews" && "Reseñas"}
               {!accountSection && activeNav === "analytics" && "Analytics"}
               {!accountSection && activeNav === "autopilot" && "Autopiloto"}
+              {!accountSection && activeNav === "qr" && "Mi QR"}
             </h1>
             <p style={{ fontSize: 11, color: d.muted, marginTop: 1 }}>
               {accountSection === "config" && "Gestiona tu información personal y conexiones"}
@@ -356,6 +358,7 @@ export default function Dashboard() {
               {!accountSection && activeNav === "dashboard" && `${pendingCount} pendientes · ${respondedToday} respondidas`}
               {!accountSection && activeNav === "reviews" && `${pendingCount} sin responder`}
               {!accountSection && activeNav === "analytics" && "Últimos 30 días"}
+              {!accountSection && activeNav === "qr" && "Tu código QR listo para imprimir"}
               {!accountSection && activeNav === "autopilot" && (autopilot ? `Activo · Tono ${tone}` : "Inactivo")}
             </p>
           </div>
@@ -759,6 +762,99 @@ export default function Dashboard() {
                 <button style={{ fontSize: 12, color: "#f87171", background: "none", border: `1px solid ${dark ? "rgba(248,113,113,0.3)" : "#fca5a5"}`, borderRadius: 7, padding: "7px 14px", cursor: "pointer", fontWeight: 600 }}>Eliminar cuenta</button>
               </div>
             </div>
+          )}
+
+          {/* QR */}
+          {!accountSection && activeNav === "qr" && (
+            <UpgradeOverlay dark={dark} d={d} blur={!isPro}>
+              <div style={{ animation: "fadeIn 0.4s ease both", maxWidth: 900 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "320px 1fr", gap: 24 }}>
+
+                  {/* QR Card */}
+                  <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 16, padding: "28px", display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: d.text, marginBottom: 4 }}>Tu QR de reseñas</div>
+
+                    {/* QR visual */}
+                    <div style={{ width: 180, height: 180, background: "#ffffff", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", padding: 12, border: `2px solid ${d.border}` }}>
+                      <svg viewBox="0 0 100 100" width="156" height="156">
+                        {/* QR simulado — se reemplaza con QR real cuando llegue Google API */}
+                        <rect width="100" height="100" fill="white"/>
+                        {[0,1,2,3,4,5,6].map(r => [0,1,2,3,4,5,6].map(c => {
+                          const pattern = [[1,1,1,1,1,1,1],[1,0,0,0,0,0,1],[1,0,1,1,1,0,1],[1,0,1,0,1,0,1],[1,0,1,1,1,0,1],[1,0,0,0,0,0,1],[1,1,1,1,1,1,1]];
+                          return pattern[r][c] ? <rect key={`${r}-${c}`} x={r*9+2} y={c*9+2} width="8" height="8" fill="black"/> : null;
+                        }))}
+                        {[...Array(20)].map((_, i) => <rect key={`d-${i}`} x={Math.sin(i*7)*30+35} y={Math.cos(i*5)*30+35} width="5" height="5" fill="black"/>)}
+                        {[0,1,2,3,4,5,6].map(r => [0,1,2,3,4,5,6].map(c => {
+                          const pattern = [[1,1,1,1,1,1,1],[1,0,0,0,0,0,1],[1,0,1,1,1,0,1],[1,0,1,0,1,0,1],[1,0,1,1,1,0,1],[1,0,0,0,0,0,1],[1,1,1,1,1,1,1]];
+                          return pattern[r][c] ? <rect key={`br-${r}-${c}`} x={r*9+2} y={c*9+65} width="8" height="8" fill="black"/> : null;
+                        }))}
+                        {[0,1,2,3,4,5,6].map(r => [0,1,2,3,4,5,6].map(c => {
+                          const pattern = [[1,1,1,1,1,1,1],[1,0,0,0,0,0,1],[1,0,1,1,1,0,1],[1,0,1,0,1,0,1],[1,0,1,1,1,0,1],[1,0,0,0,0,0,1],[1,1,1,1,1,1,1]];
+                          return pattern[r][c] ? <rect key={`tr-${r}-${c}`} x={r*9+65} y={c*9+2} width="8" height="8" fill="black"/> : null;
+                        }))}
+                      </svg>
+                    </div>
+
+                    <div style={{ textAlign: "center" }}>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: d.text, marginBottom: 4 }}>{currentBusiness?.name}</div>
+                      <div style={{ fontSize: 11, color: d.muted }}>Escanea para dejar una reseña</div>
+                    </div>
+
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8, width: "100%" }}>
+                      <button onClick={() => showToast("Descargando QR... ✨")} style={{ width: "100%", padding: "11px", background: d.accent, border: "none", borderRadius: 9, color: d.accentFg, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+                        📥 Descargar QR
+                      </button>
+                      <button onClick={() => showToast("Generando kit PDF completo... 🎨")} style={{ width: "100%", padding: "10px", background: "transparent", border: `1px solid ${d.border}`, borderRadius: 9, color: d.muted, fontSize: 12, cursor: "pointer" }}>
+                        🖨️ Descargar kit imprimible
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Info y sugerencias */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+
+                    {/* Stats */}
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12 }}>
+                      {[{ label: "Escaneos este mes", value: "0", icon: "📲" }, { label: "Reseñas por QR", value: "0", icon: "⭐" }, { label: "Conversión", value: "0%", icon: "📈" }].map((s, i) => (
+                        <div key={i} style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 12, padding: "16px", textAlign: "center" }}>
+                          <div style={{ fontSize: 20, marginBottom: 8 }}>{s.icon}</div>
+                          <div style={{ fontSize: 22, fontWeight: 700, color: d.accent, marginBottom: 4 }}>{s.value}</div>
+                          <div style={{ fontSize: 11, color: d.muted }}>{s.label}</div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Dónde ponerlo */}
+                    <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 14, padding: "20px" }}>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: d.text, marginBottom: 14 }}>💡 ¿Dónde ponerlo?</div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                        {[
+                          { icon: "🧾", place: "Cuenta o boleta", tip: "El momento perfecto — el cliente acaba de pagar satisfecho" },
+                          { icon: "🪧", place: "Carpa de mesa", tip: "Visible durante toda la experiencia del cliente" },
+                          { icon: "🚪", place: "Puerta de salida", tip: "El cliente satisfecho sale y escanea en segundos" },
+                          { icon: "📦", place: "Empaque o bolsa", tip: "Ideal para delivery — lo ven cuando abren el pedido" },
+                        ].map((item, i) => (
+                          <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+                            <span style={{ fontSize: 20, flexShrink: 0 }}>{item.icon}</span>
+                            <div>
+                              <div style={{ fontSize: 13, fontWeight: 600, color: d.text }}>{item.place}</div>
+                              <div style={{ fontSize: 12, color: d.muted, marginTop: 2 }}>{item.tip}</div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Stat motivacional */}
+                    <div style={{ background: dark ? "#1a1700" : "#fefce8", border: `1px solid ${dark ? "#3a3400" : "#fde68a"}`, borderRadius: 12, padding: "16px 18px" }}>
+                      <p style={{ fontSize: 14, color: dark ? "#c0b870" : "#713f12", lineHeight: 1.7 }}>
+                        📊 <strong>El 72% de los clientes dejan una reseña cuando se lo piden directamente.</strong> Un QR visible en tu local puede duplicar tus reseñas en Google en menos de 30 días.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </UpgradeOverlay>
           )}
 
           {/* FACTURACIÓN */}
