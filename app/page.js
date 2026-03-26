@@ -23,82 +23,59 @@ const REVIEWS = [
   { stars: 4, name: "Lucía Fernández", avatar: "LF", avatarBg: "#34A853", time: "Hace 1 día", text: "Muy buen lugar, ambiente agradable y el personal atento. Solo faltó más rapidez.", response: null, replied: false },
 ];
 
+const DEMO_REVIEWS = [
+  {
+    name: "Carlos Mendoza", initials: "CM", color: "#EA4335", stars: 2, time: "Hace 5h",
+    text: "El servicio fue lento y la comida llegó fría. Esperaba más por el precio que pagué.",
+    tone: "cercano", toneLabel: "Cercano",
+    response: "Hola Carlos, qué pena que tu experiencia no fue la mejor. Eso no es lo que queremos para nuestros clientes. Escríbenos directamente y lo solucionamos juntos."
+  },
+  {
+    name: "María González", initials: "MG", color: "#4285F4", stars: 5, time: "Hace 2h",
+    text: "Increíble experiencia, el personal súper atento y la habitación impecable. Definitivamente regreso.",
+    tone: "formal", toneLabel: "Formal",
+    response: "Estimada María, le agradecemos sinceramente sus amables palabras. Es un honor contar con clientes como usted. Esperamos tener el placer de recibirle nuevamente muy pronto."
+  },
+  {
+    name: "Rodrigo Vargas", initials: "RV", color: "#FBBC04", stars: 4, time: "Hace 1d",
+    text: "El mejor hotel de Lima. Personal increíble y las instalaciones impecables. 100% recomendado.",
+    tone: "profesional", toneLabel: "Profesional",
+    response: "Gracias por su reseña, Rodrigo. Nos alegra que su experiencia haya superado las expectativas. Su satisfacción es nuestra mejor métrica de éxito. Hasta pronto."
+  }
+];
+
 const FEATURES = [
   { icon: "🤖", title: "Respuestas inteligentes", desc: "Cada reseña recibe una respuesta única, personalizada y coherente con el tono de tu marca.", extra: null },
   { icon: "⚙️", title: "Control total", desc: "Tú decides cómo opera RevGo.", extra: ["Auto-publicar directamente en Google", "Revisar antes de publicar", "Editar cada respuesta a tu gusto"] },
   { icon: "📩", title: "Genera más reseñas", desc: "Envía campañas para pedir reseñas a tus clientes.", extra: ["Los felices → Google ⭐", "Los insatisfechos → feedback privado 🔒"] },
   { icon: "🌎", title: "Multilenguaje automático", desc: "Detecta el idioma de cada reseña y responde en el mismo idioma.", extra: ["Español → respuesta en español", "Inglés → respuesta en inglés", "Más de 50 idiomas soportados"] },
-{
-  icon: "📱",
-  title: "Kit de reseñas listo para imprimir",
-  desc: "Genera tu QR personalizado y ponlo donde tus clientes felices puedan verlo.",
-  extra: [
-    "QR directo a tu página de reseñas en Google",
-    "Cartel y tarjeta de mesa listos para imprimir",
-    "Kit PDF completo con tu marca",
-    "👉 El 72% de clientes dejan reseñas cuando se lo piden",
-  ],
-},
+  { icon: "📱", title: "Kit de reseñas listo para imprimir", desc: "Genera tu QR personalizado y ponlo donde tus clientes felices puedan verlo.", extra: ["QR directo a tu página de reseñas en Google", "Cartel y tarjeta de mesa listos para imprimir", "Kit PDF completo con tu marca", "👉 El 72% de clientes dejan reseñas cuando se lo piden"] },
 ];
 
 const PLANS = [
   {
     name: "Starter", price: "29", tagline: "Empieza a responder",
     desc: "Ideal para negocios pequeños",
-    features: [
-      "1 negocio conectado",
-      "Hasta 50 reseñas/mes",
-      "Respuestas con IA en español",
-      "🤖 Autopiloto · Solo tono Formal",
-      "📊 Analytics básico (solo visualizar)",
-      "Soporte por email",
-    ],
-    highlight: false,
-    badge: null,
+    features: ["1 negocio conectado", "Hasta 50 reseñas/mes", "Respuestas con IA en español", "🤖 Autopiloto · Solo tono Formal", "📊 Analytics básico (solo visualizar)", "Soporte por email"],
+    highlight: false, badge: null,
   },
   {
     name: "Growth", price: "79", tagline: "Crece en Google",
     desc: "Ideal para negocios en crecimiento",
-    features: [
-      "1-3 negocios conectados",
-      "Hasta 300 reseñas/mes",
-      "🌎 Español, inglés y 50 idiomas más",
-      "🤖 Autopiloto · 3 tonos disponibles",
-      "📊 Analytics completo + exportar PDF",
-      "Soporte prioritario",
-    ],
-    highlight: true,
-    badge: "⭐ Más popular",
+    features: ["1-3 negocios conectados", "Hasta 300 reseñas/mes", "🌎 Español, inglés y 50 idiomas más", "🤖 Autopiloto · 3 tonos disponibles", "📊 Analytics completo + exportar PDF", "Soporte prioritario"],
+    highlight: true, badge: "⭐ Más popular",
   },
   {
     name: "Pro", price: "149", tagline: "Domina tu reputación",
     desc: "Ideal para empresas multi-sucursal",
-    features: [
-      "Negocios ilimitados",
-      "Reseñas ilimitadas",
-      "🌎 Español, inglés y 50 idiomas más",
-      "🤖 Autopiloto · 3 tonos disponibles",
-      "📊 Analytics completo + exportar PDF",
-      "Branding avanzado",
-      "API access",
-    ],
-    highlight: false,
-    badge: null,
+    features: ["Negocios ilimitados", "Reseñas ilimitadas", "🌎 Español, inglés y 50 idiomas más", "🤖 Autopiloto · 3 tonos disponibles", "📊 Analytics completo + exportar PDF", "Branding avanzado", "API access"],
+    highlight: false, badge: null,
   },
   {
     name: "Agencia", price: "349", tagline: "Escala con tus clientes",
     desc: "Ideal para agencias y revendedores",
-    features: [
-      "Clientes ilimitados",
-      "Multi-cuenta · White label",
-      "🌎 Español, inglés y 50 idiomas más",
-      "🤖 Autopiloto · 3 tonos disponibles",
-      "📊 Analytics completo + exportar PDF",
-      "Reportes avanzados",
-      "Account manager dedicado",
-    ],
-    highlight: false,
-    badge: null,
+    features: ["Clientes ilimitados", "Multi-cuenta · White label", "🌎 Español, inglés y 50 idiomas más", "🤖 Autopiloto · 3 tonos disponibles", "📊 Analytics completo + exportar PDF", "Reportes avanzados", "Account manager dedicado"],
+    highlight: false, badge: null,
   },
 ];
 
@@ -166,6 +143,154 @@ function AnimatedBar({ pct, color, label, delay = 0 }) {
   );
 }
 
+function DemoAnimation() {
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [responseText, setResponseText] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [showPublish, setShowPublish] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [phase, setPhase] = useState("idle");
+  const animRef = useRef(null);
+
+  const r = DEMO_REVIEWS[currentIdx];
+
+  function setActiveTone(tone) {
+    return DEMO_REVIEWS[currentIdx].tone === tone;
+  }
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function runCycle() {
+      // Reset
+      setResponseText("");
+      setIsGenerating(false);
+      setShowPublish(false);
+      setProgress(0);
+      setPhase("idle");
+
+      await sleep(1000);
+      if (cancelled) return;
+
+      // Generating
+      setIsGenerating(true);
+      setPhase("generating");
+      await sleep(1400);
+      if (cancelled) return;
+
+      setIsGenerating(false);
+      setPhase("typing");
+
+      // Typewriter
+      const text = DEMO_REVIEWS[currentIdx].response;
+      for (let i = 0; i <= text.length; i++) {
+        if (cancelled) return;
+        setResponseText(text.slice(0, i));
+        await sleep(32);
+      }
+
+      if (cancelled) return;
+      setShowPublish(true);
+      setPhase("reading");
+
+      // Progress bar over 9s
+      const start = Date.now();
+      const duration = 9000;
+      while (true) {
+        if (cancelled) return;
+        const elapsed = Date.now() - start;
+        const pct = Math.min(100, (elapsed / duration) * 100);
+        setProgress(pct);
+        if (pct >= 100) break;
+        await sleep(50);
+      }
+
+      if (cancelled) return;
+
+      // Next review
+      setCurrentIdx(prev => (prev + 1) % DEMO_REVIEWS.length);
+    }
+
+    runCycle();
+    return () => { cancelled = true; };
+  }, [currentIdx]);
+
+  function sleep(ms) {
+    return new Promise(res => setTimeout(res, ms));
+  }
+
+  const currentDemo = DEMO_REVIEWS[currentIdx];
+
+  return (
+    <div style={{ background: "#111100", border: "1px solid #2a2800", borderRadius: 16, overflow: "hidden", maxWidth: 420, width: "100%" }}>
+      {/* Reviewer */}
+      <div style={{ padding: "16px", borderBottom: "1px solid #2a2800" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+          <div style={{ width: 36, height: 36, borderRadius: "50%", background: currentDemo.color, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#fff", flexShrink: 0, transition: "background 0.4s" }}>
+            {currentDemo.initials}
+          </div>
+          <div>
+            <div style={{ fontSize: 14, fontWeight: 600, color: TEXT }}>{currentDemo.name}</div>
+            <div style={{ display: "flex", gap: 2, marginTop: 2 }}>
+              {[1,2,3,4,5].map(s => <span key={s} style={{ fontSize: 12, color: s <= currentDemo.stars ? "#FBBC04" : "#3a3a3a" }}>★</span>)}
+            </div>
+          </div>
+          <span style={{ marginLeft: "auto", fontSize: 11, color: MUTED }}>{currentDemo.time}</span>
+        </div>
+        <div style={{ fontSize: 13, color: MUTED, lineHeight: 1.6, fontStyle: "italic", padding: "10px 12px", background: "#0a0a00", borderRadius: 8 }}>
+          "{currentDemo.text}"
+        </div>
+      </div>
+
+      {/* Tono */}
+      <div style={{ padding: "12px 16px", borderBottom: "1px solid #2a2800" }}>
+        <div style={{ fontSize: 10, color: MUTED, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Tono</div>
+        <div style={{ display: "flex", gap: 6 }}>
+          {["cercano", "formal", "profesional"].map(t => (
+            <div key={t} style={{ flex: 1, padding: "7px", borderRadius: 8, border: currentDemo.tone === t ? "2px solid #FFE600" : "1px solid #2a2800", background: currentDemo.tone === t ? "rgba(255,230,0,0.08)" : "transparent", fontSize: 12, textAlign: "center", fontWeight: currentDemo.tone === t ? 700 : 400, color: currentDemo.tone === t ? Y : MUTED, transition: "all 0.3s" }}>
+              {t.charAt(0).toUpperCase() + t.slice(1)}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Respuesta */}
+      <div style={{ padding: "14px 16px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+          <span style={{ fontSize: 10, color: MUTED, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em" }}>Tu respuesta</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "5px 10px", background: "#1a1700", border: "1px solid #2a2800", borderRadius: 7, fontSize: 11, color: isGenerating ? Y : MUTED, fontWeight: 600 }}>
+            {isGenerating ? (
+              <><span style={{ display: "inline-block", animation: "spin 0.8s linear infinite", fontSize: 12 }}>◌</span> Generando...</>
+            ) : (
+              <><span>✦</span> Generar con IA</>
+            )}
+          </div>
+        </div>
+
+        <div style={{ minHeight: 88, padding: "12px 14px", background: "#0a0a00", border: `1.5px solid ${phase === "typing" || phase === "reading" ? "#FFE60040" : "#2a2800"}`, borderRadius: 9, fontSize: 13, color: TEXT, lineHeight: 1.6, transition: "border-color 0.3s" }}>
+          {responseText ? (
+            <span>{responseText}{phase === "typing" && <span style={{ display: "inline-block", width: 2, height: 13, background: Y, verticalAlign: "middle", marginLeft: 1, animation: "blink 0.7s infinite" }} />}</span>
+          ) : (
+            <span style={{ color: MUTED, fontStyle: "italic" }}>Escribe o genera una respuesta con IA...</span>
+          )}
+        </div>
+
+        {showPublish && (
+          <div style={{ marginTop: 10, padding: "10px", background: Y, borderRadius: 8, fontSize: 13, fontWeight: 700, color: BG, textAlign: "center", animation: "fadeUp 0.3s ease" }}>
+            Publicar en Google →
+          </div>
+        )}
+
+        {phase === "reading" && (
+          <div style={{ marginTop: 10, height: 3, background: "#2a2800", borderRadius: 4, overflow: "hidden" }}>
+            <div style={{ height: "100%", width: `${progress}%`, background: Y, borderRadius: 4, transition: "width 0.1s linear" }} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function SignupModal({ onClose }) {
   return (
     <div onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 999, background: "rgba(0,0,0,0.88)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
@@ -175,17 +300,10 @@ function SignupModal({ onClose }) {
           <div style={{ width: 32, height: 32, background: Y, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center" }}>
             <span style={{ color: BG, fontSize: 15, fontWeight: 700 }}>R</span>
           </div>
-          <span style={{ fontSize: 17, fontWeight: 700, color: TEXT }}>RevGo<span style={{ color: Y }}>.ai</span></span>
+          <span style={{ fontSize: 17, fontWeight: 700, color: TEXT }}>RevGo<span style={{ color: Y }}>.app</span></span>
         </div>
         <h2 style={{ fontSize: 24, fontWeight: 700, color: TEXT, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 8 }}>Crea tu cuenta gratis</h2>
         <p style={{ fontSize: 14, color: MUTED, lineHeight: 1.6, marginBottom: 22 }}>Empieza a responder tus reseñas de Google con IA en menos de 3 minutos.</p>
-        <div style={{ display: "flex", alignItems: "center", gap: 10, background: "#1a1700", border: "1px solid #3a3400", borderRadius: 10, padding: "11px 14px", marginBottom: 22 }}>
-          <span style={{ fontSize: 18 }}>🎉</span>
-          <div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: Y }}>14 días completamente gratis</div>
-            <div style={{ fontSize: 11, color: MUTED, marginTop: 2 }}>No necesitas tarjeta de crédito · Cancela cuando quieras</div>
-          </div>
-        </div>
         <button style={{ width: "100%", padding: "14px 20px", background: "#fff", border: "1.5px solid #e0e0e0", borderRadius: 10, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 12, fontSize: 14, fontWeight: 600, color: "#1a1a1a", fontFamily: "'DM Sans', sans-serif", marginBottom: 14, transition: "box-shadow 0.2s" }}
           onMouseOver={e => { e.currentTarget.style.boxShadow = "0 0 0 2px " + Y; }}
           onMouseOut={e => { e.currentTarget.style.boxShadow = "none"; }}
@@ -198,19 +316,6 @@ function SignupModal({ onClose }) {
           </svg>
           Registrarme con Google
         </button>
-        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
-          <div style={{ flex: 1, height: 1, background: BORDER }} />
-          <span style={{ fontSize: 11, color: "#555540" }}>o con tu email</span>
-          <div style={{ flex: 1, height: 1, background: BORDER }} />
-        </div>
-        <input placeholder="tu@negocio.com" style={{ width: "100%", padding: "13px 16px", background: SURF2, border: "1px solid #2a2800", borderRadius: 9, color: TEXT, fontSize: 14, fontFamily: "'DM Sans', sans-serif", outline: "none", marginBottom: 10 }}
-          onFocus={e => { e.target.style.borderColor = Y + "80"; }}
-          onBlur={e => { e.target.style.borderColor = BORDER; }}
-        />
-        <button style={{ width: "100%", padding: "13px", background: Y, border: "none", borderRadius: 9, color: BG, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', sans-serif", transition: "background 0.2s" }}
-          onMouseOver={e => { e.currentTarget.style.background = "#fff176"; }}
-          onMouseOut={e => { e.currentTarget.style.background = Y; }}
-        >Crear cuenta gratis →</button>
         <p style={{ fontSize: 11, color: "#333320", textAlign: "center", marginTop: 14, lineHeight: 1.6 }}>
           Al registrarte aceptas nuestros <span style={{ color: "#666650", cursor: "pointer" }}>Términos</span> y <span style={{ color: "#666650", cursor: "pointer" }}>Privacidad</span>
         </p>
@@ -251,22 +356,22 @@ export default function Landing() {
         html { scroll-behavior: smooth; }
         @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
         .fade1 { animation: fadeUp 0.7s ease both; }
         .fade2 { animation: fadeUp 0.7s ease 0.15s both; }
         .hl { transition: transform 0.2s, border-color 0.2s; }
         .hl:hover { transform: translateY(-3px); border-color: #3a3800 !important; }
         ::-webkit-scrollbar { width: 3px; }
         ::-webkit-scrollbar-thumb { background: #2a2800; border-radius: 4px; }
-        .hgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
+        .hgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
         .sgrid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: #2a2800; }
         .tgrid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
         .fgrid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
         .bgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
         .social-btn { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 9px; border: 1px solid #2a2800; color: #555540; text-decoration: none; transition: all 0.2s; }
         .social-btn:hover { border-color: #FFE600; color: #FFE600; }
-        @media (max-width: 1000px) {
-          .fgrid { grid-template-columns: repeat(2,1fr) !important; }
-        }
+        @media (max-width: 1000px) { .fgrid { grid-template-columns: repeat(2,1fr) !important; } }
         @media (max-width: 900px) {
           .hgrid { grid-template-columns: 1fr !important; gap: 36px !important; }
           .sgrid { grid-template-columns: repeat(2,1fr) !important; }
@@ -289,7 +394,7 @@ export default function Landing() {
           <div style={{ width: 30, height: 30, background: Y, borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center" }}>
             <span style={{ color: BG, fontSize: 14, fontWeight: 700 }}>R</span>
           </div>
-          <span style={{ fontSize: 16, fontWeight: 700, color: TEXT, letterSpacing: "-0.01em" }}>RevGo<span style={{ color: Y }}>.ai</span></span>
+          <span style={{ fontSize: 16, fontWeight: 700, color: TEXT, letterSpacing: "-0.01em" }}>RevGo<span style={{ color: Y }}>.app</span></span>
         </div>
         <div className="navlinks" style={{ display: "flex", flex: 1, justifyContent: "flex-end", marginRight: 24 }}>
           <a href="#precios" style={{ fontSize: 13, color: MUTED, textDecoration: "none", transition: "color 0.2s" }} onMouseOver={e => e.target.style.color = TEXT} onMouseOut={e => e.target.style.color = MUTED}>Precios</a>
@@ -305,10 +410,17 @@ export default function Landing() {
 
           {/* Copy */}
           <div className="fade1">
+            {/* BADGE */}
             <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#1a1700", border: "1px solid #3a3400", borderRadius: 20, padding: "5px 14px", marginBottom: 28 }}>
               <span style={{ width: 6, height: 6, borderRadius: "50%", background: Y, display: "inline-block", animation: "pulse 2s infinite" }} />
-              <span style={{ color: Y, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>Más clientes desde Googl Maps · Sin esfuerzo · 7 días gratis</span>
+              <span style={{ color: Y, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>Más clientes desde Google Maps · Sin esfuerzo · 7 días gratis</span>
             </div>
+
+            {/* ── DEMO ANIMATION ── */}
+            <div style={{ marginBottom: 32 }}>
+              <DemoAnimation />
+            </div>
+
             <h1 style={{ fontSize: "clamp(32px, 4vw, 54px)", fontWeight: 700, lineHeight: 1.12, letterSpacing: "-0.03em", marginBottom: 20, color: TEXT }}>
               Estás ocupado haciendo<br />crecer tu negocio.<br />
               <span style={{ color: Y }}>RevGo se encarga<br />de tus reseñas en Google.</span>
@@ -338,7 +450,7 @@ export default function Landing() {
               </a>
             </div>
             <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
-              {["Sin tarjeta de crédito", "14 días gratis", "Cancela cuando quieras"].map(t => (
+              {["Se requiere tarjeta", "7 días gratis", "Cancela cuando quieras"].map(t => (
                 <div key={t} style={{ display: "flex", alignItems: "center", gap: 6 }}>
                   <span style={{ color: Y, fontSize: 11 }}>✓</span>
                   <span style={{ color: MUTED, fontSize: 12 }}>{t}</span>
@@ -347,10 +459,9 @@ export default function Landing() {
             </div>
           </div>
 
-          {/* ── GOOGLE MAPS STYLE PREVIEW (visible en todos los tamaños) ── */}
+          {/* Google Maps preview */}
           <div className="fade2" style={{ width: "100%" }}>
             <div style={{ background: "#202124", border: "1px solid #303134", borderRadius: 16, overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.6)" }}>
-              {/* Header */}
               <div style={{ background: "#292a2d", padding: "12px 16px", borderBottom: "1px solid #303134", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#4285F4", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#fff", flexShrink: 0 }}>H</div>
@@ -364,8 +475,6 @@ export default function Landing() {
                   <span style={{ color: Y, fontSize: 9, fontWeight: 700 }}>RevGo ACTIVO</span>
                 </div>
               </div>
-
-              {/* Reviews */}
               <div style={{ padding: "12px 14px", display: "flex", flexDirection: "column", gap: 10 }}>
                 {REVIEWS.map((r, i) => (
                   <div key={i} style={{ background: i === activeReview ? "#292a2d" : "#26272b", border: i === activeReview ? "1px solid #404144" : "1px solid #303134", borderRadius: 12, padding: "13px 14px", transition: "all 0.4s" }}>
@@ -382,27 +491,25 @@ export default function Landing() {
                     <p style={{ fontSize: 12, color: "#bdc1c6", lineHeight: 1.55, marginBottom: r.replied ? 10 : 0, fontFamily: "'Roboto', sans-serif" }}>{r.text}</p>
                     {r.replied && r.response && (
                       <div style={{ background: "#1e1f23", borderRadius: 8, padding: "10px 12px", borderLeft: "3px solid #FFE600" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 5, flexWrap: "wrap" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 5 }}>
                           <div style={{ width: 16, height: 16, background: Y, borderRadius: 3, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                             <span style={{ fontSize: 8, fontWeight: 700, color: BG }}>R</span>
                           </div>
-                          <span style={{ fontSize: 10, fontWeight: 700, color: Y, fontFamily: "'Roboto', sans-serif" }}>Respuesta del propietario</span>
+                          <span style={{ fontSize: 10, fontWeight: 700, color: Y }}>Respuesta del propietario</span>
                           <span style={{ fontSize: 10, color: "#9aa0a6" }}>· hace un momento</span>
                         </div>
-                        <p style={{ fontSize: 11, color: "#bdc1c6", lineHeight: 1.55, fontFamily: "'Roboto', sans-serif" }}>{r.response}</p>
+                        <p style={{ fontSize: 11, color: "#bdc1c6", lineHeight: 1.55 }}>{r.response}</p>
                       </div>
                     )}
                     {!r.replied && (
                       <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 8, padding: "6px 10px", background: "#1a1700", borderRadius: 6, width: "fit-content" }}>
                         <div style={{ width: 6, height: 6, borderRadius: "50%", background: Y, animation: "pulse 1s infinite" }} />
-                        <span style={{ fontSize: 10, color: Y, fontFamily: "'Roboto', sans-serif", fontWeight: 500 }}>RevGo generando respuesta...</span>
+                        <span style={{ fontSize: 10, color: Y, fontWeight: 500 }}>RevGo generando respuesta...</span>
                       </div>
                     )}
                   </div>
                 ))}
               </div>
-
-              {/* Bottom stats */}
               <div style={{ background: "#1e1f23", padding: "10px 14px", borderTop: "1px solid #303134", display: "flex", justifyContent: "space-around" }}>
                 {[["100%", "respondidas"], ["4.8★", "rating actual"], ["↑0.5", "esta semana"]].map(([v, l]) => (
                   <div key={l} style={{ textAlign: "center" }}>
@@ -440,7 +547,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── EL PROBLEMA ── */}
+      {/* EL PROBLEMA */}
       <section style={{ padding: "70px 6% 80px", background: SURF }}>
         <div style={{ maxWidth: 760, margin: "0 auto", textAlign: "center" }}>
           <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>El problema</span>
@@ -474,7 +581,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── BENEFICIOS ── */}
+      {/* BENEFICIOS */}
       <section style={{ padding: "70px 6% 80px" }}>
         <div style={{ maxWidth: 960, margin: "0 auto" }}>
           <div className="bgrid">
@@ -498,18 +605,11 @@ export default function Landing() {
                   </div>
                 ))}
               </div>
-              {/* CTA destacado centrado */}
               <div style={{ background: "#1a1700", border: "1px solid #3a3400", borderRadius: 14, padding: "22px 24px", textAlign: "center" }}>
-                <p style={{ fontSize: 22, fontWeight: 800, color: Y, marginBottom: 8, letterSpacing: "-0.02em" }}>
-                  💡 Hasta un 35% más de ingresos.
-                </p>
-                <p style={{ fontSize: 14, color: LIGHT, lineHeight: 1.6 }}>
-                  👉 RevGo hace posible ese 100% sin esfuerzo.
-                </p>
+                <p style={{ fontSize: 22, fontWeight: 800, color: Y, marginBottom: 8, letterSpacing: "-0.02em" }}>💡 Hasta un 35% más de ingresos.</p>
+                <p style={{ fontSize: 14, color: LIGHT, lineHeight: 1.6 }}>👉 RevGo hace posible ese 100% sin esfuerzo.</p>
               </div>
             </div>
-
-            {/* Animated bars */}
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
               <AnimatedBar pct={97} color={Y} label="de los clientes leen las respuestas" delay={0} />
               <AnimatedBar pct={88} color="#4ade80" label="prefieren negocios que responden" delay={200} />
@@ -540,7 +640,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── FEATURES ── */}
+      {/* FEATURES */}
       <section style={{ padding: "70px 6% 80px" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 48 }}>
@@ -575,44 +675,45 @@ export default function Landing() {
           <div style={{ textAlign: "center", marginBottom: 48 }}>
             <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>Precios</span>
             <h2 style={{ fontSize: "clamp(24px, 3vw, 40px)", fontWeight: 700, letterSpacing: "-0.03em", margin: "14px 0 10px", color: TEXT }}>Simple y transparente</h2>
-            <p style={{ fontSize: 14, color: MUTED }}>07 días gratis en el plan Starter · Cancela cuando quieras</p>
+            <p style={{ fontSize: 14, color: MUTED }}>7 días gratis en el plan Starter · Cancela cuando quieras</p>
           </div>
           <div className="tgrid" style={{ alignItems: "start" }}>
             {PLANS.map((p, i) => (
-  <div key={i} className="hl" style={{ background: p.highlight ? "#131200" : SURF2, border: p.highlight ? "1px solid #FFE60055" : "1px solid #2a2800", borderRadius: 16, padding: "32px 26px", position: "relative" }}>
-    {p.highlight && (
-      <div style={{ position: "absolute", top: -12, left: "50%", transform: "translateX(-50%)", background: Y, color: BG, fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", padding: "4px 14px", borderRadius: 20, whiteSpace: "nowrap" }}>{p.badge}</div>
-    )}
-    <div style={{ marginBottom: 6 }}>
-      <div style={{ fontSize: 16, fontWeight: 700, color: TEXT, marginBottom: 2 }}>{p.name}</div>
-      <div style={{ fontSize: 12, color: p.highlight ? Y : MUTED, fontWeight: p.highlight ? 600 : 400 }}>{p.tagline}</div>
-      <div style={{ fontSize: 11, color: MUTED, marginTop: 2 }}>{p.desc}</div>
-    </div>
-    <div style={{ margin: "16px 0" }}>
-      <span style={{ fontSize: 46, fontWeight: 700, color: p.highlight ? Y : TEXT, letterSpacing: "-0.04em", lineHeight: 1 }}>S/{p.price}</span>
-      <span style={{ fontSize: 13, color: MUTED }}>/mes</span>
-    </div>
-    <div style={{ marginBottom: 24, display: "flex", flexDirection: "column", gap: 10 }}>
-      {p.features.map((feat, j) => (
-        <div key={j} style={{ display: "flex", gap: 9, alignItems: "flex-start" }}>
-          <span style={{ color: Y, fontSize: 11, flexShrink: 0, marginTop: 2 }}>✓</span>
-          <span style={{ fontSize: 13, color: LIGHT, lineHeight: 1.4 }}>{feat}</span>
-        </div>
-      ))}
-    </div>
-    <button onClick={open}
-      style={{ width: "100%", padding: "12px", background: p.highlight ? Y : "transparent", border: p.highlight ? "none" : "1px solid #2a2800", borderRadius: 9, color: p.highlight ? BG : MUTED, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", fontFamily: "'DM Sans', sans-serif" }}
-      onMouseOver={e => { if (p.highlight) { e.currentTarget.style.background = "#fff176"; } else { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; } }}
-      onMouseOut={e => { if (p.highlight) { e.currentTarget.style.background = Y; } else { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; } }}
-    >
-      {i === 0 ? "Empezar gratis 7 días →" : i === 3 ? "Hablar con ventas →" : `Suscribirme a ${p.name} →`}
-    </button>{i === 0 && (
-  <p style={{ fontSize: 11, color: MUTED, textAlign: "center", marginTop: 8 }}>
-    Se requiere tarjeta · Cancela antes del día 7 sin costo
-  </p>
-)}
-  </div>
-))}
+              <div key={i} className="hl" style={{ background: p.highlight ? "#131200" : SURF2, border: p.highlight ? "1px solid #FFE60055" : "1px solid #2a2800", borderRadius: 16, padding: "32px 26px", position: "relative" }}>
+                {p.highlight && (
+                  <div style={{ position: "absolute", top: -12, left: "50%", transform: "translateX(-50%)", background: Y, color: BG, fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", padding: "4px 14px", borderRadius: 20, whiteSpace: "nowrap" }}>{p.badge}</div>
+                )}
+                <div style={{ marginBottom: 6 }}>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: TEXT, marginBottom: 2 }}>{p.name}</div>
+                  <div style={{ fontSize: 12, color: p.highlight ? Y : MUTED, fontWeight: p.highlight ? 600 : 400 }}>{p.tagline}</div>
+                  <div style={{ fontSize: 11, color: MUTED, marginTop: 2 }}>{p.desc}</div>
+                </div>
+                <div style={{ margin: "16px 0" }}>
+                  <span style={{ fontSize: 46, fontWeight: 700, color: p.highlight ? Y : TEXT, letterSpacing: "-0.04em", lineHeight: 1 }}>S/{p.price}</span>
+                  <span style={{ fontSize: 13, color: MUTED }}>/mes</span>
+                </div>
+                <div style={{ marginBottom: 24, display: "flex", flexDirection: "column", gap: 10 }}>
+                  {p.features.map((feat, j) => (
+                    <div key={j} style={{ display: "flex", gap: 9, alignItems: "flex-start" }}>
+                      <span style={{ color: Y, fontSize: 11, flexShrink: 0, marginTop: 2 }}>✓</span>
+                      <span style={{ fontSize: 13, color: LIGHT, lineHeight: 1.4 }}>{feat}</span>
+                    </div>
+                  ))}
+                </div>
+                <button onClick={open}
+                  style={{ width: "100%", padding: "12px", background: p.highlight ? Y : "transparent", border: p.highlight ? "none" : "1px solid #2a2800", borderRadius: 9, color: p.highlight ? BG : MUTED, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", fontFamily: "'DM Sans', sans-serif" }}
+                  onMouseOver={e => { if (p.highlight) { e.currentTarget.style.background = "#fff176"; } else { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; } }}
+                  onMouseOut={e => { if (p.highlight) { e.currentTarget.style.background = Y; } else { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; } }}
+                >
+                  {i === 0 ? "Empezar gratis 7 días →" : i === 3 ? "Hablar con ventas →" : `Suscribirme a ${p.name} →`}
+                </button>
+                {i === 0 && (
+                  <p style={{ fontSize: 11, color: MUTED, textAlign: "center", marginTop: 8 }}>
+                    Se requiere tarjeta · Cancela antes del día 7 sin costo
+                  </p>
+                )}
+              </div>
+            ))}
           </div>
           <p style={{ textAlign: "center", color: "#444430", fontSize: 13, marginTop: 24 }}>
             ¿Más de 10 locales?{" "}<span style={{ color: Y, cursor: "pointer" }}>Contáctanos para un plan a medida →</span>
@@ -649,28 +750,21 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── FOOTER ── */}
+      {/* FOOTER */}
       <footer style={{ borderTop: "1px solid #2a2800", padding: "32px 6%" }}>
         <div className="footer-inner" style={{ maxWidth: 1160, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 20 }}>
-          {/* Brand */}
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <div style={{ width: 26, height: 26, background: Y, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center" }}>
               <span style={{ color: BG, fontSize: 12, fontWeight: 700 }}>R</span>
             </div>
             <span style={{ fontSize: 14, color: "#555540" }}>RevGo.app</span>
           </div>
-
-          {/* Social buttons */}
           <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
             <span style={{ fontSize: 11, color: "#333320", marginRight: 4 }}>Síguenos</span>
             {SOCIAL.map(s => (
-              <a key={s.name} href={s.href} title={s.name} className="social-btn" target="_blank" rel="noopener noreferrer">
-                {s.svg}
-              </a>
+              <a key={s.name} href={s.href} title={s.name} className="social-btn" target="_blank" rel="noopener noreferrer">{s.svg}</a>
             ))}
           </div>
-
-          {/* Links */}
           <div style={{ display: "flex", gap: 20, alignItems: "center", flexWrap: "wrap" }}>
             {["Privacidad", "Términos", "Contacto"].map(l => (
               <span key={l} style={{ color: "#2a2810", fontSize: 12, cursor: "pointer", transition: "color 0.2s" }} onMouseOver={e => e.target.style.color = MUTED} onMouseOut={e => e.target.style.color = "#2a2810"}>{l}</span>
