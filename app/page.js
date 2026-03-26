@@ -311,10 +311,10 @@ export default function Landing() {
             </div>
             <h1 style={{ fontSize: "clamp(32px, 4vw, 54px)", fontWeight: 700, lineHeight: 1.12, letterSpacing: "-0.03em", marginBottom: 20, color: TEXT }}>
               Estás ocupado haciendo<br />crecer tu negocio.<br />
-              <span style={{ color: Y }}>RevGo se encarga<br />de tus reseñas.</span>
+              <span style={{ color: Y }}>RevGo se encarga<br />de tus reseñas en Google.</span>
             </h1>
             <p style={{ fontSize: 16, color: MUTED, lineHeight: 1.75, maxWidth: 460, marginBottom: 24 }}>
-              Convierte cada reseña de Google en una oportunidad de crecimiento con inteligencia artificial.
+              Convierte cada reseña en una oportunidad de crecimiento con inteligencia artificial.
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 11, marginBottom: 26 }}>
               {["Responde automáticamente — 24 horas, 7 días", "Mejora tu reputación y sube en Google Maps", "Aumenta tus clientes sin esfuerzo extra"].map((item, i) => (
