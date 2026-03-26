@@ -1,4 +1,5 @@
 "use client";
+import { signIn } from "next-auth/react";
 import { useState, useEffect, useRef } from "react";
 
 const Y = "#FFE600";
@@ -240,7 +241,7 @@ export default function Landing() {
   }, [showSignup]);
 
   const activeReview = tick % REVIEWS.length;
-  const open = () => setShowSignup(true);
+  const open = () => signIn("google", { callbackUrl: "/onboarding" });
 
   return (
     <div style={{ background: BG, minHeight: "100vh", color: TEXT, fontFamily: "'DM Sans', sans-serif" }}>
@@ -642,9 +643,9 @@ export default function Landing() {
             Únete a los negocios en Lima que ya responden el 100% de sus reseñas automáticamente.
           </p>
           <button onClick={open} style={{ padding: "15px 44px", background: Y, border: "none", borderRadius: 10, color: BG, fontSize: 15, fontWeight: 700, cursor: "pointer", transition: "background 0.2s" }} onMouseOver={e => e.currentTarget.style.background = "#fff176"} onMouseOut={e => e.currentTarget.style.background = Y}>
-            Empieza gratis 14 días →
+            Empieza gratis 7 días →
           </button>
-          <p style={{ color: "#333320", fontSize: 12, marginTop: 14 }}>Sin compromisos · Sin tarjeta de crédito</p>
+          <p style={{ color: "#333320", fontSize: 12, marginTop: 14 }}>Sin compromisos · Se requiere tarjeta · Cancela antes del día 7 sin costo</p>
         </div>
       </section>
 
