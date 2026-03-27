@@ -222,7 +222,7 @@ function DemoAnimation() {
   const currentDemo = DEMO_REVIEWS[currentIdx];
 
   return (
-    <div style={{ background: "#111100", border: "1px solid #2a2800", borderRadius: 16, overflow: "hidden", maxWidth: 420, width: "100%" }}>
+    <div style={{ background: "#ffffff", border: "1px solid #2a2800", borderRadius: 16, overflow: "hidden", maxWidth: 420, width: "100%" }}>
       {/* Reviewer */}
       <div style={{ padding: "16px", borderBottom: "1px solid #2a2800" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
@@ -230,14 +230,14 @@ function DemoAnimation() {
             {currentDemo.initials}
           </div>
           <div>
-            <div style={{ fontSize: 14, fontWeight: 600, color: TEXT }}>{currentDemo.name}</div>
+            <div style={{ fontSize: 14, fontWeight: 600, color: "#1a1a1a" }}>{currentDemo.name}</div>
             <div style={{ display: "flex", gap: 2, marginTop: 2 }}>
               {[1,2,3,4,5].map(s => <span key={s} style={{ fontSize: 12, color: s <= currentDemo.stars ? "#FBBC04" : "#3a3a3a" }}>★</span>)}
             </div>
           </div>
           <span style={{ marginLeft: "auto", fontSize: 11, color: MUTED }}>{currentDemo.time}</span>
         </div>
-        <div style={{ fontSize: 13, color: MUTED, lineHeight: 1.6, fontStyle: "italic", padding: "10px 12px", background: "#0a0a00", borderRadius: 8 }}>
+        <div style={{ fontSize: 13, color: "#5f6368", lineHeight: 1.6, fontStyle: "italic", padding: "10px 12px", background: "#0a0a00", borderRadius: 8 }}>
           "{currentDemo.text}"
         </div>
       </div>
@@ -267,7 +267,7 @@ function DemoAnimation() {
           </div>
         </div>
 
-        <div style={{ minHeight: 88, padding: "12px 14px", background: "#0a0a00", border: `1.5px solid ${phase === "typing" || phase === "reading" ? "#FFE60040" : "#2a2800"}`, borderRadius: 9, fontSize: 13, color: TEXT, lineHeight: 1.6, transition: "border-color 0.3s" }}>
+        <div style={{ minHeight: 88, padding: "12px 14px", background: "#f8f9fa", border: `1.5px solid ${phase === "typing" || phase === "reading" ? "#FFE60040" : "#2a2800"}`, borderRadius: 9, fontSize: 13, color: TEXT, lineHeight: 1.6, transition: "border-color 0.3s" }}>
           {responseText ? (
             <span>{responseText}{phase === "typing" && <span style={{ display: "inline-block", width: 2, height: 13, background: Y, verticalAlign: "middle", marginLeft: 1, animation: "blink 0.7s infinite" }} />}</span>
           ) : (
