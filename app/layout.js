@@ -1,4 +1,5 @@
 import Providers from "./providers";
+import Script from "next/script";
 
 export const metadata = {
   title: "RevGo.app",
@@ -12,6 +13,7 @@ export default function RootLayout({ children }) {
         <Providers>
           {children}
         </Providers>
+        <Script src="https://assets.lemonsqueezy.com/lemon.js" strategy="afterInteractive" />
       </body>
     </html>
   );

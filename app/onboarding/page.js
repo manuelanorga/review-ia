@@ -45,7 +45,15 @@ export default function Onboarding() {
         alert(JSON.stringify(error));
         return;
       }
-      router.push("/dashboard");
+      const selectedPlan = localStorage.getItem("selectedPlan") || "starter";
+      const checkoutUrls = {
+        starter: "https://famousface.lemonsqueezy.com/checkout/buy/ce895645-359a-4fa8-b43c-331693fb213e?embed=1",
+        growth: "https://famousface.lemonsqueezy.com/checkout/buy/a16816c6-0052-459b-9460-ef61a2b4190f?embed=1",
+        pro: "https://famousface.lemonsqueezy.com/checkout/buy/88ae69bb-9d2b-4f12-9821-07c7b0e72a31?embed=1",
+        agencia: "https://famousface.lemonsqueezy.com/checkout/buy/198dcdbc-05bb-4da5-96b8-c0205029b9ba?embed=1",
+    };
+    localStorage.removeItem("selectedPlan");
+    window.location.href = checkoutUrls[selectedPlan] || checkoutUrls.starter;
     } catch (error) {
       console.error("catch error:", error);
     } finally {

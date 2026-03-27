@@ -343,7 +343,12 @@ export default function Landing() {
   }, [showSignup]);
 
   const activeReview = tick % REVIEWS.length;
-  const open = () => signIn("google", { callbackUrl: "/onboarding" });
+  const open = (plan = "starter") => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("selectedPlan", plan);
+  }
+  signIn("google", { callbackUrl: "/onboarding" });
+};
 
   return (
     <div style={{ background: BG, minHeight: "100vh", color: TEXT, fontFamily: "'DM Sans', sans-serif" }}>
