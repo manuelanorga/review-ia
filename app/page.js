@@ -222,43 +222,40 @@ function DemoAnimation() {
   const currentDemo = DEMO_REVIEWS[currentIdx];
 
   return (
-    <div style={{ background: "#ffffff", border: "1px solid #2a2800", borderRadius: 16, overflow: "hidden", maxWidth: 420, width: "100%" }}>
-      {/* Reviewer */}
-      <div style={{ padding: "16px", borderBottom: "1px solid #2a2800" }}>
+    <div style={{ background: "#ffffff", border: "1px solid #e0e0e0", borderRadius: 16, overflow: "hidden", maxWidth: 420, width: "100%", boxShadow: "0 2px 12px rgba(0,0,0,0.08)" }}>
+      <div style={{ padding: "16px", borderBottom: "1px solid #e0e0e0" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
           <div style={{ width: 36, height: 36, borderRadius: "50%", background: currentDemo.color, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#fff", flexShrink: 0, transition: "background 0.4s" }}>
             {currentDemo.initials}
           </div>
           <div>
-            <div style={{ fontSize: 14, fontWeight: 600, color: "#1a1a1a" }}>{currentDemo.name}</div>
+            <div style={{ fontSize: 14, fontWeight: 600, color: "#202124" }}>{currentDemo.name}</div>
             <div style={{ display: "flex", gap: 2, marginTop: 2 }}>
-              {[1,2,3,4,5].map(s => <span key={s} style={{ fontSize: 12, color: s <= currentDemo.stars ? "#FBBC04" : "#3a3a3a" }}>★</span>)}
+              {[1,2,3,4,5].map(s => <span key={s} style={{ fontSize: 12, color: s <= currentDemo.stars ? "#FBBC04" : "#dadce0" }}>★</span>)}
             </div>
           </div>
-          <span style={{ marginLeft: "auto", fontSize: 11, color: MUTED }}>{currentDemo.time}</span>
+          <span style={{ marginLeft: "auto", fontSize: 11, color: "#80868b" }}>{currentDemo.time}</span>
         </div>
-        <div style={{ fontSize: 13, color: "#3c4043", lineHeight: 1.6, fontStyle: "italic", padding: "10px 12px", background: "#f1f3f4", borderRadius: 8 }}>
+        <div style={{ fontSize: 13, color: "#3c4043", lineHeight: 1.6, fontStyle: "italic", padding: "10px 12px", background: "#f8f9fa", border: "1px solid #e0e0e0", borderRadius: 8 }}>
           "{currentDemo.text}"
         </div>
       </div>
 
-      {/* Tono */}
-      <div style={{ padding: "12px 16px", borderBottom: "1px solid #2a2800" }}>
-        <div style={{ fontSize: 10, color: MUTED, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Tono</div>
+      <div style={{ padding: "12px 16px", borderBottom: "1px solid #e0e0e0" }}>
+        <div style={{ fontSize: 10, color: "#80868b", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Tono</div>
         <div style={{ display: "flex", gap: 6 }}>
           {["cercano", "formal", "profesional"].map(t => (
-            <div key={t} style={{ flex: 1, padding: "7px", borderRadius: 8, border: currentDemo.tone === t ? "2px solid #FFE600" : "1px solid #2a2800", background: currentDemo.tone === t ? "rgba(255,230,0,0.08)" : "transparent", fontSize: 12, textAlign: "center", fontWeight: currentDemo.tone === t ? 700 : 400, color: currentDemo.tone === t ? Y : MUTED, transition: "all 0.3s" }}>
+            <div key={t} style={{ flex: 1, padding: "7px", borderRadius: 8, border: currentDemo.tone === t ? "2px solid #FBBC04" : "1px solid #dadce0", background: currentDemo.tone === t ? "rgba(251,188,4,0.1)" : "#f8f9fa", fontSize: 12, textAlign: "center", fontWeight: currentDemo.tone === t ? 700 : 400, color: currentDemo.tone === t ? "#b8860b" : "#5f6368", transition: "all 0.3s" }}>
               {t.charAt(0).toUpperCase() + t.slice(1)}
             </div>
           ))}
         </div>
       </div>
 
-      {/* Respuesta */}
       <div style={{ padding: "14px 16px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-          <span style={{ fontSize: 10, color: MUTED, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em" }}>Tu respuesta</span>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "5px 10px", background: "#f1f3f4", border: "1px solid #2a2800", borderRadius: 7, fontSize: 11, color: isGenerating ? Y : MUTED, fontWeight: 600 }}>
+          <span style={{ fontSize: 10, color: "#80868b", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em" }}>Tu respuesta</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "5px 10px", background: "#f8f9fa", border: "1px solid #dadce0", borderRadius: 7, fontSize: 11, color: isGenerating ? "#b8860b" : "#5f6368", fontWeight: 600 }}>
             {isGenerating ? (
               <><span style={{ display: "inline-block", animation: "spin 0.8s linear infinite", fontSize: 12 }}>◌</span> Generando...</>
             ) : (
@@ -267,23 +264,23 @@ function DemoAnimation() {
           </div>
         </div>
 
-        <div style={{ minHeight: 88, padding: "12px 14px", background: "#f8f9fa", border: `1.5px solid ${phase === "typing" || phase === "reading" ? "#FFE60040" : "#2a2800"}`, borderRadius: 9, fontSize: 13, color: "#202124", lineHeight: 1.6, transition: "border-color 0.3s" }}>
+        <div style={{ minHeight: 88, padding: "12px 14px", background: "#f8f9fa", border: `1.5px solid ${phase === "typing" || phase === "reading" ? "#FBBC04" : "#dadce0"}`, borderRadius: 9, fontSize: 13, lineHeight: 1.6, transition: "border-color 0.3s" }}>
           {responseText ? (
-            <span>{responseText}{phase === "typing" && <span style={{ display: "inline-block", width: 2, height: 13, background: Y, verticalAlign: "middle", marginLeft: 1, animation: "blink 0.7s infinite" }} />}</span>
+            <span style={{ color: "#202124" }}>{responseText}{phase === "typing" && <span style={{ display: "inline-block", width: 2, height: 13, background: "#FBBC04", verticalAlign: "middle", marginLeft: 1, animation: "blink 0.7s infinite" }} />}</span>
           ) : (
-            <span style={{ color: MUTED, fontStyle: "italic" }}>Escribe o genera una respuesta con IA...</span>
+            <span style={{ color: "#9aa0a6", fontStyle: "italic" }}>Escribe o genera una respuesta con IA...</span>
           )}
         </div>
 
         {showPublish && (
-          <div style={{ marginTop: 10, padding: "10px", background: Y, borderRadius: 8, fontSize: 13, fontWeight: 700, color: BG, textAlign: "center", animation: "fadeUp 0.3s ease" }}>
+          <div style={{ marginTop: 10, padding: "10px", background: "#1a73e8", borderRadius: 8, fontSize: 13, fontWeight: 700, color: "#fff", textAlign: "center", animation: "fadeUp 0.3s ease" }}>
             Publicar en Google →
           </div>
         )}
 
         {phase === "reading" && (
-          <div style={{ marginTop: 10, height: 3, background: "#2a2800", borderRadius: 4, overflow: "hidden" }}>
-            <div style={{ height: "100%", width: `${progress}%`, background: Y, borderRadius: 4, transition: "width 0.1s linear" }} />
+          <div style={{ marginTop: 10, height: 3, background: "#e0e0e0", borderRadius: 4, overflow: "hidden" }}>
+            <div style={{ height: "100%", width: `${progress}%`, background: "#1a73e8", borderRadius: 4, transition: "width 0.1s linear" }} />
           </div>
         )}
       </div>
@@ -421,11 +418,11 @@ export default function Landing() {
               <DemoAnimation />
             </div>
 
-            <h1 style={{ fontSize: "clamp(32px, 4vw, 54px)", fontWeight: 700, lineHeight: 1.12, letterSpacing: "-0.03em", marginBottom: 20, color: "#1a1a1a" }}>
+            <h1 style={{ fontSize: "clamp(32px, 4vw, 54px)", fontWeight: 700, lineHeight: 1.12, letterSpacing: "-0.03em", marginBottom: 20, color: TEXT }}>
               Estás ocupado haciendo<br />crecer tu negocio.<br />
               <span style={{ color: Y }}>RevGo se encarga<br />de tus reseñas en Google.</span>
             </h1>
-            <p style={{ fontSize: 16, color: "#5f6368", lineHeight: 1.75, maxWidth: 460, marginBottom: 24 }}>
+            <p style={{ fontSize: 16, color: MUTED, lineHeight: 1.75, maxWidth: 460, marginBottom: 24 }}>
               Convierte cada reseña en una oportunidad de crecimiento con inteligencia artificial.
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 11, marginBottom: 26 }}>
@@ -444,7 +441,7 @@ export default function Landing() {
                 Empieza Gratis →
               </button>
               <a href="#como-funciona" style={{ textDecoration: "none" }}>
-                <button style={{ padding: "14px 30px", background: "transparent", border: "1px solid #e0e0e0", borderRadius: 10, color: MUTED, fontSize: 15, fontWeight: 500, cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap" }} onMouseOver={e => { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; }} onMouseOut={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; }}>
+                <button style={{ padding: "14px 30px", background: "transparent", border: "1px solid #2a2800", borderRadius: 10, color: MUTED, fontSize: 15, fontWeight: 500, cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap" }} onMouseOver={e => { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; }} onMouseOut={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; }}>
                   Mira cómo funciona ↓
                 </button>
               </a>
