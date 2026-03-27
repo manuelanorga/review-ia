@@ -237,7 +237,7 @@ function DemoAnimation() {
           </div>
           <span style={{ marginLeft: "auto", fontSize: 11, color: MUTED }}>{currentDemo.time}</span>
         </div>
-        <div style={{ fontSize: 13, color: "#5f6368", lineHeight: 1.6, fontStyle: "italic", padding: "10px 12px", background: "#0a0a00", borderRadius: 8 }}>
+        <div style={{ fontSize: 13, color: "#3c4043", lineHeight: 1.6, fontStyle: "italic", padding: "10px 12px", background: "#f1f3f4", borderRadius: 8 }}>
           "{currentDemo.text}"
         </div>
       </div>
@@ -258,7 +258,7 @@ function DemoAnimation() {
       <div style={{ padding: "14px 16px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
           <span style={{ fontSize: 10, color: MUTED, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em" }}>Tu respuesta</span>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "5px 10px", background: "#1a1700", border: "1px solid #2a2800", borderRadius: 7, fontSize: 11, color: isGenerating ? Y : MUTED, fontWeight: 600 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "5px 10px", background: "#f1f3f4", border: "1px solid #2a2800", borderRadius: 7, fontSize: 11, color: isGenerating ? Y : MUTED, fontWeight: 600 }}>
             {isGenerating ? (
               <><span style={{ display: "inline-block", animation: "spin 0.8s linear infinite", fontSize: 12 }}>◌</span> Generando...</>
             ) : (
@@ -267,7 +267,7 @@ function DemoAnimation() {
           </div>
         </div>
 
-        <div style={{ minHeight: 88, padding: "12px 14px", background: "#f8f9fa", border: `1.5px solid ${phase === "typing" || phase === "reading" ? "#FFE60040" : "#2a2800"}`, borderRadius: 9, fontSize: 13, color: TEXT, lineHeight: 1.6, transition: "border-color 0.3s" }}>
+        <div style={{ minHeight: 88, padding: "12px 14px", background: "#f8f9fa", border: `1.5px solid ${phase === "typing" || phase === "reading" ? "#FFE60040" : "#2a2800"}`, borderRadius: 9, fontSize: 13, color: "#202124", lineHeight: 1.6, transition: "border-color 0.3s" }}>
           {responseText ? (
             <span>{responseText}{phase === "typing" && <span style={{ display: "inline-block", width: 2, height: 13, background: Y, verticalAlign: "middle", marginLeft: 1, animation: "blink 0.7s infinite" }} />}</span>
           ) : (
@@ -421,11 +421,11 @@ export default function Landing() {
               <DemoAnimation />
             </div>
 
-            <h1 style={{ fontSize: "clamp(32px, 4vw, 54px)", fontWeight: 700, lineHeight: 1.12, letterSpacing: "-0.03em", marginBottom: 20, color: TEXT }}>
+            <h1 style={{ fontSize: "clamp(32px, 4vw, 54px)", fontWeight: 700, lineHeight: 1.12, letterSpacing: "-0.03em", marginBottom: 20, color: "#1a1a1a" }}>
               Estás ocupado haciendo<br />crecer tu negocio.<br />
               <span style={{ color: Y }}>RevGo se encarga<br />de tus reseñas en Google.</span>
             </h1>
-            <p style={{ fontSize: 16, color: MUTED, lineHeight: 1.75, maxWidth: 460, marginBottom: 24 }}>
+            <p style={{ fontSize: 16, color: "#5f6368", lineHeight: 1.75, maxWidth: 460, marginBottom: 24 }}>
               Convierte cada reseña en una oportunidad de crecimiento con inteligencia artificial.
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 11, marginBottom: 26 }}>
@@ -444,7 +444,7 @@ export default function Landing() {
                 Empieza Gratis →
               </button>
               <a href="#como-funciona" style={{ textDecoration: "none" }}>
-                <button style={{ padding: "14px 30px", background: "transparent", border: "1px solid #2a2800", borderRadius: 10, color: MUTED, fontSize: 15, fontWeight: 500, cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap" }} onMouseOver={e => { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; }} onMouseOut={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; }}>
+                <button style={{ padding: "14px 30px", background: "transparent", border: "1px solid #e0e0e0", borderRadius: 10, color: MUTED, fontSize: 15, fontWeight: 500, cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap" }} onMouseOver={e => { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; }} onMouseOut={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; }}>
                   Mira cómo funciona ↓
                 </button>
               </a>
