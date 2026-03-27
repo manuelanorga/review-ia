@@ -54,7 +54,7 @@ const FEATURES = [
 
 const PLANS = [
   {
-    name: "Starter", price: "29", tagline: "Empieza a responder",
+    name: "Starter", price: "39", tagline: "Empieza a responder",
     desc: "Ideal para negocios pequeños",
     features: ["1 negocio conectado", "Hasta 50 reseñas/mes", "Respuestas con IA en español", "🤖 Autopiloto · Solo tono Formal", "📊 Analytics básico (solo visualizar)", "Soporte por email"],
     highlight: false, badge: null,
