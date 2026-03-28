@@ -2,7 +2,6 @@
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
-import "./landing.css";
 
 const Y = "#FFE600";
 const BG = "#0A0A0A";
