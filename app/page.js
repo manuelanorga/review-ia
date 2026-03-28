@@ -217,7 +217,7 @@ function DemoAnimation() {
   const currentDemo = DEMO_REVIEWS[currentIdx];
 
   return (
-    <div style={{ background: "#ffffff", border: "1px solid #e0e0e0", borderRadius: 16, overflow: "hidden", maxWidth: 420, width: "100%", boxShadow: "0 2px 12px rgba(0,0,0,0.08)" }}>
+    <div style={{ background: "#ffffff", border: "1px solid #e0e0e0", borderRadius: 16, overflow: "hidden", maxWidth: 420, width: "100%", boxShadow: "0 2px 12px rgba(0,0,0,0.08)", minHeight: 420 }}>
       <div style={{ padding: "16px", borderBottom: "1px solid #e0e0e0" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
           <div style={{ width: 36, height: 36, borderRadius: "50%", background: currentDemo.color, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#fff", flexShrink: 0, transition: "background 0.4s" }}>
@@ -259,7 +259,7 @@ function DemoAnimation() {
           </div>
         </div>
 
-        <div style={{ minHeight: 88, padding: "12px 14px", background: "#f8f9fa", border: `1.5px solid ${phase === "typing" || phase === "reading" ? "#FBBC04" : "#dadce0"}`, borderRadius: 9, fontSize: 13, lineHeight: 1.6, transition: "border-color 0.3s" }}>
+        <div style={{ height: 110, overflow: "hidden", padding: "12px 14px", background: "#f8f9fa", border: `1.5px solid ${phase === "typing" || phase === "reading" ? "#FBBC04" : "#dadce0"}`, borderRadius: 9, fontSize: 13, lineHeight: 1.6, transition: "border-color 0.3s" }}>
           {responseText ? (
             <span style={{ color: "#202124" }}>{responseText}{phase === "typing" && <span style={{ display: "inline-block", width: 2, height: 13, background: "#FBBC04", verticalAlign: "middle", marginLeft: 1, animation: "blink 0.7s infinite" }} />}</span>
           ) : (
