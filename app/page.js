@@ -322,6 +322,7 @@ export default function Landing() {
   const [tick, setTick] = useState(0);
   const [scrolled, setScrolled] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const t = setInterval(() => setTick(p => p + 1), 3000);
@@ -383,6 +384,7 @@ export default function Landing() {
         }
         @media (max-width: 600px) {
           .navlinks { display: none !important; }
+          .hamburger { display: flex !important; }
           .fgrid { grid-template-columns: 1fr !important; }
           .ctarow { flex-direction: column !important; }
           .footer-inner { flex-direction: column !important; align-items: flex-start !important; gap: 20px !important; }
@@ -393,29 +395,53 @@ export default function Landing() {
 
       {/* ✅ BOTÓN VOLVER ARRIBA */}
       {scrolled && (
-        <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} style={{ position: "fixed", bottom: 28, right: 28, zIndex: 200, width: 44, height: 44, borderRadius: "50%", background: Y, border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 16px rgba(0,0,0,0.4)", transition: "transform 0.2s, opacity 0.2s" }} onMouseOver={e => e.currentTarget.style.transform = "translateY(-3px)"} onMouseOut={e => e.currentTarget.style.transform = "translateY(0)"} title="Volver arriba">
+        <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} style={{ position: "fixed", bottom: 28, right: 28, zIndex: 200, width: 44, height: 44, borderRadius: "50%", background: Y, border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 16px rgba(0,0,0,0.4)", transition: "transform 0.2s" }} onMouseOver={e => e.currentTarget.style.transform = "translateY(-3px)"} onMouseOut={e => e.currentTarget.style.transform = "translateY(0)"} title="Volver arriba">
           <span style={{ color: BG, fontSize: 18, fontWeight: 700, lineHeight: 1 }}>↑</span>
         </button>
       )}
 
+      {/* ✅ MENÚ MÓVIL */}
+      {mobileMenuOpen && (
+        <div onClick={() => setMobileMenuOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 150, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}>
+          <div onClick={e => e.stopPropagation()} style={{ position: "absolute", top: 60, left: 0, right: 0, background: "#0f0f00", border: "1px solid #2a2800", borderTop: "none", padding: "16px 6% 24px", display: "flex", flexDirection: "column", gap: 10, animation: "fadeUp 0.2s ease both" }}>
+            {session ? (
+              <button onClick={() => { router.push("/dashboard"); setMobileMenuOpen(false); }} style={{ width: "100%", padding: "13px", background: Y, border: "none", borderRadius: 9, color: BG, fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
+                Ir al Dashboard →
+              </button>
+            ) : (
+              <>
+                <a href="#precios" onClick={() => setMobileMenuOpen(false)} style={{ padding: "13px 16px", borderRadius: 9, border: "1px solid #2a2800", color: MUTED, fontSize: 14, textDecoration: "none", textAlign: "center" }}>Precios</a>
+                <button onClick={() => { open(); setMobileMenuOpen(false); }} style={{ width: "100%", padding: "13px", background: Y, border: "none", borderRadius: 9, color: BG, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
+                  Empezar gratis
+                </button>
+                <button onClick={() => { login(); setMobileMenuOpen(false); }} style={{ width: "100%", padding: "13px", background: "transparent", border: "1px solid #2a2800", borderRadius: 9, color: MUTED, fontSize: 14, cursor: "pointer" }}>
+                  Iniciar sesión
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* NAV */}
       <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, background: scrolled ? "rgba(10,10,10,0.95)" : "transparent", backdropFilter: scrolled ? "blur(12px)" : "none", borderBottom: scrolled ? "1px solid #2a2800" : "1px solid transparent", transition: "all 0.3s", padding: "0 6%", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        {/* ✅ LOGO CLICKEABLE → va a home */}
+
+        {/* LOGO */}
         <div onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} style={{ display: "flex", alignItems: "center", gap: 9, cursor: "pointer" }}>
           <img src="/logo.png" alt="RevGo logo" suppressHydrationWarning style={{ width: 30, height: 30, borderRadius: 7, objectFit: "contain" }} />
           <span style={{ fontSize: 16, fontWeight: 700, color: TEXT, letterSpacing: "-0.01em" }}>RevGo<span style={{ color: Y }}>.app</span></span>
         </div>
+
+        {/* DESKTOP: links + botones */}
         <div className="navlinks" style={{ display: "flex", flex: 1, justifyContent: "flex-end", marginRight: 24 }}>
           <a href="#precios" style={{ fontSize: 13, color: MUTED, textDecoration: "none", transition: "color 0.2s" }} onMouseOver={e => e.target.style.color = TEXT} onMouseOut={e => e.target.style.color = MUTED}>Precios</a>
         </div>
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          {/* ✅ NUEVO: Ocultar "Empezar gratis" si ya hay sesión */}
+        <div className="navlinks" style={{ display: "flex", gap: 8, alignItems: "center" }}>
           {!session && (
             <button onClick={open} style={{ padding: "8px 18px", background: Y, border: "none", borderRadius: 7, color: BG, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "background 0.2s" }} onMouseOver={e => e.currentTarget.style.background = "#fff176"} onMouseOut={e => e.currentTarget.style.background = Y}>
               Empezar gratis
             </button>
           )}
-          {/* ✅ NUEVO: Mostrar "Ir al Dashboard" si hay sesión, "Iniciar sesión" si no */}
           {session ? (
             <button onClick={() => router.push("/dashboard")} style={{ padding: "8px 18px", background: Y, border: "none", borderRadius: 7, color: BG, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "background 0.2s" }} onMouseOver={e => e.currentTarget.style.background = "#fff176"} onMouseOut={e => e.currentTarget.style.background = Y}>
               Ir al Dashboard →
@@ -426,6 +452,13 @@ export default function Landing() {
             </button>
           )}
         </div>
+
+        {/* ✅ MÓVIL: botón hamburguesa */}
+        <button className="hamburger" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} style={{ display: "none", flexDirection: "column", gap: 5, background: "none", border: "none", cursor: "pointer", padding: 4 }}>
+          <span style={{ display: "block", width: 22, height: 2, background: mobileMenuOpen ? Y : TEXT, borderRadius: 2, transition: "all 0.2s", transform: mobileMenuOpen ? "rotate(45deg) translate(5px, 5px)" : "none" }} />
+          <span style={{ display: "block", width: 22, height: 2, background: mobileMenuOpen ? Y : TEXT, borderRadius: 2, transition: "all 0.2s", opacity: mobileMenuOpen ? 0 : 1 }} />
+          <span style={{ display: "block", width: 22, height: 2, background: mobileMenuOpen ? Y : TEXT, borderRadius: 2, transition: "all 0.2s", transform: mobileMenuOpen ? "rotate(-45deg) translate(5px, -5px)" : "none" }} />
+        </button>
       </nav>
 
       {/* ── HERO ── */}
