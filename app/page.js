@@ -406,12 +406,32 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* LOGOS BAR */}
-      <div style={{ borderTop: "1px solid #2a2800", borderBottom: "1px solid #2a2800", padding: "18px 6%" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
-          <span style={{ fontSize: 11, color: "#444430", letterSpacing: "0.12em", textTransform: "uppercase" }}>Diseñado para</span>
-          {["🏨 Hoteles", "🍽️ Restaurantes", "🦷 Clínicas", "💆 Spas", "🏠 Inmobiliarias"].map(t => (
-            <span key={t} style={{ fontSize: 13, color: MUTED }}>{t}</span>
+      {/* LOGOS BAR - TICKER */}
+      <div style={{ borderTop: "1px solid #2a2800", borderBottom: "1px solid #2a2800", padding: "14px 0", overflow: "hidden", position: "relative" }}>
+        {/* fade izquierda */}
+        <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 80, background: "linear-gradient(to right, #0A0A0A, transparent)", zIndex: 2 }} />
+        {/* fade derecha */}
+        <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 80, background: "linear-gradient(to left, #0A0A0A, transparent)", zIndex: 2 }} />
+        <div style={{ display: "flex", animation: "ticker 35s linear infinite", width: "max-content", alignItems: "center" }}>
+          {[
+            ["🏨","Hoteles"], ["🍽️","Restaurantes"], ["🦷","Clínicas dentales"], ["💆","Spas"], ["🏠","Inmobiliarias"],
+            ["🍰","Pastelerías"], ["💄","Salones de belleza"], ["🏋️","Gimnasios"], ["🐾","Veterinarias"], ["👗","Tiendas de ropa"],
+            ["🚗","Talleres mecánicos"], ["📚","Academias"], ["💊","Farmacias"], ["🧴","Clínicas estéticas"], ["☕","Cafeterías"],
+            ["🍕","Pizzerías"], ["🥗","Comida saludable"], ["🏥","Clínicas médicas"], ["👁️","Ópticas"], ["🧘","Centros de yoga"],
+            ["📸","Fotógrafos"], ["💅","Nail salons"], ["✂️","Barberías"], ["🌸","Floristerías"], ["🛋️","Tiendas de muebles"],
+            ["👟","Zapaterías"], ["🍱","Dark kitchens"], ["🚚","Mudanzas"],
+            // duplicado para loop infinito
+            ["🏨","Hoteles"], ["🍽️","Restaurantes"], ["🦷","Clínicas dentales"], ["💆","Spas"], ["🏠","Inmobiliarias"],
+            ["🍰","Pastelerías"], ["💄","Salones de belleza"], ["🏋️","Gimnasios"], ["🐾","Veterinarias"], ["👗","Tiendas de ropa"],
+            ["🚗","Talleres mecánicos"], ["📚","Academias"], ["💊","Farmacias"], ["🧴","Clínicas estéticas"], ["☕","Cafeterías"],
+            ["🍕","Pizzerías"], ["🥗","Comida saludable"], ["🏥","Clínicas médicas"], ["👁️","Ópticas"], ["🧘","Centros de yoga"],
+            ["📸","Fotógrafos"], ["💅","Nail salons"], ["✂️","Barberías"], ["🌸","Floristerías"], ["🛋️","Tiendas de muebles"],
+            ["👟","Zapaterías"], ["🍱","Dark kitchens"], ["🚚","Mudanzas"],
+          ].map(([icon, label], i) => (
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 28px", whiteSpace: "nowrap" }}>
+              <span style={{ fontSize: 20 }}>{icon}</span>
+              <span style={{ fontSize: 13, color: MUTED }}>{label}</span>
+            </div>
           ))}
         </div>
       </div>
@@ -539,7 +559,7 @@ export default function Landing() {
           <div className="carousel-track">
             {[
               { name: "Karla Acho", role: "Dueña · La Gran Fresa · Magdalena y San Miguel", avatar: "KA", color: "#34A853", text: "Antes tardábamos semanas en responder reseñas. Ahora RevGo las responde en segundos y nuestro rating subió de 3.8 a 4.4 en solo 1 mes. Los clientes lo notan." },
-              { name: "Dra. Madeleine", role: "Dueña · Dental Beauty Care · Miraflores", avatar: "DM", color: "#4285F4", text: "Pensé que una IA no podría sonar humana para una clínica dental. Me equivoqué. Las respuestas son profesionales, empáticas y específicas para cada paciente. Mis clientes se sienten escuchados y yo tengo un lugar en la plataforma para revisarlo, es tan simple y eficaz." },
+              { name: "Dra. Madeleine", role: "Dueña · Dental Beauty Care · Miraflores", avatar: "DM", color: "#4285F4", text: "Pensé que una IA no podría sonar humana para una clínica dental. Me equivoqué. Las respuestas son profesionales, empáticas y específicas para cada paciente. Mis clientes se sienten escuchados." },
             ].map((t, i) => (
               <div key={i} className="carousel-card hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 14, padding: "28px 24px" }}>
                 <div style={{ display: "flex", gap: 2, marginBottom: 16 }}>
