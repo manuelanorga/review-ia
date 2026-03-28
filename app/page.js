@@ -773,25 +773,33 @@ export default function Landing() {
       </section>
 
       {/* FOOTER */}
-      <footer style={{ borderTop: "1px solid #2a2800", padding: "32px 6%" }}>
-        <div className="footer-inner" style={{ maxWidth: 1160, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 20 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ width: 26, height: 26, background: Y, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <span style={{ color: BG, fontSize: 12, fontWeight: 700 }}>R</span>
+      <footer style={{ borderTop: "1px solid #2a2800", padding: "40px 6%" }}>
+        <div style={{ maxWidth: 1160, margin: "0 auto" }}>
+          <div className="footer-inner" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 24, marginBottom: 28 }}>
+            {/* ✅ Logo con imagen */}
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <img src="/logo.png" alt="RevGo logo" style={{ width: 32, height: 32, borderRadius: 8, objectFit: "contain" }} />
+              <div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: TEXT }}>RevGo<span style={{ color: Y }}>.app</span></div>
+                <div style={{ fontSize: 11, color: MUTED, marginTop: 1 }}>Gestión de reseñas con IA · Lima, Perú</div>
+              </div>
             </div>
-            <span style={{ fontSize: 14, color: "#555540" }}>RevGo.app</span>
+            {/* ✅ Redes sociales más visibles */}
+            <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+              <span style={{ fontSize: 12, color: MUTED, marginRight: 4 }}>Síguenos</span>
+              {SOCIAL.map(s => (
+                <a key={s.name} href={s.href} title={s.name} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 38, height: 38, borderRadius: 9, border: "1px solid #3a3820", color: "#888870", textDecoration: "none", transition: "all 0.2s" }} onMouseOver={e => { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; e.currentTarget.style.background = "#1a1700"; }} onMouseOut={e => { e.currentTarget.style.borderColor = "#3a3820"; e.currentTarget.style.color = "#888870"; e.currentTarget.style.background = "transparent"; }}>{s.svg}</a>
+              ))}
+            </div>
           </div>
-          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-            <span style={{ fontSize: 11, color: "#333320", marginRight: 4 }}>Síguenos</span>
-            {SOCIAL.map(s => (
-              <a key={s.name} href={s.href} title={s.name} className="social-btn" target="_blank" rel="noopener noreferrer">{s.svg}</a>
-            ))}
-          </div>
-          <div style={{ display: "flex", gap: 20, alignItems: "center", flexWrap: "wrap" }}>
-            {["Privacidad", "Términos", "Contacto"].map(l => (
-              <span key={l} style={{ color: "#2a2810", fontSize: 12, cursor: "pointer", transition: "color 0.2s" }} onMouseOver={e => e.target.style.color = MUTED} onMouseOut={e => e.target.style.color = "#2a2810"}>{l}</span>
-            ))}
-            <span style={{ color: "#1a1808", fontSize: 12 }}>© 2026 RevGo · Lima, Perú</span>
+          <div style={{ height: 1, background: "#2a2800", marginBottom: 20 }} />
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 14 }}>
+            <span style={{ color: MUTED, fontSize: 12 }}>© 2026 RevGo · Lima, Perú</span>
+            <div style={{ display: "flex", gap: 24, alignItems: "center", flexWrap: "wrap" }}>
+              {["Privacidad", "Términos", "Contacto"].map(l => (
+                <span key={l} style={{ color: MUTED, fontSize: 13, cursor: "pointer", transition: "color 0.2s" }} onMouseOver={e => e.target.style.color = Y} onMouseOut={e => e.target.style.color = MUTED}>{l}</span>
+              ))}
+            </div>
           </div>
         </div>
       </footer>
