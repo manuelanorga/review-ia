@@ -353,7 +353,7 @@ export default function Landing() {
   };
 
   return (
-    <div style={{ background: BG, minHeight: "100vh", color: TEXT, fontFamily: "'DM Sans', sans-serif" }}>
+    <div suppressHydrationWarning style={{ background: BG, minHeight: "100vh", color: TEXT, fontFamily: "'DM Sans', sans-serif" }}>
       {showSignup && <SignupModal onClose={() => setShowSignup(false)} />}
 
       {/* ✅ BOTÓN VOLVER ARRIBA */}
@@ -387,7 +387,7 @@ export default function Landing() {
       )}
 
       {/* NAV */}
-      <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, background: scrolled ? "rgba(10,10,10,0.95)" : "transparent", backdropFilter: scrolled ? "blur(12px)" : "none", borderBottom: scrolled ? "1px solid #2a2800" : "1px solid transparent", transition: "all 0.3s", padding: "0 6%", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      <nav suppressHydrationWarning style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, background: scrolled ? "rgba(10,10,10,0.95)" : "transparent", backdropFilter: scrolled ? "blur(12px)" : "none", borderBottom: scrolled ? "1px solid #2a2800" : "1px solid transparent", transition: "all 0.3s", padding: "0 6%", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
 
         {/* LOGO */}
         <div onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} style={{ display: "flex", alignItems: "center", gap: 9, cursor: "pointer" }}>
@@ -437,7 +437,7 @@ export default function Landing() {
           </div>
 
           {/* GRID: izquierda copy, derecha demo */}
-          <div className="hgrid fade1">
+          <div className="hgrid fade1" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 56, alignItems: "center" }}>
 
             {/* IZQUIERDA: headline + CTAs + checklist */}
             <div className="hero-copy">
