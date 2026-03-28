@@ -1,5 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { supabase } from "../../lib/supabase";
 
 const REVIEWS = [
   { id: 1, name: "María González", avatar: "MG", avatarColor: "#4285F4", stars: 5, time: "Hace 2h", text: "Increíble experiencia, el personal súper atento y la habitación impecable. Definitivamente regreso.", status: "pending", source: "Google" },
@@ -85,6 +88,9 @@ function UpgradeOverlay({ dark, d, children, blur = false }) {
 }
 
 export default function Dashboard() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
   const [dark, setDark] = useState(true);
   const [reviews, setReviews] = useState(REVIEWS);
   const [selected, setSelected] = useState(null);
@@ -99,14 +105,54 @@ export default function Dashboard() {
   const [showBusinessMenu, setShowBusinessMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [accountSection, setAccountSection] = useState(null);
-  const [plan] = useState("growth"); // opciones: "starter", "growth", "pro", "agencia"
-  const isPro = plan !== "starter";
-  const canDownloadPDF = plan !== "starter";
-  const availableTones = plan === "starter" ? ["formal"] : ["cercano", "formal", "profesional"];
   const [showTour, setShowTour] = useState(true);
   const [tourStep, setTourStep] = useState(0);
   const [spotlightRect, setSpotlightRect] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
+
+  // ✅ NUEVO: Plan y datos del usuario desde Supabase
+  const [plan, setPlan] = useState("starter");
+  const [userName, setUserName] = useState("Usuario");
+  const [userEmail, setUserEmail] = useState("");
+  const [loadingPlan, setLoadingPlan] = useState(true);
+
+  // ✅ NUEVO: Cargar plan real desde Supabase
+  useEffect(() => {
+    const fetchUserPlan = async () => {
+      if (status === "loading") return;
+      if (!session?.user?.email) {
+        setLoadingPlan(false);
+        return;
+      }
+
+      try {
+        const { data: userData, error } = await supabase
+          .from("users")
+          .select("plan, full_name, email")
+          .eq("email", session.user.email)
+          .single();
+
+        if (userData) {
+          setPlan(userData.plan || "starter");
+          setUserName(userData.full_name || session.user.name || "Usuario");
+          setUserEmail(userData.email || session.user.email);
+        } else {
+          // Si no existe en Supabase → mandar a onboarding
+          router.push("/onboarding");
+        }
+      } catch (err) {
+        console.error("Error cargando plan:", err);
+      } finally {
+        setLoadingPlan(false);
+      }
+    };
+
+    fetchUserPlan();
+  }, [session, status]);
+
+  const isPro = plan !== "starter";
+  const canDownloadPDF = plan !== "starter";
+  const availableTones = plan === "starter" ? ["formal"] : ["cercano", "formal", "profesional"];
 
   React.useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -190,6 +236,21 @@ export default function Dashboard() {
     { id: "analytics", label: "Analytics", icon: "◎", pro: true },
     { id: "qr", label: "Mi QR", icon: "📱", pro: true },
   ];
+
+  // ✅ Pantalla de carga mientras se obtiene el plan
+  if (loadingPlan || status === "loading") {
+    return (
+      <div style={{ minHeight: "100vh", background: "#0f0f0f", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'DM Sans', sans-serif" }}>
+        <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');`}</style>
+        <div style={{ textAlign: "center" }}>
+          <div style={{ width: 36, height: 36, background: "#FFE600", borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
+            <span style={{ color: "#000", fontSize: 16, fontWeight: 700 }}>R</span>
+          </div>
+          <p style={{ color: "#737373", fontSize: 14 }}>Cargando tu panel...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ display: "flex", height: "100vh", background: d.bg, fontFamily: "'DM Sans', sans-serif", overflow: "hidden", color: d.text }} onClick={() => { showBusinessMenu && setShowBusinessMenu(false); showUserMenu && setShowUserMenu(false); }}>
@@ -367,12 +428,16 @@ export default function Dashboard() {
             {!isPro && <button style={{ fontSize: 11, color: dark ? "#000" : "#fff", padding: "5px 12px", background: d.accent, borderRadius: 7, border: "none", fontWeight: 700, cursor: "pointer" }}>Upgrade →</button>}
             <button onClick={() => setDark(!dark)} style={{ width: 36, height: 36, borderRadius: 8, border: `1px solid ${d.border}`, background: d.surface, color: d.muted, fontSize: 16, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>{dark ? "☀️" : "🌙"}</button>
             <div style={{ position: "relative" }}>
-              <div onClick={e => { e.stopPropagation(); setShowUserMenu(!showUserMenu); }} style={{ width: 32, height: 32, borderRadius: "50%", background: d.accent, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: d.accentFg, cursor: "pointer", border: showUserMenu ? `2px solid ${d.text}` : "2px solid transparent" }}>M</div>
+              <div onClick={e => { e.stopPropagation(); setShowUserMenu(!showUserMenu); }} style={{ width: 32, height: 32, borderRadius: "50%", background: d.accent, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: d.accentFg, cursor: "pointer", border: showUserMenu ? `2px solid ${d.text}` : "2px solid transparent" }}>
+                {/* ✅ Inicial del nombre real */}
+                {userName.charAt(0).toUpperCase()}
+              </div>
               {showUserMenu && (
                 <div onClick={e => e.stopPropagation()} style={{ position: "absolute", top: 42, right: 0, width: 220, background: d.card, border: `1px solid ${d.border}`, borderRadius: 12, zIndex: 200, overflow: "hidden", animation: "slideDown 0.2s ease", boxShadow: "0 8px 24px rgba(0,0,0,0.3)" }}>
                   <div style={{ padding: "14px 16px", borderBottom: `1px solid ${d.border}` }}>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: d.text }}>Manuel Añorga</div>
-                    <div style={{ fontSize: 11, color: d.muted, marginTop: 2 }}>manu@revgo.app</div>
+                    {/* ✅ Nombre y email reales */}
+                    <div style={{ fontSize: 13, fontWeight: 700, color: d.text }}>{userName}</div>
+                    <div style={{ fontSize: 11, color: d.muted, marginTop: 2 }}>{userEmail}</div>
                     <div style={{ marginTop: 6, display: "inline-block", fontSize: 10, fontWeight: 700, color: d.accent, background: dark ? "rgba(255,230,0,0.1)" : "#fefce8", border: `1px solid ${dark ? "rgba(255,230,0,0.2)" : "#fde68a"}`, borderRadius: 6, padding: "2px 8px" }}>Plan {plan.charAt(0).toUpperCase() + plan.slice(1)}</div>
                   </div>
                   <div style={{ padding: "6px 8px", borderBottom: `1px solid ${d.border}` }}>
@@ -731,7 +796,7 @@ export default function Dashboard() {
               <button onClick={() => setAccountSection(null)} style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", color: d.muted, fontSize: 13, cursor: "pointer", marginBottom: 20, padding: 0 }} onMouseOver={e => e.currentTarget.style.color = d.text} onMouseOut={e => e.currentTarget.style.color = d.muted}>← Volver</button>
               <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 14, padding: "20px", marginBottom: 14 }}>
                 <div style={{ fontSize: 14, fontWeight: 700, color: d.text, marginBottom: 16 }}>Información personal</div>
-                {[{ label: "Nombre completo", value: "Manuel Añorga" }, { label: "Correo electrónico", value: "manu@revgo.app" }, { label: "Nombre del negocio", value: currentBusiness?.name }].map((item, i) => (
+                {[{ label: "Nombre completo", value: userName }, { label: "Correo electrónico", value: userEmail }, { label: "Nombre del negocio", value: currentBusiness?.name }].map((item, i) => (
                   <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 0", borderBottom: i < 2 ? `1px solid ${d.border}` : "none" }}>
                     <div>
                       <div style={{ fontSize: 12, color: d.muted, marginBottom: 2 }}>{item.label}</div>
@@ -769,15 +834,10 @@ export default function Dashboard() {
             <UpgradeOverlay dark={dark} d={d} blur={!isPro}>
               <div style={{ animation: "fadeIn 0.4s ease both", maxWidth: 900 }}>
                 <div style={{ display: "grid", gridTemplateColumns: "320px 1fr", gap: 24 }}>
-
-                  {/* QR Card */}
                   <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 16, padding: "28px", display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
                     <div style={{ fontSize: 13, fontWeight: 700, color: d.text, marginBottom: 4 }}>Tu QR de reseñas</div>
-
-                    {/* QR visual */}
                     <div style={{ width: 180, height: 180, background: "#ffffff", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", padding: 12, border: `2px solid ${d.border}` }}>
                       <svg viewBox="0 0 100 100" width="156" height="156">
-                        {/* QR simulado — se reemplaza con QR real cuando llegue Google API */}
                         <rect width="100" height="100" fill="white"/>
                         {[0,1,2,3,4,5,6].map(r => [0,1,2,3,4,5,6].map(c => {
                           const pattern = [[1,1,1,1,1,1,1],[1,0,0,0,0,0,1],[1,0,1,1,1,0,1],[1,0,1,0,1,0,1],[1,0,1,1,1,0,1],[1,0,0,0,0,0,1],[1,1,1,1,1,1,1]];
@@ -794,26 +854,16 @@ export default function Dashboard() {
                         }))}
                       </svg>
                     </div>
-
                     <div style={{ textAlign: "center" }}>
                       <div style={{ fontSize: 13, fontWeight: 600, color: d.text, marginBottom: 4 }}>{currentBusiness?.name}</div>
                       <div style={{ fontSize: 11, color: d.muted }}>Escanea para dejar una reseña</div>
                     </div>
-
                     <div style={{ display: "flex", flexDirection: "column", gap: 8, width: "100%" }}>
-                      <button onClick={() => showToast("Descargando QR... ✨")} style={{ width: "100%", padding: "11px", background: d.accent, border: "none", borderRadius: 9, color: d.accentFg, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
-                        📥 Descargar QR
-                      </button>
-                      <button onClick={() => showToast("Generando kit PDF completo... 🎨")} style={{ width: "100%", padding: "10px", background: "transparent", border: `1px solid ${d.border}`, borderRadius: 9, color: d.muted, fontSize: 12, cursor: "pointer" }}>
-                        🖨️ Descargar kit imprimible
-                      </button>
+                      <button onClick={() => showToast("Descargando QR... ✨")} style={{ width: "100%", padding: "11px", background: d.accent, border: "none", borderRadius: 9, color: d.accentFg, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>📥 Descargar QR</button>
+                      <button onClick={() => showToast("Generando kit PDF completo... 🎨")} style={{ width: "100%", padding: "10px", background: "transparent", border: `1px solid ${d.border}`, borderRadius: 9, color: d.muted, fontSize: 12, cursor: "pointer" }}>🖨️ Descargar kit imprimible</button>
                     </div>
                   </div>
-
-                  {/* Info y sugerencias */}
                   <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-
-                    {/* Stats */}
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12 }}>
                       {[{ label: "Escaneos este mes", value: "0", icon: "📲" }, { label: "Reseñas por QR", value: "0", icon: "⭐" }, { label: "Conversión", value: "0%", icon: "📈" }].map((s, i) => (
                         <div key={i} style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 12, padding: "16px", textAlign: "center" }}>
@@ -823,8 +873,6 @@ export default function Dashboard() {
                         </div>
                       ))}
                     </div>
-
-                    {/* Dónde ponerlo */}
                     <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 14, padding: "20px" }}>
                       <div style={{ fontSize: 14, fontWeight: 700, color: d.text, marginBottom: 14 }}>💡 ¿Dónde ponerlo?</div>
                       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -844,8 +892,6 @@ export default function Dashboard() {
                         ))}
                       </div>
                     </div>
-
-                    {/* Stat motivacional */}
                     <div style={{ background: dark ? "#1a1700" : "#fefce8", border: `1px solid ${dark ? "#3a3400" : "#fde68a"}`, borderRadius: 12, padding: "16px 18px" }}>
                       <p style={{ fontSize: 14, color: dark ? "#c0b870" : "#713f12", lineHeight: 1.7 }}>
                         📊 <strong>El 72% de los clientes dejan una reseña cuando se lo piden directamente.</strong> Un QR visible en tu local puede duplicar tus reseñas en Google en menos de 30 días.
