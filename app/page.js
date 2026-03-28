@@ -539,7 +539,7 @@ export default function Landing() {
           <div className="carousel-track">
             {[
               { name: "Karla Acho", role: "Dueña · La Gran Fresa · Magdalena y San Miguel", avatar: "KA", color: "#34A853", text: "Antes tardábamos semanas en responder reseñas. Ahora RevGo las responde en segundos y nuestro rating subió de 3.8 a 4.4 en solo 1 mes. Los clientes lo notan." },
-              { name: "Dra. Madeleine", role: "Dueña · Dental Beauty Care · Miraflores", avatar: "DM", color: "#4285F4", text: "Pensé que una IA no podría sonar humana para una clínica dental. Me equivoqué. Las respuestas son profesionales, empáticas y específicas para cada paciente. Mis clientes se sienten escuchados." },
+              { name: "Dra. Madeleine", role: "Dueña · Dental Beauty Care · Miraflores", avatar: "DM", color: "#4285F4", text: "Pensé que una IA no podría sonar humana para una clínica dental. Me equivoqué. Las respuestas son profesionales, empáticas y específicas para cada paciente. Mis clientes se sienten escuchados y yo tengo un lugar en la plataforma para revisarlo, es tan simple y eficaz." },
             ].map((t, i) => (
               <div key={i} className="carousel-card hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 14, padding: "28px 24px" }}>
                 <div style={{ display: "flex", gap: 2, marginBottom: 16 }}>
