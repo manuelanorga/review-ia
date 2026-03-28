@@ -29,7 +29,7 @@ export default function Onboarding() {
         .from("users")
         .select("id, plan")
         .eq("email", session.user.email)
-        .single();
+        .maybeSingle()
 
       if (existingUser) {
         localStorage.removeItem("selectedPlan"); // ✅ FIX: limpiar para no ir al checkout
