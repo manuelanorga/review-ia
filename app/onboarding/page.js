@@ -9,7 +9,7 @@ export default function Onboarding() {
   const { data: session, status } = useSession();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [checking, setChecking] = useState(true); // ← nuevo
+  const [checking, setChecking] = useState(true);
   const [form, setForm] = useState({
     full_name: "",
     phone: "",
@@ -17,7 +17,6 @@ export default function Onboarding() {
     website: "",
   });
 
-  // ✅ NUEVO: Si el usuario ya existe en Supabase → saltar onboarding
   useEffect(() => {
     const checkExistingUser = async () => {
       if (status === "loading") return;
@@ -33,6 +32,7 @@ export default function Onboarding() {
         .single();
 
       if (existingUser) {
+        localStorage.removeItem("selectedPlan"); // ✅ FIX: limpiar para no ir al checkout
         router.push("/dashboard");
       } else {
         setChecking(false);
@@ -88,7 +88,6 @@ export default function Onboarding() {
     }
   };
 
-  // ✅ Pantalla de carga mientras verificamos si el usuario ya existe
   if (checking) {
     return (
       <div style={{ minHeight: "100vh", background: "#0f0f0f", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'DM Sans', sans-serif" }}>
