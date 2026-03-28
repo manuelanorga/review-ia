@@ -362,6 +362,9 @@ export default function Landing() {
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+        @keyframes gradientShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+        .btn-dashboard { background: linear-gradient(135deg, #FFE600, #FF9500, #FFE600, #FFF176) !important; background-size: 300% 300% !important; animation: gradientShift 3s ease infinite !important; transition: transform 0.2s, box-shadow 0.2s !important; }
+        .btn-dashboard:hover { transform: scale(1.03) !important; box-shadow: 0 4px 20px rgba(255,149,0,0.4) !important; }
         .fade1 { animation: fadeUp 0.7s ease both; }
         .fade2 { animation: fadeUp 0.7s ease 0.15s both; }
         .hl { transition: transform 0.2s, border-color 0.2s; }
@@ -405,7 +408,7 @@ export default function Landing() {
         <div onClick={() => setMobileMenuOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 150, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}>
           <div onClick={e => e.stopPropagation()} style={{ position: "absolute", top: 60, left: 0, right: 0, background: "#0f0f00", border: "1px solid #2a2800", borderTop: "none", padding: "16px 6% 24px", display: "flex", flexDirection: "column", gap: 10, animation: "fadeUp 0.2s ease both" }}>
             {session ? (
-              <button onClick={() => { router.push("/dashboard"); setMobileMenuOpen(false); }} style={{ width: "100%", padding: "13px", background: Y, border: "none", borderRadius: 9, color: BG, fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
+              <button className="btn-dashboard" onClick={() => { router.push("/dashboard"); setMobileMenuOpen(false); }} style={{ width: "100%", padding: "13px", border: "none", borderRadius: 9, color: BG, fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
                 Ir al Dashboard →
               </button>
             ) : (
@@ -443,7 +446,7 @@ export default function Landing() {
             </button>
           )}
           {session ? (
-            <button onClick={() => router.push("/dashboard")} style={{ padding: "8px 18px", background: Y, border: "none", borderRadius: 7, color: BG, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "background 0.2s" }} onMouseOver={e => e.currentTarget.style.background = "#fff176"} onMouseOut={e => e.currentTarget.style.background = Y}>
+            <button className="btn-dashboard" onClick={() => router.push("/dashboard")} style={{ padding: "8px 18px", border: "none", borderRadius: 7, color: BG, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
               Ir al Dashboard →
             </button>
           ) : (
