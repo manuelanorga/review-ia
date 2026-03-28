@@ -669,7 +669,7 @@ export default function Landing() {
             ))}
           </div>
           <p style={{ textAlign: "center", color: "#444430", fontSize: 13, marginTop: 24 }}>
-            ¿Más de 10 locales?{" "}<span style={{ color: Y, cursor: "pointer" }}>Contáctanos para un plan a medida →</span>
+            ¿Más de 10 locales?{" "}<span onClick={() => router.push("/contacto")} style={{ color: Y, cursor: "pointer" }}>Contáctanos para un plan a medida →</span>
           </p>
         </div>
       </section>
@@ -725,8 +725,8 @@ export default function Landing() {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 14 }}>
             <span style={{ color: MUTED, fontSize: 12 }}>© 2026 RevGo · Lima, Perú</span>
             <div style={{ display: "flex", gap: 24, alignItems: "center", flexWrap: "wrap" }}>
-              {["Privacidad", "Términos", "Contacto"].map(l => (
-                <span key={l} style={{ color: MUTED, fontSize: 13, cursor: "pointer", transition: "color 0.2s" }} onMouseOver={e => e.target.style.color = Y} onMouseOut={e => e.target.style.color = MUTED}>{l}</span>
+              {[["Privacidad", "/privacidad"], ["Términos", "/terminos"], ["Contacto", "/contacto"]].map(([l, href]) => (
+                <span key={l} style={{ color: MUTED, fontSize: 13, cursor: "pointer", transition: "color 0.2s" }} onClick={() => router.push(href)} onMouseOver={e => e.target.style.color = Y} onMouseOut={e => e.target.style.color = MUTED}>{l}</span>
               ))}
             </div>
           </div>
