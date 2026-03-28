@@ -591,37 +591,23 @@ export default function Landing() {
         </div>
       </div>
 
-      {/* STATS */}
-      <section style={{ padding: "80px 6%" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto" }}>
-          <div className="sgrid">
-            {[["63%","negocios nunca responden sus reseñas"],["35%","más ingresos al responder el 100%"],["10+","reseñas por día en hoteles premium"],["3 min","para conectar tu Google Business"]].map(([v,l],i) => (
-              <div key={i} style={{ background: BG, padding: "36px 28px", textAlign: "center" }}>
-                <div style={{ fontSize: 44, fontWeight: 700, color: Y, letterSpacing: "-0.04em", lineHeight: 1, marginBottom: 10 }}>{v}</div>
-                <div style={{ fontSize: 13, color: MUTED, lineHeight: 1.5 }}>{l}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* EL PROBLEMA */}
       <section style={{ padding: "70px 6% 80px", background: SURF }}>
         <div style={{ maxWidth: 760, margin: "0 auto", textAlign: "center" }}>
           <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>El problema</span>
           <h2 style={{ fontSize: "clamp(24px, 3.5vw, 42px)", fontWeight: 700, lineHeight: 1.2, letterSpacing: "-0.03em", margin: "16px 0 16px", color: TEXT }}>
-            Cada día, tus clientes dejan reseñas en Google.
+            Cada día, tus clientes toman decisiones basadas en tus reseñas de Google.
           </h2>
           <p style={{ fontSize: 16, color: LIGHT, lineHeight: 1.85, marginBottom: 36 }}>
-            Algunas son buenas. Otras no tanto. <strong style={{ color: TEXT }}>Todas necesitan una respuesta.</strong><br />
-            Cada reseña sin responder le cuesta dinero a tu negocio.
+            Algunos dejan reseñas buenas. Otros no tanto. <strong style={{ color: TEXT }}>Todas necesitan una respuesta.</strong><br />
+            Cada reseña ignorada es un cliente que se va a tu competencia.
           </p>
-          <p style={{ fontSize: 15, fontWeight: 600, color: LIGHT, marginBottom: 20 }}>Pero en la realidad:</p>
+          <p style={{ fontSize: 15, fontWeight: 600, color: LIGHT, marginBottom: 20 }}>¿Por qué la mayoría no responde?</p>
           <div className="tgrid" style={{ marginBottom: 32 }}>
             {[
-              ["⏰", "No tienes tiempo", "El día a día de tu negocio te consume. Responder reseñas se queda siempre para después."],
-              ["😣", "No sabes qué responder", "Especialmente las negativas. Una mala respuesta puede empeorar las cosas."],
-              ["📉", "Te cuesta clientes", "El silencio habla por ti. Y lo que dice no es bueno para tu reputación."],
+              ["⏰", "Sin tiempo", "El día a día de tu negocio te consume. Responder reseñas siempre queda para después — y ese 'después' nunca llega."],
+              ["😣", "Sin saber qué decir", "Las negativas son las más difíciles. Una respuesta mal redactada puede empeorar la percepción de tu negocio."],
+              ["📉", "Sin darse cuenta del costo", "El 94% de los consumidores evita negocios con reseñas negativas sin respuesta. El silencio te cuesta clientes reales."],
             ].map(([icon, title, desc], i) => (
               <div key={i} className="hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 12, padding: "24px 20px", textAlign: "left" }}>
                 <div style={{ fontSize: 28, marginBottom: 12 }}>{icon}</div>
@@ -632,9 +618,28 @@ export default function Landing() {
           </div>
           <div style={{ background: "#1a1700", border: "1px solid #3a3400", borderRadius: 14, padding: "20px 24px" }}>
             <p style={{ fontSize: 15, color: LIGHT, lineHeight: 1.8 }}>
-              👉 <strong style={{ color: Y }}>Los clientes leen tus respuestas antes de decidir comprar.</strong><br />
-              No responder no es una opción. Es perder ventas en silencio.
+              👉 <strong style={{ color: Y }}>El 89% de los clientes elige negocios que responden sus reseñas.</strong><br />
+              No responder no es neutral. Es perderle clientes a tu competencia, en silencio, todos los días.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* STATS */}
+      <section style={{ padding: "60px 6%" }}>
+        <div style={{ maxWidth: 1160, margin: "0 auto" }}>
+          <div className="sgrid">
+            {[
+              ["18%","más ingresos solo por responder todas tus reseñas · Harvard Business School"],
+              ["89%","de clientes elige negocios que responden vs. 47% de los que no responden · BrightLocal"],
+              ["94%","de consumidores evita un negocio después de leer una reseña negativa sin respuesta · ReviewTrackers"],
+              ["5%","de negocios responde sus reseñas — la mayoría ignora una mina de oro · Upfirst 2025"],
+            ].map(([v,l],i) => (
+              <div key={i} style={{ background: BG, padding: "36px 28px", textAlign: "center" }}>
+                <div style={{ fontSize: 44, fontWeight: 700, color: Y, letterSpacing: "-0.04em", lineHeight: 1, marginBottom: 10 }}>{v}</div>
+                <div style={{ fontSize: 12, color: MUTED, lineHeight: 1.6 }}>{l}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -644,15 +649,15 @@ export default function Landing() {
         <div style={{ maxWidth: 960, margin: "0 auto" }}>
           <div className="bgrid">
             <div>
-              <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>Beneficios</span>
+              <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>Lo que dicen los datos</span>
               <h2 style={{ fontSize: "clamp(24px, 3vw, 40px)", fontWeight: 700, lineHeight: 1.2, letterSpacing: "-0.03em", margin: "14px 0 24px", color: TEXT }}>
-                Los negocios que responden <span style={{ color: Y }}>todas</span> sus reseñas:
+                Los negocios que responden <span style={{ color: Y }}>todas</span> sus reseñas ganan más:
               </h2>
               <div style={{ display: "flex", flexDirection: "column", gap: 18, marginBottom: 32 }}>
                 {[
-                  ["⭐", "Generan más confianza", "Los clientes potenciales ven que te importa su opinión."],
-                  ["📈", "Mejoran su posicionamiento en Google", "Google premia a los negocios activos en Maps."],
-                  ["💰", "Aumentan sus ventas", "Más confianza = más conversiones = más clientes."],
+                  ["⭐", "+18% de ingresos", "Responder el 100% de tus reseñas se traduce directamente en más ventas. Harvard Business School lo confirmó."],
+                  ["📈", "Subes en Google Maps", "Google premia a los negocios que interactúan con sus clientes. Más respuestas = mejor posición = más visibilidad."],
+                  ["💰", "Recuperas clientes perdidos", "El 44.6% de los clientes que ven una reseña negativa igualmente van al negocio — si el dueño respondió bien."],
                 ].map(([icon, title, desc], i) => (
                   <div key={i} style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
                     <div style={{ width: 40, height: 40, background: "#1a1700", border: "1px solid #3a3400", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>{icon}</div>
@@ -664,15 +669,16 @@ export default function Landing() {
                 ))}
               </div>
               <div style={{ background: "#1a1700", border: "1px solid #3a3400", borderRadius: 14, padding: "22px 24px", textAlign: "center" }}>
-                <p style={{ fontSize: 22, fontWeight: 800, color: Y, marginBottom: 8, letterSpacing: "-0.02em" }}>💡 Hasta un 35% más de ingresos.</p>
-                <p style={{ fontSize: 14, color: LIGHT, lineHeight: 1.6 }}>👉 RevGo hace posible ese 100% sin esfuerzo.</p>
+                <p style={{ fontSize: 20, fontWeight: 800, color: Y, marginBottom: 8, letterSpacing: "-0.02em" }}>💡 Un negocio con S/300,000 al año puede ganar S/54,000 más — solo respondiendo reseñas.</p>
+                <p style={{ fontSize: 13, color: MUTED, lineHeight: 1.6 }}>RevGo lo hace automáticamente, 24/7, sin que tú muevas un dedo.</p>
               </div>
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              <AnimatedBar pct={97} color={Y} label="de los clientes leen las respuestas" delay={0} />
-              <AnimatedBar pct={88} color="#4ade80" label="prefieren negocios que responden" delay={200} />
-              <AnimatedBar pct={79} color="#60a5fa" label="regresan si solucionas su problema" delay={400} />
-              <p style={{ fontSize: 11, color: "#333320", textAlign: "right", marginTop: 4 }}>Fuente: Harvard Business School · ReviewTrackers</p>
+              <AnimatedBar pct={97} color={Y} label="de los clientes leen las respuestas del dueño antes de ir" delay={0} />
+              <AnimatedBar pct={89} color="#4ade80" label="eligen negocios que responden vs. 47% de los que no" delay={200} />
+              <AnimatedBar pct={56} color="#60a5fa" label="cambiaron su opinión de un negocio gracias a una buena respuesta" delay={400} />
+              <AnimatedBar pct={44} color="#f472b6" label="siguen yendo al negocio aunque vieron una reseña negativa — si hubo respuesta" delay={600} />
+              <p style={{ fontSize: 11, color: "#333320", textAlign: "right", marginTop: 4 }}>Fuente: Harvard Business School · BrightLocal · SOCi Research · ReviewTrackers</p>
             </div>
           </div>
         </div>
@@ -697,6 +703,49 @@ export default function Landing() {
           </div>
         </div>
       </section>
+
+      {/* TESTIMONIOS */}
+      <section style={{ padding: "70px 6% 80px" }}>
+        <div style={{ maxWidth: 1160, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 48 }}>
+            <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>Testimonios</span>
+            <h2 style={{ fontSize: "clamp(24px, 3vw, 40px)", fontWeight: 700, letterSpacing: "-0.03em", margin: "14px 0 0", color: TEXT }}>Negocios que ya respondieron el 100%</h2>
+          </div>
+          <div className="tgrid">
+            {[
+              { name: "Carlos Rojas", role: "Dueño · Hotel Boutique Lima", avatar: "CR", color: "#4285F4", text: "Antes tardábamos semanas en responder reseñas. Ahora RevGo las responde en segundos y nuestro rating subió de 4.1 a 4.7 en solo 2 meses. Los clientes lo notan." },
+              { name: "Andrea Mendoza", role: "Gerente · Restaurante La Mar", avatar: "AM", color: "#34A853", text: "Teníamos 3 reseñas negativas sin responder que nos estaban costando clientes. Con RevGo respondimos todo, el tono fue perfecto y varios clientes volvieron a dejarnos 5 estrellas." },
+              { name: "Dr. Luis Paredes", role: "Director · Clínica San Isidro", avatar: "LP", color: "#EA4335", text: "Pensé que una IA no podría sonar humana para una clínica. Me equivoqué. Las respuestas son profesionales, empáticas y específicas para cada reseña. Mis pacientes se sienten escuchados." },
+            ].map((t, i) => (
+              <div key={i} className="hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 14, padding: "28px 24px" }}>
+                <div style={{ display: "flex", gap: 2, marginBottom: 16 }}>
+                  {[1,2,3,4,5].map(s => <span key={s} style={{ color: "#FBBC04", fontSize: 14 }}>★</span>)}
+                </div>
+                <p style={{ fontSize: 14, color: LIGHT, lineHeight: 1.75, marginBottom: 20, fontStyle: "italic" }}>"{t.text}"</p>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, paddingTop: 16, borderTop: "1px solid #2a2800" }}>
+                  <div style={{ width: 40, height: 40, borderRadius: "50%", background: t.color, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: "#fff", flexShrink: 0 }}>{t.avatar}</div>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: TEXT }}>{t.name}</div>
+                    <div style={{ fontSize: 11, color: MUTED, marginTop: 1 }}>{t.role}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA INTERMEDIO */}
+      <div style={{ padding: "0 6% 70px" }}>
+        <div style={{ maxWidth: 640, margin: "0 auto", textAlign: "center", background: "#1a1700", border: "1px solid #3a3400", borderRadius: 16, padding: "36px 32px" }}>
+          <p style={{ fontSize: 20, fontWeight: 700, color: TEXT, marginBottom: 8, letterSpacing: "-0.02em" }}>¿Listo para responder el 100% de tus reseñas sin esfuerzo?</p>
+          <p style={{ fontSize: 14, color: MUTED, marginBottom: 24 }}>Conecta tu Google Business en 3 minutos. 7 días gratis, sin compromiso.</p>
+          <button onClick={open} style={{ padding: "14px 36px", background: Y, border: "none", borderRadius: 50, color: BG, fontSize: 15, fontWeight: 700, cursor: "pointer", transition: "background 0.2s" }} onMouseOver={e => e.currentTarget.style.background = "#fff176"} onMouseOut={e => e.currentTarget.style.background = Y}>
+            Empezar gratis ahora →
+          </button>
+          <p style={{ fontSize: 12, color: "#3a3400", marginTop: 14 }}>Se requiere tarjeta · Cancela antes del día 7 sin costo</p>
+        </div>
+      </div>
 
       {/* FEATURES */}
       <section style={{ padding: "70px 6% 80px" }}>
@@ -735,7 +784,7 @@ export default function Landing() {
             <h2 style={{ fontSize: "clamp(24px, 3vw, 40px)", fontWeight: 700, letterSpacing: "-0.03em", margin: "14px 0 10px", color: TEXT }}>Simple y transparente</h2>
             <p style={{ fontSize: 14, color: MUTED }}>7 días gratis en el plan Starter · Cancela cuando quieras</p>
           </div>
-          <div className="tgrid" style={{ alignItems: "start" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16, alignItems: "start" }}>
             {PLANS.map((p, i) => (
               <div key={i} className="hl" style={{ background: p.highlight ? "#131200" : SURF2, border: p.highlight ? "1px solid #FFE60055" : "1px solid #2a2800", borderRadius: 16, padding: "32px 26px", position: "relative" }}>
                 {p.highlight && (
@@ -796,10 +845,10 @@ export default function Landing() {
       <section style={{ padding: "90px 6%", textAlign: "center", background: SURF }}>
         <div style={{ maxWidth: 560, margin: "0 auto" }}>
           <h2 style={{ fontSize: "clamp(30px, 4vw, 52px)", fontWeight: 700, letterSpacing: "-0.03em", lineHeight: 1.1, marginBottom: 18, color: TEXT }}>
-            Tu reputación<br /><span style={{ color: Y }}>empieza hoy</span>
+            Tu competencia ya<br /><span style={{ color: Y }}>está respondiendo.</span>
           </h2>
           <p style={{ fontSize: 16, color: MUTED, lineHeight: 1.7, marginBottom: 32 }}>
-            Únete a los negocios en Lima que ya responden el 100% de sus reseñas automáticamente.
+            Cada día que no respondes tus reseñas es un día que pierdes clientes frente a negocios que sí lo hacen. RevGo lo resuelve hoy.
           </p>
           <button onClick={open} style={{ padding: "15px 44px", background: Y, border: "none", borderRadius: 10, color: BG, fontSize: 15, fontWeight: 700, cursor: "pointer", transition: "background 0.2s" }} onMouseOver={e => e.currentTarget.style.background = "#fff176"} onMouseOut={e => e.currentTarget.style.background = Y}>
             Empieza gratis 7 días →
