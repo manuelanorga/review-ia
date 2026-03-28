@@ -345,9 +345,13 @@ export default function Landing() {
   const activeReview = tick % REVIEWS.length;
   const open = (plan = "starter") => {
     if (typeof window !== "undefined") {
-      localStorage.setItem("selectedPlan", plan);
+     localStorage.setItem("selectedPlan", plan);
   }
   signIn("google", { callbackUrl: "/onboarding" });
+};
+
+const login = () => {
+  signIn("google", { callbackUrl: "/dashboard" });
 };
 
   return (
@@ -401,9 +405,14 @@ export default function Landing() {
         <div className="navlinks" style={{ display: "flex", flex: 1, justifyContent: "flex-end", marginRight: 24 }}>
           <a href="#precios" style={{ fontSize: 13, color: MUTED, textDecoration: "none", transition: "color 0.2s" }} onMouseOver={e => e.target.style.color = TEXT} onMouseOut={e => e.target.style.color = MUTED}>Precios</a>
         </div>
-        <button onClick={open} style={{ padding: "8px 18px", background: Y, border: "none", borderRadius: 7, color: BG, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "background 0.2s" }} onMouseOver={e => e.currentTarget.style.background = "#fff176"} onMouseOut={e => e.currentTarget.style.background = Y}>
-          Empezar gratis
-        </button>
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          <button onClick={open} style={{ padding: "8px 18px", background: Y, border: "none", borderRadius: 7, color: BG, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "background 0.2s" }} onMouseOver={e => e.currentTarget.style.background = "#fff176"} onMouseOut={e => e.currentTarget.style.background = Y}>
+            Empezar gratis
+          </button>
+          <button onClick={login} style={{ padding: "8px 18px", background: "transparent", border: `1px solid ${BORDER}`, borderRadius: 7, color: MUTED, fontSize: 13, fontWeight: 500, cursor: "pointer", transition: "all 0.2s" }} onMouseOver={e => { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; }} onMouseOut={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; }}>
+            Iniciar sesión
+          </button>
+        </div>
       </nav>
 
       {/* ── HERO ── */}
