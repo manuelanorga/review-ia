@@ -142,7 +142,7 @@ export default function Onboarding() {
               </div>
               <div style={{ marginTop: 16, padding: "14px", background: "rgba(255,230,0,0.06)", border: "1px solid rgba(255,230,0,0.15)", borderRadius: 9 }}>
                 <p style={{ fontSize: 12, color: "#c0b870", lineHeight: 1.6 }}>
-                  🎉 ¡Ya casi listo! Después de esto conectaremos tu Google Business Profile y empezarás a responder reseñas con IA.
+                  🎉 ¡Ya casi listo! Tu Google Business Profile ya está conectado. En segundos podrás empezar a responder tus reseñas con IA automáticamente.
                 </p>
               </div>
               <div style={{ display: "flex", gap: 10, marginTop: 24 }}>
