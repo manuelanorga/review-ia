@@ -538,9 +538,8 @@ export default function Landing() {
           </div>
           <div className="carousel-track">
             {[
-              { name: "Carlos Rojas", role: "Dueño · Hotel Boutique Lima", avatar: "CR", color: "#4285F4", text: "Antes tardábamos semanas en responder reseñas. Ahora RevGo las responde en segundos y nuestro rating subió de 4.1 a 4.7 en solo 2 meses. Los clientes lo notan." },
-              { name: "Andrea Mendoza", role: "Gerente · Restaurante La Mar", avatar: "AM", color: "#34A853", text: "Teníamos 3 reseñas negativas sin responder que nos estaban costando clientes. Con RevGo respondimos todo, el tono fue perfecto y varios clientes volvieron a dejarnos 5 estrellas." },
-              { name: "Dr. Luis Paredes", role: "Director · Clínica San Isidro", avatar: "LP", color: "#EA4335", text: "Pensé que una IA no podría sonar humana para una clínica. Me equivoqué. Las respuestas son profesionales, empáticas y específicas para cada reseña. Mis pacientes se sienten escuchados." },
+              { name: "Karla Acho", role: "Dueña · La Gran Fresa · Magdalena y San Miguel", avatar: "KA", color: "#34A853", text: "Antes tardábamos semanas en responder reseñas. Ahora RevGo las responde en segundos y nuestro rating subió de 3.8 a 4.4 en solo 1 mes. Los clientes lo notan." },
+              { name: "Dra. Madeleine", role: "Dueña · Dental Beauty Care · Miraflores", avatar: "DM", color: "#4285F4", text: "Pensé que una IA no podría sonar humana para una clínica dental. Me equivoqué. Las respuestas son profesionales, empáticas y específicas para cada paciente. Mis clientes se sienten escuchados." },
             ].map((t, i) => (
               <div key={i} className="carousel-card hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 14, padding: "28px 24px" }}>
                 <div style={{ display: "flex", gap: 2, marginBottom: 16 }}>
