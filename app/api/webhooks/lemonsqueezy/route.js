@@ -20,6 +20,7 @@ export async function POST(request) {
   }
 
   const payload = JSON.parse(body);
+  console.log("Webhook recibido:", eventName, email, productName);
   const eventName = payload.meta?.event_name;
   const email = payload.data?.attributes?.user_email;
   const productName = payload.data?.attributes?.product_name?.toLowerCase();
