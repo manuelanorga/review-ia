@@ -402,7 +402,7 @@ export default function Landing() {
       <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, background: scrolled ? "rgba(10,10,10,0.95)" : "transparent", backdropFilter: scrolled ? "blur(12px)" : "none", borderBottom: scrolled ? "1px solid #2a2800" : "1px solid transparent", transition: "all 0.3s", padding: "0 6%", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         {/* ✅ LOGO CLICKEABLE → va a home */}
         <div onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} style={{ display: "flex", alignItems: "center", gap: 9, cursor: "pointer" }}>
-          <img src="/logo.png" alt="RevGo logo" style={{ width: 30, height: 30, borderRadius: 7, objectFit: "contain" }} />
+          <img src="/logo.png" alt="RevGo logo" suppressHydrationWarning style={{ width: 30, height: 30, borderRadius: 7, objectFit: "contain" }} />
           <span style={{ fontSize: 16, fontWeight: 700, color: TEXT, letterSpacing: "-0.01em" }}>RevGo<span style={{ color: Y }}>.app</span></span>
         </div>
         <div className="navlinks" style={{ display: "flex", flex: 1, justifyContent: "flex-end", marginRight: 24 }}>
@@ -778,7 +778,7 @@ export default function Landing() {
           <div className="footer-inner" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 24, marginBottom: 28 }}>
             {/* ✅ Logo con imagen */}
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <img src="/logo.png" alt="RevGo logo" style={{ width: 32, height: 32, borderRadius: 8, objectFit: "contain" }} />
+              <img src="/logo.png" alt="RevGo logo" suppressHydrationWarning style={{ width: 32, height: 32, borderRadius: 8, objectFit: "contain" }} />
               <div>
                 <div style={{ fontSize: 15, fontWeight: 700, color: TEXT }}>RevGo<span style={{ color: Y }}>.app</span></div>
                 <div style={{ fontSize: 11, color: MUTED, marginTop: 1 }}>Gestión de reseñas con IA · Lima, Perú</div>
