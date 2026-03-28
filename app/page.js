@@ -301,7 +301,123 @@ const TONE_CONFIG = {
 function AutopilotDemo() {
   const [activeTone, setActiveTone] = useState("profesional");
   const [autopilot, setAutopilot] = useState(true);
+  const [hinted, setHinted] = useState(false);
   const reviews = TONE_PREVIEWS[activeTone];
+
+  // Marca como "ya interactuó" al primer clic
+  const handleTone = (key) => {
+    setActiveTone(key);
+    setHinted(true);
+  };
+
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: "320px 1fr", gap: 24, alignItems: "start" }} className="bgrid">
+      {/* PANEL IZQUIERDO */}
+      <div style={{ background: SURF2, border: `1px solid ${BORDER}`, borderRadius: 16, overflow: "hidden" }}>
+        {/* Header */}
+        <div style={{ padding: "18px 20px", borderBottom: `1px solid ${BORDER}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: TEXT }}>⚡ Autopiloto</div>
+            <div style={{ fontSize: 12, color: autopilot ? "#4ade80" : MUTED, marginTop: 2 }}>{autopilot ? "Respondiendo automáticamente" : "Pausado"}</div>
+          </div>
+          <div onClick={() => setAutopilot(!autopilot)} style={{ width: 44, height: 24, borderRadius: 12, background: autopilot ? "#4ade80" : "#333", cursor: "pointer", position: "relative", transition: "background 0.3s", flexShrink: 0 }}>
+            <div style={{ position: "absolute", top: 2, left: autopilot ? 22 : 2, width: 20, height: 20, borderRadius: "50%", background: "#fff", transition: "left 0.3s", boxShadow: "0 1px 4px rgba(0,0,0,0.3)" }} />
+          </div>
+        </div>
+
+        {/* Tono */}
+        <div style={{ padding: "16px 20px", borderBottom: `1px solid ${BORDER}` }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+            <div style={{ fontSize: 11, color: MUTED, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em" }}>Tono de respuesta</div>
+            {!hinted && (
+              <div style={{ fontSize: 10, color: Y, fontWeight: 600, animation: "pulse 1.5s infinite", display: "flex", alignItems: "center", gap: 4 }}>
+                <span>👆</span> Toca para probar
+              </div>
+            )}
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {Object.entries(TONE_CONFIG).map(([key, { label, desc }]) => {
+              const isActive = activeTone === key;
+              return (
+                <div
+                  key={key}
+                  onClick={() => handleTone(key)}
+                  style={{
+                    padding: "12px 14px",
+                    borderRadius: 10,
+                    border: `1.5px solid ${isActive ? Y : BORDER}`,
+                    background: isActive ? "rgba(255,230,0,0.06)" : "transparent",
+                    cursor: "pointer",
+                    transition: "all 0.2s",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    boxShadow: isActive ? "0 0 12px rgba(255,230,0,0.25), 0 0 24px rgba(255,230,0,0.1)" : "none",
+                    animation: isActive ? "tonePulse 2.5s ease-in-out infinite" : "none",
+                  }}
+                >
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: isActive ? 700 : 400, color: isActive ? Y : LIGHT }}>{label}</div>
+                    <div style={{ fontSize: 11, color: MUTED, marginTop: 2 }}>{desc}</div>
+                  </div>
+                  {isActive && <span style={{ color: Y, fontSize: 14 }}>✓</span>}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Reglas */}
+        <div style={{ padding: "16px 20px" }}>
+          <div style={{ fontSize: 11, color: MUTED, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>Reglas de autopiloto</div>
+          {[["Reseñas de 5 estrellas", true], ["Reseñas de 4 estrellas", true], ["Reseñas de 3 estrellas", true], ["Reseñas de 1-2 estrellas", false]].map(([label, on]) => (
+            <div key={label} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+              <span style={{ fontSize: 12, color: LIGHT }}>{label}</span>
+              <div style={{ width: 34, height: 18, borderRadius: 9, background: on ? "#4ade80" : "#333", position: "relative", flexShrink: 0 }}>
+                <div style={{ position: "absolute", top: 2, left: on ? 16 : 2, width: 14, height: 14, borderRadius: "50%", background: "#fff", transition: "left 0.3s" }} />
+              </div>
+            </div>
+          ))}
+          <div style={{ background: "#1a1700", border: "1px solid #3a3400", borderRadius: 8, padding: "10px 12px", marginTop: 8 }}>
+            <p style={{ fontSize: 11, color: "#a89060", lineHeight: 1.6 }}>⚠️ Las reseñas de 1–2 estrellas requieren atención especial. Te recomendamos revisarlas manualmente.</p>
+          </div>
+        </div>
+      </div>
+
+      {/* PANEL DERECHO — Respuestas */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+          <div style={{ fontSize: 13, color: MUTED }}>Vista previa del tono</div>
+          <div style={{ background: "#1a1700", border: "1px solid #3a3400", borderRadius: 20, padding: "4px 14px", fontSize: 12, fontWeight: 700, color: Y }}>{TONE_CONFIG[activeTone].label}</div>
+        </div>
+        <div style={{ fontSize: 12, color: MUTED, fontStyle: "italic", marginBottom: 4 }}>💡 La IA adapta cada respuesta al contexto de la reseña. Estos son ejemplos representativos del tono seleccionado.</div>
+        {reviews.map((r, i) => (
+          <div key={`${activeTone}-${i}`} style={{ background: SURF2, border: `1px solid ${BORDER}`, borderRadius: 14, padding: "18px 20px", animation: "fadeUp 0.3s ease both", animationDelay: `${i * 0.08}s` }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+              <div style={{ width: 34, height: 34, borderRadius: "50%", background: r.avatarColor, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#fff", flexShrink: 0 }}>{r.name.split(" ").map(n => n[0]).join("")}</div>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: TEXT }}>{r.name}</div>
+                <div style={{ display: "flex", gap: 1, marginTop: 1 }}>
+                  {[1,2,3,4,5].map(s => <span key={s} style={{ fontSize: 11, color: s <= r.stars ? "#FBBC04" : "#333" }}>★</span>)}
+                </div>
+              </div>
+            </div>
+            <p style={{ fontSize: 13, color: LIGHT, lineHeight: 1.6, marginBottom: 12, fontStyle: "italic" }}>"{r.text}"</p>
+            <div style={{ background: "#1a1700", borderLeft: `3px solid ${Y}`, borderRadius: "0 8px 8px 0", padding: "12px 14px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
+                <div style={{ width: 16, height: 16, background: Y, borderRadius: 3, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <span style={{ fontSize: 8, fontWeight: 700, color: BG }}>R</span>
+                </div>
+                <span style={{ fontSize: 10, fontWeight: 700, color: Y }}>REVGO AI · {activeTone.toUpperCase()}</span>
+              </div>
+              <p style={{ fontSize: 13, color: LIGHT, lineHeight: 1.65 }}>{r.response}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
   return (
     <div style={{ display: "grid", gridTemplateColumns: "320px 1fr", gap: 24, alignItems: "start" }} className="bgrid">
