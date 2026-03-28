@@ -268,7 +268,7 @@ function DemoAnimation() {
         </div>
 
         {showPublish && (
-          <div style={{ marginTop: 10, padding: "10px", background: "#1a73e8", borderRadius: 8, fontSize: 13, fontWeight: 700, color: "#fff", textAlign: "center", opacity: showPublish ? 1 : 0, transition: "opacity 0.3s ease" }}>
+          <div style={{ marginTop: 10, padding: "10px", background: showPublish ? "#1a73e8" : "#dadce0", borderRadius: 8, fontSize: 13, fontWeight: 700, color: "#fff", textAlign: "center", transition: "background 0.4s ease", cursor: showPublish ? "pointer" : "default" }}>
             Publicar en Google →
           </div>
         )}
