@@ -683,19 +683,104 @@ export default function Landing() {
       {/* HOW IT WORKS */}
       <section id="como-funciona" style={{ padding: "50px 6% 60px", background: SURF }}>
         <div style={{ maxWidth: 1160, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 52 }}>
+          <div style={{ textAlign: "center", marginBottom: 48 }}>
             <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>Cómo funciona</span>
             <h2 style={{ fontSize: "clamp(24px, 3vw, 40px)", fontWeight: 700, letterSpacing: "-0.03em", margin: "14px 0 0", color: TEXT }}>Listo en 3 minutos</h2>
           </div>
-          <div className="tgrid">
-            {STEPS.map((s, i) => (
-              <div key={i} className="hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 14, padding: "32px 28px", position: "relative", overflow: "hidden" }}>
-                <div style={{ position: "absolute", top: 18, right: 20, fontSize: 56, fontWeight: 700, color: "#1a1800", lineHeight: 1, userSelect: "none" }}>{s.n}</div>
-                <div style={{ width: 36, height: 36, background: "#1a1700", border: "1px solid #2a2800", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20, color: Y, fontSize: 16 }}>{s.icon}</div>
-                <h3 style={{ fontSize: 17, fontWeight: 700, color: TEXT, marginBottom: 10, letterSpacing: "-0.02em", lineHeight: 1.3 }}>{s.title}</h3>
-                <p style={{ fontSize: 13, color: MUTED, lineHeight: 1.65 }}>{s.desc}</p>
+          <div className="carousel-track">
+
+            {/* CARD 1 — Google Business */}
+            <div className="carousel-card hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 16, overflow: "hidden", flexShrink: 0 }}>
+              <div style={{ padding: "28px 24px 20px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
+                  <div style={{ width: 36, height: 36, background: "#1a1700", border: "1px solid #2a2800", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>○</div>
+                  <div style={{ fontSize: 36, fontWeight: 700, color: "#1a1800", lineHeight: 1 }}>01</div>
+                </div>
+                <h3 style={{ fontSize: 18, fontWeight: 700, color: TEXT, marginBottom: 8, letterSpacing: "-0.02em" }}>Conecta tu Google Business</h3>
+                <p style={{ fontSize: 13, color: MUTED, lineHeight: 1.65, marginBottom: 20 }}>Un clic. Google abre su ventana oficial. Nosotros jamás vemos tu contraseña.</p>
               </div>
-            ))}
+              {/* Simulación del botón de Google */}
+              <div style={{ margin: "0 24px 24px", background: "#fff", borderRadius: 12, padding: "16px", boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+                  <svg width="20" height="20" viewBox="0 0 48 48">
+                    <path fill="#FFC107" d="M43.6 20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.7-.4-4z"/>
+                    <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
+                    <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2A12 12 0 0 1 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/>
+                    <path fill="#1976D2" d="M43.6 20H24v8h11.3a12 12 0 0 1-4.1 5.6l6.2 5.2C40.9 35.2 44 30 44 24c0-1.3-.1-2.7-.4-4z"/>
+                  </svg>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: "#202124" }}>Continuar con Google</span>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#f8f9fa", borderRadius: 8, padding: "10px 12px" }}>
+                  <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#4285F4", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#fff" }}>H</div>
+                  <div>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: "#202124" }}>Hotel Miraflores Boutique</div>
+                    <div style={{ fontSize: 10, color: "#5f6368" }}>4.6 ⭐ · 847 reseñas · Google Business</div>
+                  </div>
+                  <div style={{ marginLeft: "auto", width: 8, height: 8, borderRadius: "50%", background: "#34A853" }} />
+                </div>
+              </div>
+            </div>
+
+            {/* CARD 2 — Tono */}
+            <div className="carousel-card hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 16, overflow: "hidden", flexShrink: 0 }}>
+              <div style={{ padding: "28px 24px 20px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
+                  <div style={{ width: 36, height: 36, background: "#1a1700", border: "1px solid #2a2800", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>◇</div>
+                  <div style={{ fontSize: 36, fontWeight: 700, color: "#1a1800", lineHeight: 1 }}>02</div>
+                </div>
+                <h3 style={{ fontSize: 18, fontWeight: 700, color: TEXT, marginBottom: 8, letterSpacing: "-0.02em" }}>Define el tono de tu marca</h3>
+                <p style={{ fontSize: 13, color: MUTED, lineHeight: 1.65, marginBottom: 20 }}>Cercano, formal o profesional. La IA aprende cómo habla tu negocio.</p>
+              </div>
+              <div style={{ margin: "0 24px 24px", display: "flex", flexDirection: "column", gap: 8 }}>
+                {[
+                  { key: "cercano", label: "😊 Cercano", desc: "Cálido y personal", active: false },
+                  { key: "formal", label: "🎩 Formal", desc: "Elegante y respetuoso", active: true },
+                  { key: "profesional", label: "💼 Profesional", desc: "Directo y ejecutivo", active: false },
+                ].map(t => (
+                  <div key={t.key} style={{ padding: "11px 14px", borderRadius: 10, border: `1.5px solid ${t.active ? Y : BORDER}`, background: t.active ? "rgba(255,230,0,0.06)" : "transparent", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: t.active ? 700 : 400, color: t.active ? Y : LIGHT }}>{t.label}</div>
+                      <div style={{ fontSize: 11, color: MUTED, marginTop: 1 }}>{t.desc}</div>
+                    </div>
+                    {t.active && <span style={{ color: Y }}>✓</span>}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* CARD 3 — Autopiloto */}
+            <div className="carousel-card hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 16, overflow: "hidden", flexShrink: 0 }}>
+              <div style={{ padding: "28px 24px 20px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
+                  <div style={{ width: 36, height: 36, background: "#1a1700", border: "1px solid #2a2800", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>△</div>
+                  <div style={{ fontSize: 36, fontWeight: 700, color: "#1a1800", lineHeight: 1 }}>03</div>
+                </div>
+                <h3 style={{ fontSize: 18, fontWeight: 700, color: TEXT, marginBottom: 8, letterSpacing: "-0.02em" }}>Responde en autopiloto</h3>
+                <p style={{ fontSize: 13, color: MUTED, lineHeight: 1.65, marginBottom: 20 }}>Cada reseña nueva recibe una respuesta personalizada en segundos, 24/7.</p>
+              </div>
+              <div style={{ margin: "0 24px 24px", display: "flex", flexDirection: "column", gap: 10 }}>
+                {/* Toggle autopiloto */}
+                <div style={{ background: "#111100", border: "1px solid #2a2800", borderRadius: 12, padding: "14px 16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: TEXT }}>⚡ Autopiloto</div>
+                    <div style={{ fontSize: 11, color: "#4ade80", marginTop: 2 }}>Respondiendo automáticamente</div>
+                  </div>
+                  <div style={{ width: 44, height: 24, borderRadius: 12, background: "#4ade80", position: "relative", flexShrink: 0 }}>
+                    <div style={{ position: "absolute", top: 2, left: 22, width: 20, height: 20, borderRadius: "50%", background: "#fff", boxShadow: "0 1px 4px rgba(0,0,0,0.3)" }} />
+                  </div>
+                </div>
+                {/* Respuesta ejemplo */}
+                <div style={{ background: "#111100", border: "1px solid #2a2800", borderRadius: 12, padding: "12px 14px" }}>
+                  <div style={{ fontSize: 11, color: MUTED, marginBottom: 6 }}>María G. ⭐⭐⭐⭐⭐ · hace un momento</div>
+                  <div style={{ fontSize: 12, color: LIGHT, fontStyle: "italic", marginBottom: 8 }}>"Increíble experiencia, el personal súper atento."</div>
+                  <div style={{ borderLeft: `2px solid ${Y}`, paddingLeft: 8 }}>
+                    <div style={{ fontSize: 9, fontWeight: 700, color: Y, marginBottom: 3 }}>REVGO AI · FORMAL</div>
+                    <div style={{ fontSize: 11, color: LIGHT }}>Estimada María, le agradecemos sus amables palabras. ¡Esperamos verla pronto!</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
