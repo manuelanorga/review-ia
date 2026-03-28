@@ -1,5 +1,6 @@
 "use client";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 
 const Y = "#FFE600";
@@ -162,7 +163,6 @@ function DemoAnimation() {
     let cancelled = false;
 
     async function runCycle() {
-      // Reset
       setResponseText("");
       setIsGenerating(false);
       setShowPublish(false);
@@ -172,7 +172,6 @@ function DemoAnimation() {
       await sleep(1000);
       if (cancelled) return;
 
-      // Generating
       setIsGenerating(true);
       setPhase("generating");
       await sleep(1400);
@@ -181,7 +180,6 @@ function DemoAnimation() {
       setIsGenerating(false);
       setPhase("typing");
 
-      // Typewriter
       const text = DEMO_REVIEWS[currentIdx].response;
       for (let i = 0; i <= text.length; i++) {
         if (cancelled) return;
@@ -193,7 +191,6 @@ function DemoAnimation() {
       setShowPublish(true);
       setPhase("reading");
 
-      // Progress bar over 9s
       const start = Date.now();
       const duration = 9000;
       while (true) {
@@ -206,8 +203,6 @@ function DemoAnimation() {
       }
 
       if (cancelled) return;
-
-      // Next review
       setCurrentIdx(prev => (prev + 1) % DEMO_REVIEWS.length);
     }
 
@@ -322,6 +317,8 @@ function SignupModal({ onClose }) {
 }
 
 export default function Landing() {
+  const { data: session } = useSession();
+  const router = useRouter();
   const [tick, setTick] = useState(0);
   const [scrolled, setScrolled] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
@@ -345,14 +342,14 @@ export default function Landing() {
   const activeReview = tick % REVIEWS.length;
   const open = (plan = "starter") => {
     if (typeof window !== "undefined") {
-     localStorage.setItem("selectedPlan", plan);
-  }
-  signIn("google", { callbackUrl: "/onboarding" });
-};
+      localStorage.setItem("selectedPlan", plan);
+    }
+    signIn("google", { callbackUrl: "/onboarding" });
+  };
 
-const login = () => {
-  signIn("google", { callbackUrl: "/dashboard" });
-};
+  const login = () => {
+    signIn("google", { callbackUrl: "/dashboard" });
+  };
 
   return (
     <div style={{ background: BG, minHeight: "100vh", color: TEXT, fontFamily: "'DM Sans', sans-serif" }}>
@@ -406,12 +403,22 @@ const login = () => {
           <a href="#precios" style={{ fontSize: 13, color: MUTED, textDecoration: "none", transition: "color 0.2s" }} onMouseOver={e => e.target.style.color = TEXT} onMouseOut={e => e.target.style.color = MUTED}>Precios</a>
         </div>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <button onClick={open} style={{ padding: "8px 18px", background: Y, border: "none", borderRadius: 7, color: BG, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "background 0.2s" }} onMouseOver={e => e.currentTarget.style.background = "#fff176"} onMouseOut={e => e.currentTarget.style.background = Y}>
-            Empezar gratis
-          </button>
-          <button onClick={login} style={{ padding: "8px 18px", background: "transparent", border: `1px solid ${BORDER}`, borderRadius: 7, color: MUTED, fontSize: 13, fontWeight: 500, cursor: "pointer", transition: "all 0.2s" }} onMouseOver={e => { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; }} onMouseOut={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; }}>
-            Iniciar sesión
-          </button>
+          {/* ✅ NUEVO: Ocultar "Empezar gratis" si ya hay sesión */}
+          {!session && (
+            <button onClick={open} style={{ padding: "8px 18px", background: Y, border: "none", borderRadius: 7, color: BG, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "background 0.2s" }} onMouseOver={e => e.currentTarget.style.background = "#fff176"} onMouseOut={e => e.currentTarget.style.background = Y}>
+              Empezar gratis
+            </button>
+          )}
+          {/* ✅ NUEVO: Mostrar "Ir al Dashboard" si hay sesión, "Iniciar sesión" si no */}
+          {session ? (
+            <button onClick={() => router.push("/dashboard")} style={{ padding: "8px 18px", background: Y, border: "none", borderRadius: 7, color: BG, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "background 0.2s" }} onMouseOver={e => e.currentTarget.style.background = "#fff176"} onMouseOut={e => e.currentTarget.style.background = Y}>
+              Ir al Dashboard →
+            </button>
+          ) : (
+            <button onClick={login} style={{ padding: "8px 18px", background: "transparent", border: `1px solid ${BORDER}`, borderRadius: 7, color: MUTED, fontSize: 13, fontWeight: 500, cursor: "pointer", transition: "all 0.2s" }} onMouseOver={e => { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; }} onMouseOut={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; }}>
+              Iniciar sesión
+            </button>
+          )}
         </div>
       </nav>
 
@@ -421,13 +428,11 @@ const login = () => {
 
           {/* Copy */}
           <div className="fade1">
-            {/* BADGE */}
             <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#1a1700", border: "1px solid #3a3400", borderRadius: 20, padding: "5px 14px", marginBottom: 28 }}>
               <span style={{ width: 6, height: 6, borderRadius: "50%", background: Y, display: "inline-block", animation: "pulse 2s infinite" }} />
               <span style={{ color: Y, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>Más clientes desde Google Maps · Sin esfuerzo · 7 días gratis</span>
             </div>
 
-            {/* ── DEMO ANIMATION ── */}
             <div style={{ marginBottom: 32 }}>
               <DemoAnimation />
             </div>
