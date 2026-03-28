@@ -73,10 +73,10 @@ const PLANS = [
     highlight: false, badge: null,
   },
   {
-    name: "Agencia", price: "349", tagline: "Escala con tus clientes",
+    name: "Agencia", price: "449", tagline: "Escala con tus clientes",
     desc: "Ideal para agencias y revendedores",
     features: ["Clientes ilimitados", "Multi-cuenta · White label", "🌎 Español, inglés y 50 idiomas más", "🤖 Autopiloto · 3 tonos disponibles", "📊 Analytics completo + exportar PDF", "Reportes avanzados", "Account manager dedicado"],
-    highlight: false, badge: null,
+    highlight: false, badge: null, regularPrice: "699",
   },
 ];
 
@@ -650,8 +650,16 @@ export default function Landing() {
                   <div style={{ fontSize: 11, color: MUTED, marginTop: 2 }}>{p.desc}</div>
                 </div>
                 <div style={{ margin: "16px 0" }}>
+                  {p.regularPrice && (
+                    <div style={{ fontSize: 13, color: MUTED, marginBottom: 4 }}>
+                      Precio regular: <span style={{ textDecoration: "line-through" }}>S/{p.regularPrice}</span>
+                    </div>
+                  )}
                   <span style={{ fontSize: 46, fontWeight: 700, color: p.highlight ? Y : TEXT, letterSpacing: "-0.04em", lineHeight: 1 }}>S/{p.price}</span>
                   <span style={{ fontSize: 13, color: MUTED }}>/mes</span>
+                  {p.regularPrice && (
+                    <span style={{ marginLeft: 10, fontSize: 11, fontWeight: 700, color: "#4ade80", background: "#0a2a0a", padding: "2px 8px", borderRadius: 20 }}>Precio lanzamiento</span>
+                  )}
                 </div>
                 <div style={{ marginBottom: 24, display: "flex", flexDirection: "column", gap: 10 }}>
                   {p.features.map((feat, j) => (
@@ -661,8 +669,8 @@ export default function Landing() {
                     </div>
                   ))}
                 </div>
-                <button onClick={open} style={{ width: "100%", padding: "12px", background: p.highlight ? Y : "transparent", border: p.highlight ? "none" : "1px solid #2a2800", borderRadius: 9, color: p.highlight ? BG : MUTED, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", fontFamily: "'DM Sans', sans-serif" }} onMouseOver={e => { if (p.highlight) { e.currentTarget.style.background = "#fff176"; } else { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; } }} onMouseOut={e => { if (p.highlight) { e.currentTarget.style.background = Y; } else { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; } }}>
-                  {i === 0 ? "Empezar gratis 7 días →" : i === 3 ? "Hablar con ventas →" : `Suscribirme a ${p.name} →`}
+                <button onClick={() => window.open("https://wa.me/51931067775?text=Hola%2C%20me%20interesa%20el%20plan%20Agencia%20de%20RevGo", "_blank")} style={{ width: "100%", padding: "12px", background: p.highlight ? Y : "transparent", border: p.highlight ? "none" : "1px solid #2a2800", borderRadius: 9, color: p.highlight ? BG : MUTED, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", fontFamily: "'DM Sans', sans-serif" }} onMouseOver={e => { if (p.highlight) { e.currentTarget.style.background = "#fff176"; } else { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; } }} onMouseOut={e => { if (p.highlight) { e.currentTarget.style.background = Y; } else { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; } }}>
+                  {i === 0 ? "Empezar gratis 7 días →" : i === 3 ? "💬 Hablar con ventas →" : `Suscribirme a ${p.name} →`}
                 </button>
                 {i === 0 && <p style={{ fontSize: 11, color: MUTED, textAlign: "center", marginTop: 8 }}>Se requiere tarjeta · Cancela antes del día 7 sin costo</p>}
               </div>
