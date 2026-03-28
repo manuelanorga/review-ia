@@ -151,48 +151,24 @@ function DemoAnimation() {
   const [showPublish, setShowPublish] = useState(false);
   const [progress, setProgress] = useState(0);
   const [phase, setPhase] = useState("idle");
-  const animRef = useRef(null);
-
-  const r = DEMO_REVIEWS[currentIdx];
-
-  function setActiveTone(tone) {
-    return DEMO_REVIEWS[currentIdx].tone === tone;
-  }
 
   useEffect(() => {
     let cancelled = false;
-
     async function runCycle() {
-      setResponseText("");
-      setIsGenerating(false);
-      setShowPublish(false);
-      setProgress(0);
-      setPhase("idle");
-
-      await sleep(1000);
-      if (cancelled) return;
-
-      setIsGenerating(true);
-      setPhase("generating");
-      await sleep(1400);
-      if (cancelled) return;
-
-      setIsGenerating(false);
-      setPhase("typing");
-
+      setResponseText(""); setIsGenerating(false); setShowPublish(false); setProgress(0); setPhase("idle");
+      await sleep(1000); if (cancelled) return;
+      setIsGenerating(true); setPhase("generating");
+      await sleep(1400); if (cancelled) return;
+      setIsGenerating(false); setPhase("typing");
       const text = DEMO_REVIEWS[currentIdx].response;
       for (let i = 0; i <= text.length; i++) {
         if (cancelled) return;
         setResponseText(text.slice(0, i));
         await sleep(32);
       }
-
       if (cancelled) return;
-      setShowPublish(true);
-      setPhase("reading");
-
-      const start = Date.now();
-      const duration = 9000;
+      setShowPublish(true); setPhase("reading");
+      const start = Date.now(); const duration = 9000;
       while (true) {
         if (cancelled) return;
         const elapsed = Date.now() - start;
@@ -201,18 +177,14 @@ function DemoAnimation() {
         if (pct >= 100) break;
         await sleep(50);
       }
-
       if (cancelled) return;
       setCurrentIdx(prev => (prev + 1) % DEMO_REVIEWS.length);
     }
-
     runCycle();
     return () => { cancelled = true; };
   }, [currentIdx]);
 
-  function sleep(ms) {
-    return new Promise(res => setTimeout(res, ms));
-  }
+  function sleep(ms) { return new Promise(res => setTimeout(res, ms)); }
 
   const currentDemo = DEMO_REVIEWS[currentIdx];
 
@@ -220,9 +192,7 @@ function DemoAnimation() {
     <div style={{ background: "#ffffff", border: "1px solid #e0e0e0", borderRadius: 16, overflow: "hidden", maxWidth: 420, width: "100%", boxShadow: "0 2px 12px rgba(0,0,0,0.08)", minHeight: 420 }}>
       <div style={{ padding: "16px", borderBottom: "1px solid #e0e0e0" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-          <div style={{ width: 36, height: 36, borderRadius: "50%", background: currentDemo.color, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#fff", flexShrink: 0, transition: "background 0.4s" }}>
-            {currentDemo.initials}
-          </div>
+          <div style={{ width: 36, height: 36, borderRadius: "50%", background: currentDemo.color, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#fff", flexShrink: 0, transition: "background 0.4s" }}>{currentDemo.initials}</div>
           <div>
             <div style={{ fontSize: 14, fontWeight: 600, color: "#202124" }}>{currentDemo.name}</div>
             <div style={{ display: "flex", gap: 2, marginTop: 2 }}>
@@ -235,7 +205,6 @@ function DemoAnimation() {
           "{currentDemo.text}"
         </div>
       </div>
-
       <div style={{ padding: "12px 16px", borderBottom: "1px solid #e0e0e0" }}>
         <div style={{ fontSize: 10, color: "#80868b", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Tono</div>
         <div style={{ display: "flex", gap: 6 }}>
@@ -246,19 +215,13 @@ function DemoAnimation() {
           ))}
         </div>
       </div>
-
       <div style={{ padding: "14px 16px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
           <span style={{ fontSize: 10, color: "#80868b", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em" }}>Tu respuesta</span>
           <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "5px 10px", background: "#f8f9fa", border: "1px solid #dadce0", borderRadius: 7, fontSize: 11, color: isGenerating ? "#b8860b" : "#5f6368", fontWeight: 600 }}>
-            {isGenerating ? (
-              <><span style={{ display: "inline-block", animation: "spin 0.8s linear infinite", fontSize: 12 }}>◌</span> Generando...</>
-            ) : (
-              <><span>✦</span> Generar con IA</>
-            )}
+            {isGenerating ? <><span style={{ display: "inline-block", animation: "spin 0.8s linear infinite", fontSize: 12 }}>◌</span> Generando...</> : <><span>✦</span> Generar con IA</>}
           </div>
         </div>
-
         <div style={{ height: 110, overflow: "hidden", padding: "12px 14px", background: "#f8f9fa", border: `1.5px solid ${phase === "typing" || phase === "reading" ? "#FBBC04" : "#dadce0"}`, borderRadius: 9, fontSize: 13, lineHeight: 1.6, transition: "border-color 0.3s" }}>
           {responseText ? (
             <span style={{ color: "#202124" }}>{responseText}{phase === "typing" && <span style={{ display: "inline-block", width: 2, height: 13, background: "#FBBC04", verticalAlign: "middle", marginLeft: 1, animation: "blink 0.7s infinite" }} />}</span>
@@ -266,15 +229,12 @@ function DemoAnimation() {
             <span style={{ color: "#9aa0a6", fontStyle: "italic" }}>Escribe o genera una respuesta con IA...</span>
           )}
         </div>
-
-        {showPublish && (
-          <div style={{ marginTop: 10, padding: "10px", background: "#1a73e8", borderRadius: 8, fontSize: 13, fontWeight: 700, color: "#fff", textAlign: "center", animation: "fadeUp 0.3s ease" }}>
-            Publicar en Google →
-          </div>
-        )}
-
+        {/* Botón siempre visible — evita layout shift */}
+        <div style={{ marginTop: 10, padding: "10px", background: showPublish ? "#1a73e8" : "#dadce0", borderRadius: 8, fontSize: 13, fontWeight: 700, color: showPublish ? "#fff" : "#9aa0a6", textAlign: "center", transition: "background 0.4s, color 0.4s" }}>
+          Publicar en Google →
+        </div>
         {phase === "reading" && (
-          <div style={{ marginTop: 10, height: 3, background: "#e0e0e0", borderRadius: 4, overflow: "hidden" }}>
+          <div style={{ marginTop: 8, height: 3, background: "#e0e0e0", borderRadius: 4, overflow: "hidden" }}>
             <div style={{ height: "100%", width: `${progress}%`, background: "#1a73e8", borderRadius: 4, transition: "width 0.1s linear" }} />
           </div>
         )}
@@ -296,10 +256,7 @@ function SignupModal({ onClose }) {
         </div>
         <h2 style={{ fontSize: 24, fontWeight: 700, color: TEXT, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 8 }}>Crea tu cuenta gratis</h2>
         <p style={{ fontSize: 14, color: MUTED, lineHeight: 1.6, marginBottom: 22 }}>Empieza a responder tus reseñas de Google con IA en menos de 3 minutos.</p>
-        <button style={{ width: "100%", padding: "14px 20px", background: "#fff", border: "1.5px solid #e0e0e0", borderRadius: 10, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 12, fontSize: 14, fontWeight: 600, color: "#1a1a1a", fontFamily: "'DM Sans', sans-serif", marginBottom: 14, transition: "box-shadow 0.2s" }}
-          onMouseOver={e => { e.currentTarget.style.boxShadow = "0 0 0 2px " + Y; }}
-          onMouseOut={e => { e.currentTarget.style.boxShadow = "none"; }}
-        >
+        <button style={{ width: "100%", padding: "14px 20px", background: "#fff", border: "1.5px solid #e0e0e0", borderRadius: 10, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 12, fontSize: 14, fontWeight: 600, color: "#1a1a1a", fontFamily: "'DM Sans', sans-serif", marginBottom: 14, transition: "box-shadow 0.2s" }} onMouseOver={e => { e.currentTarget.style.boxShadow = "0 0 0 2px " + Y; }} onMouseOut={e => { e.currentTarget.style.boxShadow = "none"; }}>
           <svg width="18" height="18" viewBox="0 0 48 48" style={{ flexShrink: 0 }}>
             <path fill="#FFC107" d="M43.6 20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.7-.4-4z" />
             <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z" />
@@ -342,28 +299,24 @@ export default function Landing() {
 
   const activeReview = tick % REVIEWS.length;
   const open = (plan = "starter") => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("selectedPlan", plan);
-    }
+    if (typeof window !== "undefined") { localStorage.setItem("selectedPlan", plan); }
     signIn("google", { callbackUrl: "/onboarding" });
   };
-
-  const login = () => {
-    signIn("google", { callbackUrl: "/dashboard" });
-  };
+  const login = () => { signIn("google", { callbackUrl: "/dashboard" }); };
 
   return (
     <div suppressHydrationWarning style={{ background: BG, minHeight: "100vh", color: TEXT, fontFamily: "'DM Sans', sans-serif" }}>
+
       {showSignup && <SignupModal onClose={() => setShowSignup(false)} />}
 
-      {/* ✅ BOTÓN VOLVER ARRIBA */}
+      {/* BOTÓN VOLVER ARRIBA */}
       {scrolled && (
-        <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} style={{ position: "fixed", bottom: 28, right: 28, zIndex: 200, width: 44, height: 44, borderRadius: "50%", background: Y, border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 16px rgba(0,0,0,0.4)", transition: "transform 0.2s" }} onMouseOver={e => e.currentTarget.style.transform = "translateY(-3px)"} onMouseOut={e => e.currentTarget.style.transform = "translateY(0)"} title="Volver arriba">
+        <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} style={{ position: "fixed", bottom: 28, right: 28, zIndex: 200, width: 44, height: 44, borderRadius: "50%", background: Y, border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 16px rgba(0,0,0,0.4)", transition: "transform 0.2s" }} onMouseOver={e => e.currentTarget.style.transform = "translateY(-3px)"} onMouseOut={e => e.currentTarget.style.transform = "translateY(0)"}>
           <span style={{ color: BG, fontSize: 18, fontWeight: 700, lineHeight: 1 }}>↑</span>
         </button>
       )}
 
-      {/* ✅ MENÚ MÓVIL */}
+      {/* MENÚ MÓVIL */}
       {mobileMenuOpen && (
         <div onClick={() => setMobileMenuOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 150, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}>
           <div onClick={e => e.stopPropagation()} style={{ position: "absolute", top: 60, left: 0, right: 0, background: "#0f0f00", border: "1px solid #2a2800", borderTop: "none", padding: "16px 6% 24px", display: "flex", flexDirection: "column", gap: 10, animation: "fadeUp 0.2s ease both" }}>
@@ -374,12 +327,8 @@ export default function Landing() {
             ) : (
               <>
                 <a href="#precios" onClick={() => setMobileMenuOpen(false)} style={{ padding: "13px 16px", borderRadius: 9, border: "1px solid #2a2800", color: MUTED, fontSize: 14, textDecoration: "none", textAlign: "center" }}>Precios</a>
-                <button onClick={() => { open(); setMobileMenuOpen(false); }} style={{ width: "100%", padding: "13px", background: Y, border: "none", borderRadius: 9, color: BG, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
-                  Empezar gratis
-                </button>
-                <button onClick={() => { login(); setMobileMenuOpen(false); }} style={{ width: "100%", padding: "13px", background: "transparent", border: "1px solid #2a2800", borderRadius: 9, color: MUTED, fontSize: 14, cursor: "pointer" }}>
-                  Iniciar sesión
-                </button>
+                <button onClick={() => { open(); setMobileMenuOpen(false); }} style={{ width: "100%", padding: "13px", background: Y, border: "none", borderRadius: 9, color: BG, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>Empezar gratis</button>
+                <button onClick={() => { login(); setMobileMenuOpen(false); }} style={{ width: "100%", padding: "13px", background: "transparent", border: "1px solid #2a2800", borderRadius: 9, color: MUTED, fontSize: 14, cursor: "pointer" }}>Iniciar sesión</button>
               </>
             )}
           </div>
@@ -388,35 +337,23 @@ export default function Landing() {
 
       {/* NAV */}
       <nav suppressHydrationWarning style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, background: scrolled ? "rgba(10,10,10,0.95)" : "transparent", backdropFilter: scrolled ? "blur(12px)" : "none", borderBottom: scrolled ? "1px solid #2a2800" : "1px solid transparent", transition: "all 0.3s", padding: "0 6%", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-
-        {/* LOGO */}
         <div onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} style={{ display: "flex", alignItems: "center", gap: 9, cursor: "pointer" }}>
           <img src="/logo.png" alt="RevGo logo" suppressHydrationWarning style={{ width: 30, height: 30, borderRadius: 7, objectFit: "contain" }} />
           <span style={{ fontSize: 16, fontWeight: 700, color: TEXT, letterSpacing: "-0.01em" }}>RevGo<span style={{ color: Y }}>.app</span></span>
         </div>
-
-        {/* DESKTOP: links + botones */}
         <div className="navlinks" style={{ display: "flex", flex: 1, justifyContent: "flex-end", marginRight: 24 }}>
           <a href="#precios" style={{ fontSize: 13, color: MUTED, textDecoration: "none", transition: "color 0.2s" }} onMouseOver={e => e.target.style.color = TEXT} onMouseOut={e => e.target.style.color = MUTED}>Precios</a>
         </div>
         <div className="navlinks" style={{ display: "flex", gap: 8, alignItems: "center" }}>
           {!session && (
-            <button onClick={open} style={{ padding: "8px 18px", background: Y, border: "none", borderRadius: 7, color: BG, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "background 0.2s" }} onMouseOver={e => e.currentTarget.style.background = "#fff176"} onMouseOut={e => e.currentTarget.style.background = Y}>
-              Empezar gratis
-            </button>
+            <button onClick={open} style={{ padding: "8px 18px", background: Y, border: "none", borderRadius: 7, color: BG, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "background 0.2s" }} onMouseOver={e => e.currentTarget.style.background = "#fff176"} onMouseOut={e => e.currentTarget.style.background = Y}>Empezar gratis</button>
           )}
           {session ? (
-            <button className="btn-dashboard" onClick={() => router.push("/dashboard")} style={{ padding: "8px 22px", border: "none", borderRadius: 50, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
-              Ir al Dashboard →
-            </button>
+            <button className="btn-dashboard" onClick={() => router.push("/dashboard")} style={{ padding: "8px 22px", border: "none", borderRadius: 50, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Ir al Dashboard →</button>
           ) : (
-            <button onClick={login} style={{ padding: "8px 18px", background: "transparent", border: `1px solid ${BORDER}`, borderRadius: 7, color: MUTED, fontSize: 13, fontWeight: 500, cursor: "pointer", transition: "all 0.2s" }} onMouseOver={e => { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; }} onMouseOut={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; }}>
-              Iniciar sesión
-            </button>
+            <button onClick={login} style={{ padding: "8px 18px", background: "transparent", border: `1px solid ${BORDER}`, borderRadius: 7, color: MUTED, fontSize: 13, fontWeight: 500, cursor: "pointer", transition: "all 0.2s" }} onMouseOver={e => { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; }} onMouseOut={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; }}>Iniciar sesión</button>
           )}
         </div>
-
-        {/* ✅ MÓVIL: botón hamburguesa */}
         <button className="hamburger" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} style={{ display: "none", flexDirection: "column", gap: 5, background: "none", border: "none", cursor: "pointer", padding: 4 }}>
           <span style={{ display: "block", width: 22, height: 2, background: mobileMenuOpen ? Y : TEXT, borderRadius: 2, transition: "all 0.2s", transform: mobileMenuOpen ? "rotate(45deg) translate(5px, 5px)" : "none" }} />
           <span style={{ display: "block", width: 22, height: 2, background: mobileMenuOpen ? Y : TEXT, borderRadius: 2, transition: "all 0.2s", opacity: mobileMenuOpen ? 0 : 1 }} />
@@ -424,39 +361,30 @@ export default function Landing() {
         </button>
       </nav>
 
-      {/* ── HERO ── */}
+      {/* HERO */}
       <section style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: "100px 6% 80px" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", width: "100%" }}>
-
-          {/* BADGE — centrado en ambos */}
+          {/* BADGE centrado */}
           <div style={{ display: "flex", justifyContent: "center", marginBottom: 40 }}>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#1a1700", border: "1px solid #3a3400", borderRadius: 20, padding: "5px 14px" }}>
               <span style={{ width: 6, height: 6, borderRadius: "50%", background: Y, display: "inline-block", animation: "pulse 2s infinite" }} />
               <span style={{ color: Y, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>Más clientes desde Google Maps · Sin esfuerzo · 7 días gratis</span>
             </div>
           </div>
-
-          {/* GRID: izquierda copy, derecha demo */}
-          <div className="hgrid fade1" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 56, alignItems: "center" }}>
-
-            {/* IZQUIERDA: headline + CTAs + checklist */}
+          {/* GRID 2 columnas desktop, 1 columna móvil */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "56px", alignItems: "center" }} className="hgrid">
+            {/* IZQUIERDA */}
             <div className="hero-copy">
               <h1 style={{ fontSize: "clamp(32px, 4vw, 54px)", fontWeight: 700, lineHeight: 1.12, letterSpacing: "-0.03em", marginBottom: 20, color: TEXT }}>
                 Estás ocupado haciendo<br />crecer tu negocio.<br />
                 <span style={{ color: Y }}>RevGo se encarga<br />de tus reseñas en Google.</span>
               </h1>
-
               <div className="ctarow" style={{ display: "flex", gap: 12, marginBottom: 28, flexWrap: "wrap" }}>
-                <button onClick={open} style={{ padding: "14px 30px", background: Y, border: "none", borderRadius: 10, color: BG, fontSize: 15, fontWeight: 700, cursor: "pointer", transition: "background 0.2s", whiteSpace: "nowrap" }} onMouseOver={e => e.currentTarget.style.background = "#fff176"} onMouseOut={e => e.currentTarget.style.background = Y}>
-                  Empieza Gratis →
-                </button>
+                <button onClick={open} style={{ padding: "14px 30px", background: Y, border: "none", borderRadius: 10, color: BG, fontSize: 15, fontWeight: 700, cursor: "pointer", transition: "background 0.2s", whiteSpace: "nowrap" }} onMouseOver={e => e.currentTarget.style.background = "#fff176"} onMouseOut={e => e.currentTarget.style.background = Y}>Empieza Gratis →</button>
                 <a href="#como-funciona" style={{ textDecoration: "none" }}>
-                  <button style={{ padding: "14px 30px", background: "transparent", border: "1px solid #2a2800", borderRadius: 10, color: MUTED, fontSize: 15, fontWeight: 500, cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap" }} onMouseOver={e => { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; }} onMouseOut={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; }}>
-                    Mira cómo funciona ↓
-                  </button>
+                  <button style={{ padding: "14px 30px", background: "transparent", border: "1px solid #2a2800", borderRadius: 10, color: MUTED, fontSize: 15, fontWeight: 500, cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap" }} onMouseOver={e => { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; }} onMouseOut={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; }}>Mira cómo funciona ↓</button>
                 </a>
               </div>
-
               <div style={{ display: "flex", flexDirection: "column", gap: 11, marginBottom: 16 }}>
                 {["Responde automáticamente — 24 horas, 7 días", "Mejora tu reputación y sube en Google Maps", "Aumenta tus clientes sin esfuerzo extra"].map((item, i) => (
                   <div key={i} style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -470,9 +398,8 @@ export default function Landing() {
               <p style={{ fontSize: 14, fontWeight: 700, color: Y, marginBottom: 8 }}>👉 Sin esfuerzo. Sin contratar a nadie.</p>
               <p style={{ fontSize: 14, color: MUTED, lineHeight: 1.7 }}>Convierte cada reseña en una oportunidad de crecimiento con IA.</p>
             </div>
-
-            {/* DERECHA: demo animada */}
-            <div className="fade2 hero-demo" style={{ width: "100%" }}>
+            {/* DERECHA: demo */}
+            <div className="hero-demo" style={{ width: "100%" }}>
               <DemoAnimation />
             </div>
           </div>
@@ -705,18 +632,10 @@ export default function Landing() {
                     </div>
                   ))}
                 </div>
-                <button onClick={open}
-                  style={{ width: "100%", padding: "12px", background: p.highlight ? Y : "transparent", border: p.highlight ? "none" : "1px solid #2a2800", borderRadius: 9, color: p.highlight ? BG : MUTED, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", fontFamily: "'DM Sans', sans-serif" }}
-                  onMouseOver={e => { if (p.highlight) { e.currentTarget.style.background = "#fff176"; } else { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; } }}
-                  onMouseOut={e => { if (p.highlight) { e.currentTarget.style.background = Y; } else { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; } }}
-                >
+                <button onClick={open} style={{ width: "100%", padding: "12px", background: p.highlight ? Y : "transparent", border: p.highlight ? "none" : "1px solid #2a2800", borderRadius: 9, color: p.highlight ? BG : MUTED, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", fontFamily: "'DM Sans', sans-serif" }} onMouseOver={e => { if (p.highlight) { e.currentTarget.style.background = "#fff176"; } else { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; } }} onMouseOut={e => { if (p.highlight) { e.currentTarget.style.background = Y; } else { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; } }}>
                   {i === 0 ? "Empezar gratis 7 días →" : i === 3 ? "Hablar con ventas →" : `Suscribirme a ${p.name} →`}
                 </button>
-                {i === 0 && (
-                  <p style={{ fontSize: 11, color: MUTED, textAlign: "center", marginTop: 8 }}>
-                    Se requiere tarjeta · Cancela antes del día 7 sin costo
-                  </p>
-                )}
+                {i === 0 && <p style={{ fontSize: 11, color: MUTED, textAlign: "center", marginTop: 8 }}>Se requiere tarjeta · Cancela antes del día 7 sin costo</p>}
               </div>
             ))}
           </div>
@@ -759,7 +678,6 @@ export default function Landing() {
       <footer style={{ borderTop: "1px solid #2a2800", padding: "40px 6%" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto" }}>
           <div className="footer-inner" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 24, marginBottom: 28 }}>
-            {/* ✅ Logo con imagen */}
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <img src="/logo.png" alt="RevGo logo" suppressHydrationWarning style={{ width: 32, height: 32, borderRadius: 8, objectFit: "contain" }} />
               <div>
@@ -767,7 +685,6 @@ export default function Landing() {
                 <div style={{ fontSize: 11, color: MUTED, marginTop: 1 }}>Gestión de reseñas con IA · Lima, Perú</div>
               </div>
             </div>
-            {/* ✅ Redes sociales más visibles */}
             <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
               <span style={{ fontSize: 12, color: MUTED, marginRight: 4 }}>Síguenos</span>
               {SOCIAL.map(s => (
