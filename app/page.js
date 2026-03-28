@@ -389,8 +389,19 @@ export default function Landing() {
           .navlinks { display: none !important; }
           .hamburger { display: flex !important; }
           .fgrid { grid-template-columns: 1fr !important; }
-          .ctarow { flex-direction: column !important; }
+          .ctarow { flex-direction: column !important; align-items: stretch !important; }
           .footer-inner { flex-direction: column !important; align-items: flex-start !important; gap: 20px !important; }
+          .hero-copy { text-align: center !important; }
+          .hero-copy h1 { text-align: center !important; }
+          .hero-copy .ctarow button, .hero-copy .ctarow a { width: 100% !important; text-align: center !important; }
+          .hero-demo { order: 2; }
+          .hero-copy { order: 1; }
+          .carousel-track { display: flex !important; overflow-x: auto; gap: 16px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; padding-bottom: 12px; scrollbar-width: none; }
+          .carousel-track::-webkit-scrollbar { display: none; }
+          .carousel-card { min-width: 82vw !important; scroll-snap-align: start; flex-shrink: 0; }
+          .pricing-carousel { display: flex !important; overflow-x: auto; gap: 16px; scroll-snap-type: x mandatory; padding-bottom: 12px; scrollbar-width: none; }
+          .pricing-carousel::-webkit-scrollbar { display: none; }
+          .pricing-card { min-width: 82vw !important; scroll-snap-align: start; flex-shrink: 0; }
         }
       `}</style>
 
@@ -466,116 +477,54 @@ export default function Landing() {
 
       {/* ── HERO ── */}
       <section style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: "100px 6% 80px" }}>
-        <div className="hgrid" style={{ maxWidth: 1160, margin: "0 auto", width: "100%" }}>
+        <div style={{ maxWidth: 1160, margin: "0 auto", width: "100%" }}>
 
-          {/* Copy */}
-          <div className="fade1">
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#1a1700", border: "1px solid #3a3400", borderRadius: 20, padding: "5px 14px", marginBottom: 28 }}>
+          {/* BADGE — centrado en ambos */}
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 40 }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#1a1700", border: "1px solid #3a3400", borderRadius: 20, padding: "5px 14px" }}>
               <span style={{ width: 6, height: 6, borderRadius: "50%", background: Y, display: "inline-block", animation: "pulse 2s infinite" }} />
               <span style={{ color: Y, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>Más clientes desde Google Maps · Sin esfuerzo · 7 días gratis</span>
             </div>
-
-            <div style={{ marginBottom: 32 }}>
-              <DemoAnimation />
-            </div>
-
-            <h1 style={{ fontSize: "clamp(32px, 4vw, 54px)", fontWeight: 700, lineHeight: 1.12, letterSpacing: "-0.03em", marginBottom: 20, color: TEXT }}>
-              Estás ocupado haciendo<br />crecer tu negocio.<br />
-              <span style={{ color: Y }}>RevGo se encarga<br />de tus reseñas en Google.</span>
-            </h1>
-            <p style={{ fontSize: 16, color: MUTED, lineHeight: 1.75, maxWidth: 460, marginBottom: 24 }}>
-              Convierte cada reseña en una oportunidad de crecimiento con inteligencia artificial.
-            </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 11, marginBottom: 26 }}>
-              {["Responde automáticamente — 24 horas, 7 días", "Mejora tu reputación y sube en Google Maps", "Aumenta tus clientes sin esfuerzo extra"].map((item, i) => (
-                <div key={i} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <div style={{ width: 20, height: 20, borderRadius: "50%", background: "#1a1700", border: "1px solid #FFE60050", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    <span style={{ color: Y, fontSize: 10 }}>✓</span>
-                  </div>
-                  <span style={{ fontSize: 14, color: LIGHT }}>{item}</span>
-                </div>
-              ))}
-            </div>
-            <p style={{ fontSize: 15, fontWeight: 700, color: Y, marginBottom: 28 }}>👉 Sin esfuerzo. Sin contratar a nadie.</p>
-            <div className="ctarow" style={{ display: "flex", gap: 12, marginBottom: 24, flexWrap: "wrap" }}>
-              <button onClick={open} style={{ padding: "14px 30px", background: Y, border: "none", borderRadius: 10, color: BG, fontSize: 15, fontWeight: 700, cursor: "pointer", transition: "background 0.2s", whiteSpace: "nowrap" }} onMouseOver={e => e.currentTarget.style.background = "#fff176"} onMouseOut={e => e.currentTarget.style.background = Y}>
-                Empieza Gratis →
-              </button>
-              <a href="#como-funciona" style={{ textDecoration: "none" }}>
-                <button style={{ padding: "14px 30px", background: "transparent", border: "1px solid #2a2800", borderRadius: 10, color: MUTED, fontSize: 15, fontWeight: 500, cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap" }} onMouseOver={e => { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; }} onMouseOut={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; }}>
-                  Mira cómo funciona ↓
-                </button>
-              </a>
-            </div>
-            <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
-              {["Se requiere tarjeta", "7 días gratis", "Cancela cuando quieras"].map(t => (
-                <div key={t} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  <span style={{ color: Y, fontSize: 11 }}>✓</span>
-                  <span style={{ color: MUTED, fontSize: 12 }}>{t}</span>
-                </div>
-              ))}
-            </div>
           </div>
 
-          {/* Google Maps preview */}
-          <div className="fade2" style={{ width: "100%" }}>
-            <div style={{ background: "#202124", border: "1px solid #303134", borderRadius: 16, overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.6)" }}>
-              <div style={{ background: "#292a2d", padding: "12px 16px", borderBottom: "1px solid #303134", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#4285F4", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#fff", flexShrink: 0 }}>H</div>
-                  <div>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: "#e8eaed", fontFamily: "'Roboto', sans-serif" }}>Hotel Miraflores Boutique</div>
-                    <div style={{ fontSize: 10, color: "#9aa0a6", marginTop: 1 }}>4.6 ★★★★★ · 847 reseñas</div>
-                  </div>
-                </div>
-                <div style={{ background: "#1a1700", border: "1px solid #2a2800", borderRadius: 8, padding: "3px 9px", display: "flex", alignItems: "center", gap: 5, flexShrink: 0 }}>
-                  <span style={{ width: 5, height: 5, borderRadius: "50%", background: Y, display: "inline-block", animation: "pulse 2s infinite" }} />
-                  <span style={{ color: Y, fontSize: 9, fontWeight: 700 }}>RevGo ACTIVO</span>
-                </div>
+          {/* GRID: izquierda copy, derecha demo */}
+          <div className="hgrid fade1">
+
+            {/* IZQUIERDA: headline + CTAs + checklist */}
+            <div className="hero-copy">
+              <h1 style={{ fontSize: "clamp(32px, 4vw, 54px)", fontWeight: 700, lineHeight: 1.12, letterSpacing: "-0.03em", marginBottom: 20, color: TEXT }}>
+                Estás ocupado haciendo<br />crecer tu negocio.<br />
+                <span style={{ color: Y }}>RevGo se encarga<br />de tus reseñas en Google.</span>
+              </h1>
+
+              <div className="ctarow" style={{ display: "flex", gap: 12, marginBottom: 28, flexWrap: "wrap" }}>
+                <button onClick={open} style={{ padding: "14px 30px", background: Y, border: "none", borderRadius: 10, color: BG, fontSize: 15, fontWeight: 700, cursor: "pointer", transition: "background 0.2s", whiteSpace: "nowrap" }} onMouseOver={e => e.currentTarget.style.background = "#fff176"} onMouseOut={e => e.currentTarget.style.background = Y}>
+                  Empieza Gratis →
+                </button>
+                <a href="#como-funciona" style={{ textDecoration: "none" }}>
+                  <button style={{ padding: "14px 30px", background: "transparent", border: "1px solid #2a2800", borderRadius: 10, color: MUTED, fontSize: 15, fontWeight: 500, cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap" }} onMouseOver={e => { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; }} onMouseOut={e => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; }}>
+                    Mira cómo funciona ↓
+                  </button>
+                </a>
               </div>
-              <div style={{ padding: "12px 14px", display: "flex", flexDirection: "column", gap: 10 }}>
-                {REVIEWS.map((r, i) => (
-                  <div key={i} style={{ background: i === activeReview ? "#292a2d" : "#26272b", border: i === activeReview ? "1px solid #404144" : "1px solid #303134", borderRadius: 12, padding: "13px 14px", transition: "all 0.4s" }}>
-                    <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 8 }}>
-                      <div style={{ width: 32, height: 32, borderRadius: "50%", background: r.avatarBg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#fff", flexShrink: 0, fontFamily: "'Roboto', sans-serif" }}>{r.avatar}</div>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: "#e8eaed", fontFamily: "'Roboto', sans-serif" }}>{r.name}</div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 2, flexWrap: "wrap" }}>
-                          <StarRow count={r.stars} />
-                          <span style={{ fontSize: 10, color: "#9aa0a6" }}>{r.time}</span>
-                        </div>
-                      </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: 11, marginBottom: 16 }}>
+                {["Responde automáticamente — 24 horas, 7 días", "Mejora tu reputación y sube en Google Maps", "Aumenta tus clientes sin esfuerzo extra"].map((item, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <div style={{ width: 20, height: 20, borderRadius: "50%", background: "#1a1700", border: "1px solid #FFE60050", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      <span style={{ color: Y, fontSize: 10 }}>✓</span>
                     </div>
-                    <p style={{ fontSize: 12, color: "#bdc1c6", lineHeight: 1.55, marginBottom: r.replied ? 10 : 0, fontFamily: "'Roboto', sans-serif" }}>{r.text}</p>
-                    {r.replied && r.response && (
-                      <div style={{ background: "#1e1f23", borderRadius: 8, padding: "10px 12px", borderLeft: "3px solid #FFE600" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 5 }}>
-                          <div style={{ width: 16, height: 16, background: Y, borderRadius: 3, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                            <span style={{ fontSize: 8, fontWeight: 700, color: BG }}>R</span>
-                          </div>
-                          <span style={{ fontSize: 10, fontWeight: 700, color: Y }}>Respuesta del propietario</span>
-                          <span style={{ fontSize: 10, color: "#9aa0a6" }}>· hace un momento</span>
-                        </div>
-                        <p style={{ fontSize: 11, color: "#bdc1c6", lineHeight: 1.55 }}>{r.response}</p>
-                      </div>
-                    )}
-                    {!r.replied && (
-                      <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 8, padding: "6px 10px", background: "#1a1700", borderRadius: 6, width: "fit-content" }}>
-                        <div style={{ width: 6, height: 6, borderRadius: "50%", background: Y, animation: "pulse 1s infinite" }} />
-                        <span style={{ fontSize: 10, color: Y, fontWeight: 500 }}>RevGo generando respuesta...</span>
-                      </div>
-                    )}
+                    <span style={{ fontSize: 14, color: LIGHT }}>{item}</span>
                   </div>
                 ))}
               </div>
-              <div style={{ background: "#1e1f23", padding: "10px 14px", borderTop: "1px solid #303134", display: "flex", justifyContent: "space-around" }}>
-                {[["100%", "respondidas"], ["4.8★", "rating actual"], ["↑0.5", "esta semana"]].map(([v, l]) => (
-                  <div key={l} style={{ textAlign: "center" }}>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: Y }}>{v}</div>
-                    <div style={{ fontSize: 9, color: "#9aa0a6", marginTop: 2 }}>{l}</div>
-                  </div>
-                ))}
-              </div>
+              <p style={{ fontSize: 14, fontWeight: 700, color: Y, marginBottom: 8 }}>👉 Sin esfuerzo. Sin contratar a nadie.</p>
+              <p style={{ fontSize: 14, color: MUTED, lineHeight: 1.7 }}>Convierte cada reseña en una oportunidad de crecimiento con IA.</p>
+            </div>
+
+            {/* DERECHA: demo animada */}
+            <div className="fade2 hero-demo" style={{ width: "100%" }}>
+              <DemoAnimation />
             </div>
           </div>
         </div>
@@ -711,13 +660,13 @@ export default function Landing() {
             <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>Testimonios</span>
             <h2 style={{ fontSize: "clamp(24px, 3vw, 40px)", fontWeight: 700, letterSpacing: "-0.03em", margin: "14px 0 0", color: TEXT }}>Negocios que ya respondieron el 100%</h2>
           </div>
-          <div className="tgrid">
+          <div className="carousel-track">
             {[
               { name: "Carlos Rojas", role: "Dueño · Hotel Boutique Lima", avatar: "CR", color: "#4285F4", text: "Antes tardábamos semanas en responder reseñas. Ahora RevGo las responde en segundos y nuestro rating subió de 4.1 a 4.7 en solo 2 meses. Los clientes lo notan." },
               { name: "Andrea Mendoza", role: "Gerente · Restaurante La Mar", avatar: "AM", color: "#34A853", text: "Teníamos 3 reseñas negativas sin responder que nos estaban costando clientes. Con RevGo respondimos todo, el tono fue perfecto y varios clientes volvieron a dejarnos 5 estrellas." },
               { name: "Dr. Luis Paredes", role: "Director · Clínica San Isidro", avatar: "LP", color: "#EA4335", text: "Pensé que una IA no podría sonar humana para una clínica. Me equivoqué. Las respuestas son profesionales, empáticas y específicas para cada reseña. Mis pacientes se sienten escuchados." },
             ].map((t, i) => (
-              <div key={i} className="hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 14, padding: "28px 24px" }}>
+              <div key={i} className="carousel-card hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 14, padding: "28px 24px" }}>
                 <div style={{ display: "flex", gap: 2, marginBottom: 16 }}>
                   {[1,2,3,4,5].map(s => <span key={s} style={{ color: "#FBBC04", fontSize: 14 }}>★</span>)}
                 </div>
@@ -784,9 +733,9 @@ export default function Landing() {
             <h2 style={{ fontSize: "clamp(24px, 3vw, 40px)", fontWeight: 700, letterSpacing: "-0.03em", margin: "14px 0 10px", color: TEXT }}>Simple y transparente</h2>
             <p style={{ fontSize: 14, color: MUTED }}>7 días gratis en el plan Starter · Cancela cuando quieras</p>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16, alignItems: "start" }}>
+          <div className="pricing-carousel" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16, alignItems: "start" }}>
             {PLANS.map((p, i) => (
-              <div key={i} className="hl" style={{ background: p.highlight ? "#131200" : SURF2, border: p.highlight ? "1px solid #FFE60055" : "1px solid #2a2800", borderRadius: 16, padding: "32px 26px", position: "relative" }}>
+              <div key={i} className="pricing-card hl" style={{ background: p.highlight ? "#131200" : SURF2, border: p.highlight ? "1px solid #FFE60055" : "1px solid #2a2800", borderRadius: 16, padding: "32px 26px", position: "relative", boxSizing: "border-box" }}>
                 {p.highlight && (
                   <div style={{ position: "absolute", top: -12, left: "50%", transform: "translateX(-50%)", background: Y, color: BG, fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", padding: "4px 14px", borderRadius: 20, whiteSpace: "nowrap" }}>{p.badge}</div>
                 )}
