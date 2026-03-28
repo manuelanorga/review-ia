@@ -104,7 +104,10 @@ export default function Dashboard() {
   const [showBusinessMenu, setShowBusinessMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [accountSection, setAccountSection] = useState(null);
-  const [showTour, setShowTour] = useState(true);
+  const [showTour, setShowTour] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("tourCompleted") !== "true";
+  });
   const [tourStep, setTourStep] = useState(0);
   const [spotlightRect, setSpotlightRect] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -149,7 +152,11 @@ export default function Dashboard() {
   }, []);
 
   const navRefs = { dashboard: React.useRef(null), reviews: React.useRef(null), autopilot: React.useRef(null), analytics: React.useRef(null) };
-  const closeTour = () => { setShowTour(false); setSpotlightRect(null); };
+  const closeTour = () => {
+    setShowTour(false);
+    setSpotlightRect(null);
+    localStorage.setItem("tourCompleted", "true");
+  };
   const currentStep = TOUR_STEPS[tourStep];
 
   React.useEffect(() => {
