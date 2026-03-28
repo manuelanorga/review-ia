@@ -362,10 +362,10 @@ export default function Landing() {
       </nav>
 
       {/* HERO */}
-      <section style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: "100px 6% 80px" }}>
+      <section style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: "80px 6% 60px" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", width: "100%" }}>
           {/* BADGE centrado */}
-          <div style={{ display: "flex", justifyContent: "center", marginBottom: 40 }}>
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#1a1700", border: "1px solid #3a3400", borderRadius: 20, padding: "5px 14px" }}>
               <span style={{ width: 6, height: 6, borderRadius: "50%", background: Y, display: "inline-block", animation: "pulse 2s infinite" }} />
               <span style={{ color: Y, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>Más clientes desde Google Maps · Sin esfuerzo · 7 días gratis</span>
@@ -417,7 +417,7 @@ export default function Landing() {
       </div>
 
       {/* EL PROBLEMA */}
-      <section style={{ padding: "70px 6% 80px", background: SURF }}>
+      <section style={{ padding: "50px 6% 60px", background: SURF }}>
         <div style={{ maxWidth: 760, margin: "0 auto", textAlign: "center" }}>
           <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>El problema</span>
           <h2 style={{ fontSize: "clamp(24px, 3.5vw, 42px)", fontWeight: 700, lineHeight: 1.2, letterSpacing: "-0.03em", margin: "16px 0 16px", color: TEXT }}>
@@ -451,7 +451,7 @@ export default function Landing() {
       </section>
 
       {/* STATS */}
-      <section style={{ padding: "60px 6%" }}>
+      <section style={{ padding: "40px 6%" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto" }}>
           <div className="sgrid">
             {[
@@ -470,7 +470,7 @@ export default function Landing() {
       </section>
 
       {/* BENEFICIOS */}
-      <section style={{ padding: "70px 6% 80px" }}>
+      <section style={{ padding: "50px 6% 60px" }}>
         <div style={{ maxWidth: 960, margin: "0 auto" }}>
           <div className="bgrid">
             <div>
@@ -510,7 +510,7 @@ export default function Landing() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section id="como-funciona" style={{ padding: "70px 6% 80px", background: SURF }}>
+      <section id="como-funciona" style={{ padding: "50px 6% 60px", background: SURF }}>
         <div style={{ maxWidth: 1160, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 52 }}>
             <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>Cómo funciona</span>
@@ -530,7 +530,7 @@ export default function Landing() {
       </section>
 
       {/* TESTIMONIOS */}
-      <section style={{ padding: "70px 6% 80px" }}>
+      <section style={{ padding: "50px 6% 60px" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 48 }}>
             <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>Testimonios</span>
@@ -561,7 +561,7 @@ export default function Landing() {
       </section>
 
       {/* CTA INTERMEDIO */}
-      <div style={{ padding: "0 6% 70px" }}>
+      <div style={{ padding: "0 6% 50px" }}>
         <div style={{ maxWidth: 640, margin: "0 auto", textAlign: "center", background: "#1a1700", border: "1px solid #3a3400", borderRadius: 16, padding: "36px 32px" }}>
           <p style={{ fontSize: 20, fontWeight: 700, color: TEXT, marginBottom: 8, letterSpacing: "-0.02em" }}>¿Listo para responder el 100% de tus reseñas sin esfuerzo?</p>
           <p style={{ fontSize: 14, color: MUTED, marginBottom: 24 }}>Conecta tu Google Business en 3 minutos. 7 días gratis, sin compromiso.</p>
@@ -573,7 +573,7 @@ export default function Landing() {
       </div>
 
       {/* FEATURES */}
-      <section style={{ padding: "70px 6% 80px" }}>
+      <section style={{ padding: "50px 6% 60px" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 48 }}>
             <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>Features</span>
@@ -602,7 +602,7 @@ export default function Landing() {
       </section>
 
       {/* PRICING */}
-      <section id="precios" style={{ padding: "70px 6% 80px", background: SURF }}>
+      <section id="precios" style={{ padding: "50px 6% 60px", background: SURF }}>
         <div style={{ maxWidth: 1160, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 48 }}>
             <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>Precios</span>
@@ -646,7 +646,7 @@ export default function Landing() {
       </section>
 
       {/* FAQ */}
-      <section style={{ padding: "70px 6% 80px" }}>
+      <section style={{ padding: "50px 6% 60px" }}>
         <div style={{ maxWidth: 640, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 40 }}>
             <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>FAQ</span>
@@ -659,7 +659,7 @@ export default function Landing() {
       </section>
 
       {/* FINAL CTA */}
-      <section style={{ padding: "90px 6%", textAlign: "center", background: SURF }}>
+      <section style={{ padding: "60px 6%", textAlign: "center", background: SURF }}>
         <div style={{ maxWidth: 560, margin: "0 auto" }}>
           <h2 style={{ fontSize: "clamp(30px, 4vw, 52px)", fontWeight: 700, letterSpacing: "-0.03em", lineHeight: 1.1, marginBottom: 18, color: TEXT }}>
             Tu competencia ya<br /><span style={{ color: Y }}>está respondiendo.</span>
