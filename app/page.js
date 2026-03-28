@@ -412,7 +412,7 @@ export default function Landing() {
         <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 80, background: "linear-gradient(to right, #0A0A0A, transparent)", zIndex: 2 }} />
         {/* fade derecha */}
         <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 80, background: "linear-gradient(to left, #0A0A0A, transparent)", zIndex: 2 }} />
-        <div style={{ display: "flex", animation: "ticker 35s linear infinite", width: "max-content", alignItems: "center" }}>
+        <div style={{ display: "flex", animation: "ticker 70s linear infinite", width: "max-content", alignItems: "center" }}>
           {[
             ["🏨","Hoteles"], ["🍽️","Restaurantes"], ["🦷","Clínicas dentales"], ["💆","Spas"], ["🏠","Inmobiliarias"],
             ["🍰","Pastelerías"], ["💄","Salones de belleza"], ["🏋️","Gimnasios"], ["🐾","Veterinarias"], ["👗","Tiendas de ropa"],
