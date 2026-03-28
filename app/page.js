@@ -391,9 +391,17 @@ export default function Landing() {
 
       {showSignup && <SignupModal onClose={() => setShowSignup(false)} />}
 
+      {/* ✅ BOTÓN VOLVER ARRIBA */}
+      {scrolled && (
+        <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} style={{ position: "fixed", bottom: 28, right: 28, zIndex: 200, width: 44, height: 44, borderRadius: "50%", background: Y, border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 16px rgba(0,0,0,0.4)", transition: "transform 0.2s, opacity 0.2s" }} onMouseOver={e => e.currentTarget.style.transform = "translateY(-3px)"} onMouseOut={e => e.currentTarget.style.transform = "translateY(0)"} title="Volver arriba">
+          <span style={{ color: BG, fontSize: 18, fontWeight: 700, lineHeight: 1 }}>↑</span>
+        </button>
+      )}
+
       {/* NAV */}
       <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, background: scrolled ? "rgba(10,10,10,0.95)" : "transparent", backdropFilter: scrolled ? "blur(12px)" : "none", borderBottom: scrolled ? "1px solid #2a2800" : "1px solid transparent", transition: "all 0.3s", padding: "0 6%", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+        {/* ✅ LOGO CLICKEABLE → va a home */}
+        <div onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} style={{ display: "flex", alignItems: "center", gap: 9, cursor: "pointer" }}>
           <div style={{ width: 30, height: 30, background: Y, borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center" }}>
             <span style={{ color: BG, fontSize: 14, fontWeight: 700 }}>R</span>
           </div>
