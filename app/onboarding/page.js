@@ -1,20 +1,46 @@
 "use client";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabase";
 
 export default function Onboarding() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [checking, setChecking] = useState(true); // ← nuevo
   const [form, setForm] = useState({
     full_name: "",
     phone: "",
     industry: "",
     website: "",
   });
+
+  // ✅ NUEVO: Si el usuario ya existe en Supabase → saltar onboarding
+  useEffect(() => {
+    const checkExistingUser = async () => {
+      if (status === "loading") return;
+      if (!session?.user?.email) {
+        setChecking(false);
+        return;
+      }
+
+      const { data: existingUser } = await supabase
+        .from("users")
+        .select("id, plan")
+        .eq("email", session.user.email)
+        .single();
+
+      if (existingUser) {
+        router.push("/dashboard");
+      } else {
+        setChecking(false);
+      }
+    };
+
+    checkExistingUser();
+  }, [session, status]);
 
   const industries = [
     "🏨 Hotel",
@@ -61,6 +87,21 @@ export default function Onboarding() {
       setLoading(false);
     }
   };
+
+  // ✅ Pantalla de carga mientras verificamos si el usuario ya existe
+  if (checking) {
+    return (
+      <div style={{ minHeight: "100vh", background: "#0f0f0f", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'DM Sans', sans-serif" }}>
+        <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');`}</style>
+        <div style={{ textAlign: "center" }}>
+          <div style={{ width: 36, height: 36, background: "#FFE600", borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
+            <span style={{ color: "#000", fontSize: 16, fontWeight: 700 }}>R</span>
+          </div>
+          <p style={{ color: "#737373", fontSize: 14 }}>Verificando tu cuenta...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ minHeight: "100vh", background: "#0f0f0f", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'DM Sans', sans-serif", padding: 20 }}>
