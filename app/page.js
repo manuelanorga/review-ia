@@ -907,9 +907,20 @@ export default function Landing() {
                     </div>
                   ))}
                 </div>
-                <button onClick={i === 3 ? () => window.open("https://wa.me/51931067775?text=Hola%2C%20me%20interesa%20el%20plan%20Agencia%20de%20RevGo", "_blank") : open} style={{ width: "100%", padding: "12px", background: p.highlight ? Y : "transparent", border: p.highlight ? "none" : "1px solid #2a2800", borderRadius: 9, color: p.highlight ? BG : MUTED, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", fontFamily: "'DM Sans', sans-serif" }} onMouseOver={e => { if (p.highlight) { e.currentTarget.style.background = "#fff176"; } else { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; } }} onMouseOut={e => { if (p.highlight) { e.currentTarget.style.background = Y; } else { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; } }}>
-                  {i === 0 ? "Empezar gratis 7 días →" : i === 1 ? "Elegir Growth →" : i === 2 ? "Elegir Pro →" : "💬 Agendar demo →"}
-                </button>
+                {i === 3 ? (
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    <button onClick={() => window.open("https://wa.me/51931067775?text=Hola%2C%20me%20interesa%20el%20plan%20Agencia%20de%20RevGo", "_blank")} style={{ width: "100%", padding: "12px", background: "transparent", border: `1px solid ${Y}`, borderRadius: 9, color: Y, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", fontFamily: "'DM Sans', sans-serif" }} onMouseOver={e => { e.currentTarget.style.background = "rgba(255,230,0,0.08)"; }} onMouseOut={e => { e.currentTarget.style.background = "transparent"; }}>
+                      💬 Agendar demo →
+                    </button>
+                    <button onClick={open} style={{ width: "100%", padding: "12px", background: "transparent", border: "1px solid #2a2800", borderRadius: 9, color: MUTED, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", fontFamily: "'DM Sans', sans-serif" }} onMouseOver={e => { e.currentTarget.style.borderColor = MUTED; e.currentTarget.style.color = TEXT; }} onMouseOut={e => { e.currentTarget.style.borderColor = "#2a2800"; e.currentTarget.style.color = MUTED; }}>
+                      Suscribirme a Agencia →
+                    </button>
+                  </div>
+                ) : (
+                  <button onClick={open} style={{ width: "100%", padding: "12px", background: p.highlight ? Y : "transparent", border: p.highlight ? "none" : "1px solid #2a2800", borderRadius: 9, color: p.highlight ? BG : MUTED, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", fontFamily: "'DM Sans', sans-serif" }} onMouseOver={e => { if (p.highlight) { e.currentTarget.style.background = "#fff176"; } else { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; } }} onMouseOut={e => { if (p.highlight) { e.currentTarget.style.background = Y; } else { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; } }}>
+                    {i === 0 ? "Empezar gratis 7 días →" : i === 1 ? "Elegir Growth →" : "Elegir Pro →"}
+                  </button>
+                )}
                 {i === 0 && <p style={{ fontSize: 11, color: MUTED, textAlign: "center", marginTop: 8 }}>Se requiere tarjeta · Cancela antes del día 7 sin costo</p>}
               </div>
             ))}
