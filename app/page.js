@@ -446,9 +446,6 @@ export default function Landing() {
   const [scrolled, setScrolled] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     const t = setInterval(() => setTick(p => p + 1), 3000);
@@ -486,7 +483,7 @@ export default function Landing() {
       )}
 
       {/* BARRA SOCIAL PROOF FIJA */}
-      {mounted && <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 199, background: "#0f0f00", borderTop: "1px solid #2a2800", height: 44, display: "flex", alignItems: "center", overflow: "hidden" }}>
+      <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 199, background: "#0f0f00", borderTop: "1px solid #2a2800", height: 44, display: "flex", alignItems: "center", overflow: "hidden" }}>
         {/* En vivo */}
         <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "0 14px", borderRight: "1px solid #2a2800", flexShrink: 0, height: "100%" }}>
           <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#4ade80", animation: "pulse 1.5s infinite" }} />
@@ -526,7 +523,7 @@ export default function Landing() {
           </div>
           <span style={{ fontSize: 11, color: "#25D366", fontWeight: 600, whiteSpace: "nowrap" }} className="wa-label">¿Preguntas? Escríbenos</span>
         </a>
-      </div>}
+      </div>
 
       {/* MENÚ MÓVIL */}
       {mobileMenuOpen && (
@@ -580,7 +577,7 @@ export default function Landing() {
           <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#1a1700", border: "1px solid #3a3400", borderRadius: 20, padding: "5px 14px" }}>
               <span style={{ width: 6, height: 6, borderRadius: "50%", background: Y, display: "inline-block", animation: "pulse 2s infinite" }} />
-              <span style={{ color: Y, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>Más clientes desde Google Maps · Sin esfuerzo · 7 días gratis</span>
+              <span style={{ color: Y, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>Responde el 100% de tus reseñas en Google — automáticamente, con IA</span>
             </div>
           </div>
           {/* GRID 2 columnas desktop, 1 columna móvil */}
@@ -618,32 +615,32 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* LOGOS BAR - APP ICONS TICKER */}
+      {/* LOGOS BAR - APP ICONS */}
       <div style={{ padding: "40px 6%", display: "flex", justifyContent: "center" }}>
-        <div style={{ width: "100%", maxWidth: 860, background: "#0f0f00", border: "1px solid #2a2800", borderRadius: 20, padding: "20px 0", overflow: "hidden", position: "relative" }}>
-          <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 50, background: "linear-gradient(to right, #0f0f00, transparent)", zIndex: 2 }} />
-          <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 50, background: "linear-gradient(to left, #0f0f00, transparent)", zIndex: 2 }} />
-          <div style={{ display: "flex", animation: "ticker 35s linear infinite", width: "max-content", gap: 12, padding: "0 20px" }}>
-            {[
-              ["🏨","Hoteles"], ["🍽️","Restaurantes"], ["🦷","Clínicas dentales"], ["💆","Spas"], ["🏠","Inmobiliarias"],
-              ["🍰","Pastelerías"], ["💄","Salones de belleza"], ["🏋️","Gimnasios"], ["🐾","Veterinarias"], ["👗","Tiendas de ropa"],
-              ["🚗","Talleres mecánicos"], ["📚","Academias"], ["💊","Farmacias"], ["🧴","Clínicas estéticas"], ["☕","Cafeterías"],
-              ["🍕","Pizzerías"], ["🥗","Comida saludable"], ["🏥","Clínicas médicas"], ["👁️","Ópticas"], ["🧘","Centros de yoga"],
-              ["📸","Fotógrafos"], ["💅","Nail salons"], ["✂️","Barberías"], ["🌸","Floristerías"], ["🚚","Mudanzas"],
-              ["🏨","Hoteles"], ["🍽️","Restaurantes"], ["🦷","Clínicas dentales"], ["💆","Spas"], ["🏠","Inmobiliarias"],
-              ["🍰","Pastelerías"], ["💄","Salones de belleza"], ["🏋️","Gimnasios"], ["🐾","Veterinarias"], ["👗","Tiendas de ropa"],
-              ["🚗","Talleres mecánicos"], ["📚","Academias"], ["💊","Farmacias"], ["🧴","Clínicas estéticas"], ["☕","Cafeterías"],
-              ["🍕","Pizzerías"], ["🥗","Comida saludable"], ["🏥","Clínicas médicas"], ["👁️","Ópticas"], ["🧘","Centros de yoga"],
-              ["📸","Fotógrafos"], ["💅","Nail salons"], ["✂️","Barberías"], ["🌸","Floristerías"], ["🚚","Mudanzas"],
-            ].map(([icon, label], i) => (
-              <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, flexShrink: 0 }}>
-                <div style={{ width: 54, height: 54, borderRadius: 14, background: "#161608", border: "1px solid #2a2800", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24 }}>{icon}</div>
-                <span style={{ fontSize: 10, color: Y, fontWeight: 700, whiteSpace: "nowrap", letterSpacing: "0.02em" }}>{label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+       <div style={{ width: "100%", maxWidth: 860, background: "#0f0f00", border: "1px solid #2a2800", borderRadius: 20, padding: "20px 0", overflow: "hidden", position: "relative" }}>
+         <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 50, background: "linear-gradient(to right, #0f0f00, transparent)", zIndex: 2 }} />
+         <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 50, background: "linear-gradient(to left, #0f0f00, transparent)", zIndex: 2 }} />
+        <div style={{ display: "flex", animation: "ticker 35s linear infinite", width: "max-content", gap: 12, padding: "0 20px" }}>
+          {[
+            ["🏨","Hoteles"],["🍽️","Restaurantes"],["🦷","Clínicas dentales"],["💆","Spas"],["🏠","Inmobiliarias"],
+            ["🍰","Pastelerías"],["💄","Salones de belleza"],["🏋️","Gimnasios"],["🐾","Veterinarias"],["👗","Tiendas de ropa"],
+            ["🚗","Talleres mecánicos"],["📚","Academias"],["💊","Farmacias"],["🧴","Clínicas estéticas"],["☕","Cafeterías"],
+            ["🍕","Pizzerías"],["🥗","Comida saludable"],["🏥","Clínicas médicas"],["👁️","Ópticas"],["🧘","Centros de yoga"],
+            ["📸","Fotógrafos"],["💅","Nail salons"],["✂️","Barberías"],["🌸","Floristerías"],["🚚","Mudanzas"],
+            ["🏨","Hoteles"],["🍽️","Restaurantes"],["🦷","Clínicas dentales"],["💆","Spas"],["🏠","Inmobiliarias"],
+            ["🍰","Pastelerías"],["💄","Salones de belleza"],["🏋️","Gimnasios"],["🐾","Veterinarias"],["👗","Tiendas de ropa"],
+            ["🚗","Talleres mecánicos"],["📚","Academias"],["💊","Farmacias"],["🧴","Clínicas estéticas"],["☕","Cafeterías"],
+            ["🍕","Pizzerías"],["🥗","Comida saludable"],["🏥","Clínicas médicas"],["👁️","Ópticas"],["🧘","Centros de yoga"],
+            ["📸","Fotógrafos"],["💅","Nail salons"],["✂️","Barberías"],["🌸","Floristerías"],["🚚","Mudanzas"],
+          ].map(([icon, label], i) => (
+            <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, flexShrink: 0 }}>
+             <div style={{ width: 54, height: 54, borderRadius: 14, background: "#161608", border: "1px solid #2a2800", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24 }}>{icon}</div>
+            <span style={{ fontSize: 10, color: Y, fontWeight: 700, whiteSpace: "nowrap", letterSpacing: "0.02em" }}>{label}</span>
+            </div>
+         ))}
+       </div>
+     </div>
+   </div>
 
       {/* EL PROBLEMA */}
       <section style={{ padding: "50px 6% 60px", background: SURF }}>
