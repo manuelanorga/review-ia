@@ -384,9 +384,7 @@ export default function Dashboard() {
 
       <main style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
         <header style={{ height: 56, borderBottom: `1px solid ${d.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px", background: d.sidebar, flexShrink: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {isMobile && false && (
-            <div>
+          <div>
             <h1 style={{ fontSize: 15, fontWeight: 700, color: d.text }}>
               {accountSection === "config" && "Mi cuenta"}{accountSection === "billing" && "Pagos y planes"}{accountSection === "invoices" && "Facturas"}
               {!accountSection && activeNav === "dashboard" && "Resumen"}{!accountSection && activeNav === "reviews" && "Reseñas"}{!accountSection && activeNav === "analytics" && "Analytics"}{!accountSection && activeNav === "autopilot" && "Autopiloto"}{!accountSection && activeNav === "qr" && "Mi QR"}
@@ -395,7 +393,6 @@ export default function Dashboard() {
               {accountSection === "config" && "Gestiona tu información personal y conexiones"}{accountSection === "billing" && "Plan actual y método de pago"}{accountSection === "invoices" && "Historial de pagos"}
               {!accountSection && activeNav === "dashboard" && `${pendingCount} pendientes · ${respondedToday} respondidas`}{!accountSection && activeNav === "reviews" && `${pendingCount} sin responder`}{!accountSection && activeNav === "analytics" && "Últimos 30 días"}{!accountSection && activeNav === "qr" && "Tu código QR listo para imprimir"}{!accountSection && activeNav === "autopilot" && (autopilot ? `Activo · Tono ${tone}` : "Inactivo")}
             </p>
-          </div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             {autopilot && <div style={{ fontSize: 11, color: d.accent, padding: "4px 10px", background: dark ? "#1a1700" : "#fefce8", borderRadius: 7, border: `1px solid ${dark ? "#3a3400" : "#fde68a"}`, fontWeight: 600 }}>⚡ Autopiloto ON</div>}
