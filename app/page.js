@@ -836,19 +836,21 @@ export default function Landing() {
 
       {/* FEATURES */}
       <section style={{ padding: "50px 6% 60px" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 48 }}>
             <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>Features</span>
             <h2 style={{ fontSize: "clamp(24px, 3vw, 40px)", fontWeight: 700, letterSpacing: "-0.03em", margin: "14px 0 0", color: TEXT }}>Todo lo que necesita tu negocio</h2>
           </div>
-          <div className="fgrid">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }} className="fgrid">
             {FEATURES.map((f, i) => (
-              <div key={i} className="hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 14, padding: "28px 24px", display: "flex", flexDirection: "column", gap: 12 }}>
-                <div style={{ fontSize: 32 }}>{f.icon}</div>
-                <h3 style={{ fontSize: 16, fontWeight: 700, color: TEXT, letterSpacing: "-0.02em", lineHeight: 1.3 }}>{f.title}</h3>
+              <div key={i} className="hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 16, padding: "28px 24px", display: "flex", flexDirection: "column", gap: 10, position: "relative", overflow: "hidden" }}>
+                {/* Número de fondo decorativo */}
+                <div style={{ position: "absolute", top: 12, right: 16, fontSize: 56, fontWeight: 700, color: "#1a1800", lineHeight: 1, userSelect: "none" }}>0{i+1}</div>
+                <div style={{ fontSize: 28, marginBottom: 4 }}>{f.icon}</div>
+                <h3 style={{ fontSize: 15, fontWeight: 700, color: TEXT, letterSpacing: "-0.02em", lineHeight: 1.3 }}>{f.title}</h3>
                 <p style={{ fontSize: 13, color: MUTED, lineHeight: 1.65 }}>{f.desc}</p>
                 {f.extra && (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 4, paddingTop: 12, borderTop: "1px solid #2a2800" }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 7, marginTop: 6, paddingTop: 12, borderTop: "1px solid #2a2800" }}>
                     {f.extra.map((item, j) => (
                       <div key={j} style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
                         <span style={{ color: Y, fontSize: 11, marginTop: 2, flexShrink: 0 }}>→</span>
