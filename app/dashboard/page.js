@@ -426,7 +426,7 @@ export default function Dashboard() {
                   <button onClick={() => { setActiveNav("reviews"); setSelected(urgentReview.id); setEditText(""); }} style={{ padding: "7px 14px", background: "#f87171", border: "none", borderRadius: 8, color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" }}>Responder ahora →</button>
                 </div>
               )}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 20 }}>
+              <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2,1fr)" : "repeat(4,1fr)", gap: 12, marginBottom: 20 }}>
                 {STATS.map((s, i) => (
                   <div key={i} style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 12, padding: "16px 18px", animation: `fadeIn 0.4s ease ${i * 0.06}s both` }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
@@ -438,7 +438,7 @@ export default function Dashboard() {
                   </div>
                 ))}
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+              <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 16 }}>
                 <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 14, overflow: "hidden" }}>
                   <div style={{ padding: "14px 16px", borderBottom: `1px solid ${d.border}`, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <div style={{ fontSize: 13, fontWeight: 700, color: d.text }}>Últimas reseñas</div>
