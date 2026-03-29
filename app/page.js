@@ -55,28 +55,28 @@ const FEATURES = [
 
 const PLANS = [
   {
-    name: "Starter", price: "39", tagline: "Empieza a responder",
-    desc: "Ideal para negocios pequeños",
+    name: "Starter", price: "9", tagline: "Empieza a automatizar tus reseñas",
+    desc: "Prueba cómo la IA responde por ti y ahorra horas cada semana",
     features: ["1 negocio conectado", "Hasta 50 reseñas/mes", "Respuestas con IA en español", "🤖 Autopiloto · Solo tono Formal", "📊 Analytics básico (solo visualizar)", "Soporte por email"],
-    highlight: false, badge: null,
+    highlight: false, badge: null, regularPrice: "15",
   },
   {
-    name: "Growth", price: "79", tagline: "Crece en Google",
-    desc: "Ideal para negocios en crecimiento",
-    features: ["1-3 negocios conectados", "Hasta 300 reseñas/mes", "🌎 Español, inglés y 50 idiomas más", "🤖 Autopiloto · 3 tonos disponibles", "📊 Analytics completo + exportar PDF", "Soporte prioritario"],
-    highlight: true, badge: "⭐ Más popular",
+    name: "Growth", price: "29", tagline: "Convierte reseñas en más clientes",
+    desc: "Automatiza respuestas y mejora tu reputación en Google sin esfuerzo",
+    features: ["1-3 negocios conectados", "Hasta 300 reseñas/mes", "🌎 Español, inglés y 50 idiomas más", "🤖 Autopiloto · 3 tonos disponibles", "📊 Analytics completo + Análisis con IA + exportar PDF", "Soporte prioritario"],
+    highlight: true, badge: "⭐ Más popular", regularPrice: null,
   },
   {
-    name: "Pro", price: "149", tagline: "Domina tu reputación",
-    desc: "Ideal para empresas multi-sucursal",
-    features: ["Negocios ilimitados", "Reseñas ilimitadas", "🌎 Español, inglés y 50 idiomas más", "🤖 Autopiloto · 3 tonos disponibles", "📊 Analytics completo + exportar PDF", "Branding avanzado", "API access"],
-    highlight: false, badge: null,
+    name: "Pro", price: "59", tagline: "Automatiza y escala tu reputación",
+    desc: "Gestiona múltiples sucursales y responde miles de reseñas sin límites",
+    features: ["Negocios ilimitados", "Reseñas ilimitadas", "🌎 Español, inglés y 50 idiomas más", "🤖 Autopiloto · 3 tonos disponibles", "📊 Analytics completo + Análisis con IA + exportar PDF", "Branding avanzado"],
+    highlight: false, badge: null, regularPrice: null,
   },
   {
-    name: "Agencia", price: "449", tagline: "Escala con tus clientes",
-    desc: "Ideal para agencias y revendedores",
-    features: ["Clientes ilimitados", "Multi-cuenta · White label", "🌎 Español, inglés y 50 idiomas más", "🤖 Autopiloto · 3 tonos disponibles", "📊 Analytics completo + exportar PDF", "Reportes avanzados", "Account manager dedicado"],
-    highlight: false, badge: null, regularPrice: "699",
+    name: "Agencia", price: "160", tagline: "Gestiona decenas de clientes sin esfuerzo",
+    desc: "Administra múltiples cuentas y escala tu negocio de reputación digital",
+    features: ["Clientes ilimitados", "Multi-cuenta · White label", "🌎 Español, inglés y 50 idiomas más", "🤖 Autopiloto · 3 tonos disponibles", "📊 Analytics completo + Análisis con IA + exportar PDF", "Reportes avanzados", "Account manager dedicado"],
+    highlight: false, badge: null, regularPrice: "200",
   },
 ];
 
@@ -463,7 +463,7 @@ export default function Landing() {
       )}
 
       {/* BOTÓN WHATSAPP FLOTANTE */}
-      <a href="https://wa.me/51999999999?text=Hola%2C%20me%20interesa%20RevGo%20para%20mi%20negocio" target="_blank" rel="noopener noreferrer" style={{ position: "fixed", bottom: scrolled ? 82 : 28, right: 28, zIndex: 199, width: 50, height: 50, borderRadius: "50%", background: "#25D366", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 16px rgba(37,211,102,0.4)", transition: "bottom 0.3s, transform 0.2s", textDecoration: "none" }} onMouseOver={e => e.currentTarget.style.transform = "translateY(-3px)"} onMouseOut={e => e.currentTarget.style.transform = "translateY(0)"}>
+      <a href="https://wa.me/51931067775?text=Hola%2C%20me%20interesa%20RevGo%20para%20mi%20negocio" target="_blank" rel="noopener noreferrer" style={{ position: "fixed", bottom: scrolled ? 82 : 28, right: 28, zIndex: 199, width: 50, height: 50, borderRadius: "50%", background: "#25D366", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 16px rgba(37,211,102,0.4)", transition: "bottom 0.3s, transform 0.2s", textDecoration: "none" }} onMouseOver={e => e.currentTarget.style.transform = "translateY(-3px)"} onMouseOut={e => e.currentTarget.style.transform = "translateY(0)"}>
         <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
       </a>
 
@@ -665,7 +665,7 @@ export default function Landing() {
                 ))}
               </div>
               <div style={{ background: "#1a1700", border: "1px solid #3a3400", borderRadius: 14, padding: "22px 24px", textAlign: "center" }}>
-                <p style={{ fontSize: 20, fontWeight: 800, color: Y, marginBottom: 8, letterSpacing: "-0.02em" }}>💡 Un negocio con S/300,000 al año puede ganar S/54,000 más — solo respondiendo reseñas.</p>
+                <p style={{ fontSize: 20, fontWeight: 800, color: Y, marginBottom: 8, letterSpacing: "-0.02em" }}>💡 Un negocio con $80,000 USD al año puede ganar $14,400 más — solo respondiendo reseñas.</p>
                 <p style={{ fontSize: 13, color: MUTED, lineHeight: 1.6 }}>RevGo lo hace automáticamente, 24/7, sin que tú muevas un dedo.</p>
               </div>
             </div>
@@ -690,19 +690,18 @@ export default function Landing() {
           <div className="carousel-track">
 
             {/* CARD 1 — Google Business */}
-            <div className="carousel-card hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 16, overflow: "hidden", flexShrink: 0 }}>
-              <div style={{ padding: "28px 24px 20px" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
-                  <div style={{ width: 36, height: 36, background: "#1a1700", border: "1px solid #2a2800", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>○</div>
-                  <div style={{ fontSize: 36, fontWeight: 700, color: "#1a1800", lineHeight: 1 }}>01</div>
+            <div className="carousel-card hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 16, overflow: "hidden", flexShrink: 0, boxSizing: "border-box" }}>
+              <div style={{ padding: "24px 20px 16px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+                  <div style={{ width: 32, height: 32, background: "#1a1700", border: "1px solid #2a2800", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, flexShrink: 0 }}>○</div>
+                  <div style={{ fontSize: 28, fontWeight: 700, color: "#1a1800", lineHeight: 1 }}>01</div>
                 </div>
-                <h3 style={{ fontSize: 18, fontWeight: 700, color: TEXT, marginBottom: 8, letterSpacing: "-0.02em" }}>Conecta tu Google Business</h3>
-                <p style={{ fontSize: 13, color: MUTED, lineHeight: 1.65, marginBottom: 20 }}>Un clic. Google abre su ventana oficial. Nosotros jamás vemos tu contraseña.</p>
+                <h3 style={{ fontSize: 17, fontWeight: 700, color: TEXT, marginBottom: 6, letterSpacing: "-0.02em" }}>Conecta tu Google Business</h3>
+                <p style={{ fontSize: 13, color: MUTED, lineHeight: 1.65, marginBottom: 16 }}>Un clic. Google abre su ventana oficial. Jamás vemos tu contraseña.</p>
               </div>
-              {/* Simulación del botón de Google */}
-              <div style={{ margin: "0 24px 24px", background: "#fff", borderRadius: 12, padding: "16px", boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
-                  <svg width="20" height="20" viewBox="0 0 48 48">
+              <div style={{ margin: "0 20px 20px", background: "#fff", borderRadius: 10, padding: "14px", boxShadow: "0 2px 8px rgba(0,0,0,0.15)", overflow: "hidden" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                  <svg width="18" height="18" viewBox="0 0 48 48" style={{ flexShrink: 0 }}>
                     <path fill="#FFC107" d="M43.6 20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.7-.4-4z"/>
                     <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
                     <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2A12 12 0 0 1 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/>
@@ -710,72 +709,70 @@ export default function Landing() {
                   </svg>
                   <span style={{ fontSize: 13, fontWeight: 600, color: "#202124" }}>Continuar con Google</span>
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#f8f9fa", borderRadius: 8, padding: "10px 12px" }}>
-                  <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#4285F4", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#fff" }}>H</div>
-                  <div>
-                    <div style={{ fontSize: 12, fontWeight: 600, color: "#202124" }}>Hotel Miraflores Boutique</div>
-                    <div style={{ fontSize: 10, color: "#5f6368" }}>4.6 ⭐ · 847 reseñas · Google Business</div>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#f8f9fa", borderRadius: 8, padding: "10px", overflow: "hidden" }}>
+                  <div style={{ width: 26, height: 26, borderRadius: "50%", background: "#4285F4", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, color: "#fff", flexShrink: 0 }}>H</div>
+                  <div style={{ overflow: "hidden", flex: 1 }}>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: "#202124", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Hotel Miraflores Boutique</div>
+                    <div style={{ fontSize: 10, color: "#5f6368" }}>4.6 ⭐ · 847 reseñas</div>
                   </div>
-                  <div style={{ marginLeft: "auto", width: 8, height: 8, borderRadius: "50%", background: "#34A853" }} />
+                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#34A853", flexShrink: 0 }} />
                 </div>
               </div>
             </div>
 
             {/* CARD 2 — Tono */}
-            <div className="carousel-card hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 16, overflow: "hidden", flexShrink: 0 }}>
-              <div style={{ padding: "28px 24px 20px" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
-                  <div style={{ width: 36, height: 36, background: "#1a1700", border: "1px solid #2a2800", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>◇</div>
-                  <div style={{ fontSize: 36, fontWeight: 700, color: "#1a1800", lineHeight: 1 }}>02</div>
+            <div className="carousel-card hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 16, overflow: "hidden", flexShrink: 0, boxSizing: "border-box" }}>
+              <div style={{ padding: "24px 20px 16px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+                  <div style={{ width: 32, height: 32, background: "#1a1700", border: "1px solid #2a2800", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, flexShrink: 0 }}>◇</div>
+                  <div style={{ fontSize: 28, fontWeight: 700, color: "#1a1800", lineHeight: 1 }}>02</div>
                 </div>
-                <h3 style={{ fontSize: 18, fontWeight: 700, color: TEXT, marginBottom: 8, letterSpacing: "-0.02em" }}>Define el tono de tu marca</h3>
-                <p style={{ fontSize: 13, color: MUTED, lineHeight: 1.65, marginBottom: 20 }}>Cercano, formal o profesional. La IA aprende cómo habla tu negocio.</p>
+                <h3 style={{ fontSize: 17, fontWeight: 700, color: TEXT, marginBottom: 6, letterSpacing: "-0.02em" }}>Define el tono de tu marca</h3>
+                <p style={{ fontSize: 13, color: MUTED, lineHeight: 1.65, marginBottom: 16 }}>La IA aprende cómo habla tu negocio.</p>
               </div>
-              <div style={{ margin: "0 24px 24px", display: "flex", flexDirection: "column", gap: 8 }}>
+              <div style={{ margin: "0 20px 20px", display: "flex", flexDirection: "column", gap: 8 }}>
                 {[
                   { key: "cercano", label: "😊 Cercano", desc: "Cálido y personal", active: false },
                   { key: "formal", label: "🎩 Formal", desc: "Elegante y respetuoso", active: true },
                   { key: "profesional", label: "💼 Profesional", desc: "Directo y ejecutivo", active: false },
                 ].map(t => (
-                  <div key={t.key} style={{ padding: "11px 14px", borderRadius: 10, border: `1.5px solid ${t.active ? Y : BORDER}`, background: t.active ? "rgba(255,230,0,0.06)" : "transparent", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <div key={t.key} style={{ padding: "10px 12px", borderRadius: 10, border: `1.5px solid ${t.active ? Y : BORDER}`, background: t.active ? "rgba(255,230,0,0.06)" : "transparent", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                     <div>
                       <div style={{ fontSize: 13, fontWeight: t.active ? 700 : 400, color: t.active ? Y : LIGHT }}>{t.label}</div>
                       <div style={{ fontSize: 11, color: MUTED, marginTop: 1 }}>{t.desc}</div>
                     </div>
-                    {t.active && <span style={{ color: Y }}>✓</span>}
+                    {t.active && <span style={{ color: Y, flexShrink: 0 }}>✓</span>}
                   </div>
                 ))}
               </div>
             </div>
 
             {/* CARD 3 — Autopiloto */}
-            <div className="carousel-card hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 16, overflow: "hidden", flexShrink: 0 }}>
-              <div style={{ padding: "28px 24px 20px" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
-                  <div style={{ width: 36, height: 36, background: "#1a1700", border: "1px solid #2a2800", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>△</div>
-                  <div style={{ fontSize: 36, fontWeight: 700, color: "#1a1800", lineHeight: 1 }}>03</div>
+            <div className="carousel-card hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 16, overflow: "hidden", flexShrink: 0, boxSizing: "border-box" }}>
+              <div style={{ padding: "24px 20px 16px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+                  <div style={{ width: 32, height: 32, background: "#1a1700", border: "1px solid #2a2800", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, flexShrink: 0 }}>△</div>
+                  <div style={{ fontSize: 28, fontWeight: 700, color: "#1a1800", lineHeight: 1 }}>03</div>
                 </div>
-                <h3 style={{ fontSize: 18, fontWeight: 700, color: TEXT, marginBottom: 8, letterSpacing: "-0.02em" }}>Responde en autopiloto</h3>
-                <p style={{ fontSize: 13, color: MUTED, lineHeight: 1.65, marginBottom: 20 }}>Cada reseña nueva recibe una respuesta personalizada en segundos, 24/7.</p>
+                <h3 style={{ fontSize: 17, fontWeight: 700, color: TEXT, marginBottom: 6, letterSpacing: "-0.02em" }}>Responde en autopiloto</h3>
+                <p style={{ fontSize: 13, color: MUTED, lineHeight: 1.65, marginBottom: 16 }}>Cada reseña recibe una respuesta personalizada en segundos, 24/7.</p>
               </div>
-              <div style={{ margin: "0 24px 24px", display: "flex", flexDirection: "column", gap: 10 }}>
-                {/* Toggle autopiloto */}
-                <div style={{ background: "#111100", border: "1px solid #2a2800", borderRadius: 12, padding: "14px 16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ margin: "0 20px 20px", display: "flex", flexDirection: "column", gap: 10 }}>
+                <div style={{ background: "#111100", border: "1px solid #2a2800", borderRadius: 10, padding: "12px 14px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                   <div>
                     <div style={{ fontSize: 14, fontWeight: 700, color: TEXT }}>⚡ Autopiloto</div>
                     <div style={{ fontSize: 11, color: "#4ade80", marginTop: 2 }}>Respondiendo automáticamente</div>
                   </div>
-                  <div style={{ width: 44, height: 24, borderRadius: 12, background: "#4ade80", position: "relative", flexShrink: 0 }}>
-                    <div style={{ position: "absolute", top: 2, left: 22, width: 20, height: 20, borderRadius: "50%", background: "#fff", boxShadow: "0 1px 4px rgba(0,0,0,0.3)" }} />
+                  <div style={{ width: 40, height: 22, borderRadius: 11, background: "#4ade80", position: "relative", flexShrink: 0 }}>
+                    <div style={{ position: "absolute", top: 2, left: 20, width: 18, height: 18, borderRadius: "50%", background: "#fff", boxShadow: "0 1px 4px rgba(0,0,0,0.3)" }} />
                   </div>
                 </div>
-                {/* Respuesta ejemplo */}
-                <div style={{ background: "#111100", border: "1px solid #2a2800", borderRadius: 12, padding: "12px 14px" }}>
+                <div style={{ background: "#111100", border: "1px solid #2a2800", borderRadius: 10, padding: "12px 14px", overflow: "hidden" }}>
                   <div style={{ fontSize: 11, color: MUTED, marginBottom: 6 }}>María G. ⭐⭐⭐⭐⭐ · hace un momento</div>
                   <div style={{ fontSize: 12, color: LIGHT, fontStyle: "italic", marginBottom: 8 }}>"Increíble experiencia, el personal súper atento."</div>
                   <div style={{ borderLeft: `2px solid ${Y}`, paddingLeft: 8 }}>
                     <div style={{ fontSize: 9, fontWeight: 700, color: Y, marginBottom: 3 }}>REVGO AI · FORMAL</div>
-                    <div style={{ fontSize: 11, color: LIGHT }}>Estimada María, le agradecemos sus amables palabras. ¡Esperamos verla pronto!</div>
+                    <div style={{ fontSize: 11, color: LIGHT, lineHeight: 1.5 }}>Estimada María, le agradecemos sus amables palabras. ¡Esperamos verla pronto!</div>
                   </div>
                 </div>
               </div>
@@ -873,6 +870,7 @@ export default function Landing() {
             <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>Precios</span>
             <h2 style={{ fontSize: "clamp(24px, 3vw, 40px)", fontWeight: 700, letterSpacing: "-0.03em", margin: "14px 0 10px", color: TEXT }}>Simple y transparente</h2>
             <p style={{ fontSize: 14, color: MUTED }}>7 días gratis en el plan Starter · Cancela cuando quieras</p>
+            <p style={{ fontSize: 12, color: "#555540", marginTop: 8 }}>💳 Precios en USD · Acepta tarjetas de cualquier país · Pago seguro vía LemonSqueezy</p>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#1a1700", border: "1px solid #3a3400", borderRadius: 20, padding: "5px 14px", marginTop: 12 }}>
               <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#4ade80", display: "inline-block", animation: "pulse 2s infinite" }} />
               <span style={{ color: "#4ade80", fontSize: 11, fontWeight: 700, letterSpacing: "0.08em" }}>Precio de lanzamiento · Sube pronto</span>
@@ -892,11 +890,11 @@ export default function Landing() {
                 <div style={{ margin: "16px 0" }}>
                   {p.regularPrice && (
                     <div style={{ fontSize: 13, color: MUTED, marginBottom: 4 }}>
-                      Precio regular: <span style={{ textDecoration: "line-through" }}>S/{p.regularPrice}</span>
+                      Precio regular: <span style={{ textDecoration: "line-through" }}>${p.regularPrice} USD</span>
                     </div>
                   )}
-                  <span style={{ fontSize: 46, fontWeight: 700, color: p.highlight ? Y : TEXT, letterSpacing: "-0.04em", lineHeight: 1 }}>S/{p.price}</span>
-                  <span style={{ fontSize: 13, color: MUTED }}>/mes</span>
+                  <span style={{ fontSize: 46, fontWeight: 700, color: p.highlight ? Y : TEXT, letterSpacing: "-0.04em", lineHeight: 1 }}>${p.price}</span>
+                  <span style={{ fontSize: 13, color: MUTED }}> USD/mes</span>
                   {p.regularPrice && (
                     <span style={{ marginLeft: 10, fontSize: 11, fontWeight: 700, color: "#4ade80", background: "#0a2a0a", padding: "2px 8px", borderRadius: 20 }}>Precio lanzamiento</span>
                   )}
@@ -909,8 +907,8 @@ export default function Landing() {
                     </div>
                   ))}
                 </div>
-                <button onClick={() => window.open("https://wa.me/51931067775?text=Hola%2C%20me%20interesa%20el%20plan%20Agencia%20de%20RevGo", "_blank")} style={{ width: "100%", padding: "12px", background: p.highlight ? Y : "transparent", border: p.highlight ? "none" : "1px solid #2a2800", borderRadius: 9, color: p.highlight ? BG : MUTED, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", fontFamily: "'DM Sans', sans-serif" }} onMouseOver={e => { if (p.highlight) { e.currentTarget.style.background = "#fff176"; } else { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; } }} onMouseOut={e => { if (p.highlight) { e.currentTarget.style.background = Y; } else { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; } }}>
-                  {i === 0 ? "Empezar gratis 7 días →" : i === 3 ? "💬 Hablar con ventas →" : `Suscribirme a ${p.name} →`}
+                <button onClick={i === 3 ? () => window.open("https://wa.me/51931067775?text=Hola%2C%20me%20interesa%20el%20plan%20Agencia%20de%20RevGo", "_blank") : open} style={{ width: "100%", padding: "12px", background: p.highlight ? Y : "transparent", border: p.highlight ? "none" : "1px solid #2a2800", borderRadius: 9, color: p.highlight ? BG : MUTED, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.2s", fontFamily: "'DM Sans', sans-serif" }} onMouseOver={e => { if (p.highlight) { e.currentTarget.style.background = "#fff176"; } else { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; } }} onMouseOut={e => { if (p.highlight) { e.currentTarget.style.background = Y; } else { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.color = MUTED; } }}>
+                  {i === 0 ? "Empezar gratis 7 días →" : i === 1 ? "Elegir Growth →" : i === 2 ? "Elegir Pro →" : "💬 Agendar demo →"}
                 </button>
                 {i === 0 && <p style={{ fontSize: 11, color: MUTED, textAlign: "center", marginTop: 8 }}>Se requiere tarjeta · Cancela antes del día 7 sin costo</p>}
               </div>
