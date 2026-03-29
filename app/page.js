@@ -419,6 +419,26 @@ function AutopilotDemo() {
   );
 }
 
+function FAQSection() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div>
+      <div onClick={() => setOpen(!open)} style={{ textAlign: "center", marginBottom: open ? 40 : 0, cursor: "pointer", userSelect: "none" }}>
+        <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>FAQ</span>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 14, marginTop: 14 }}>
+          <h2 style={{ fontSize: "clamp(22px, 3vw, 36px)", fontWeight: 700, letterSpacing: "-0.03em", color: TEXT, margin: 0 }}>Preguntas frecuentes</h2>
+          <span style={{ color: Y, fontSize: 28, display: "inline-block", transform: open ? "rotate(45deg)" : "rotate(0)", transition: "transform 0.25s", lineHeight: 1, flexShrink: 0 }}>+</span>
+        </div>
+      </div>
+      {open && (
+        <div style={{ borderTop: "1px solid #2a2800", animation: "fadeUp 0.25s ease both" }}>
+          {FAQS.map((f, i) => <FAQItem key={i} q={f.q} a={f.a} />)}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Landing() {
   const { data: session } = useSession();
   const router = useRouter();
@@ -936,13 +956,7 @@ export default function Landing() {
       {/* FAQ */}
       <section style={{ padding: "50px 6% 60px" }}>
         <div style={{ maxWidth: 640, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 40 }}>
-            <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>FAQ</span>
-            <h2 style={{ fontSize: "clamp(22px, 3vw, 36px)", fontWeight: 700, letterSpacing: "-0.03em", margin: "14px 0 0", color: TEXT }}>Preguntas frecuentes</h2>
-          </div>
-          <div style={{ borderTop: "1px solid #2a2800" }}>
-            {FAQS.map((f, i) => <FAQItem key={i} q={f.q} a={f.a} />)}
-          </div>
+          <FAQSection />
         </div>
       </section>
 
