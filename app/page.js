@@ -477,7 +477,7 @@ export default function Landing() {
 
       {/* BOTÓN VOLVER ARRIBA */}
       {scrolled && (
-        <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} style={{ position: "fixed", bottom: 28, right: 28, zIndex: 200, width: 44, height: 44, borderRadius: "50%", background: Y, border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 16px rgba(0,0,0,0.4)", transition: "transform 0.2s" }} onMouseOver={e => e.currentTarget.style.transform = "translateY(-3px)"} onMouseOut={e => e.currentTarget.style.transform = "translateY(0)"}>
+        <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} style={{ position: "fixed", bottom: 56, right: 28, zIndex: 200, width: 44, height: 44, borderRadius: "50%", background: Y, border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 16px rgba(0,0,0,0.4)", transition: "transform 0.2s" }} onMouseOver={e => e.currentTarget.style.transform = "translateY(-3px)"} onMouseOut={e => e.currentTarget.style.transform = "translateY(0)"}>
           <span style={{ color: BG, fontSize: 18, fontWeight: 700, lineHeight: 1 }}>↑</span>
         </button>
       )}
