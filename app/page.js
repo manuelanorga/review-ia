@@ -577,7 +577,7 @@ export default function Landing() {
           <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#1a1700", border: "1px solid #3a3400", borderRadius: 20, padding: "5px 14px" }}>
               <span style={{ width: 6, height: 6, borderRadius: "50%", background: Y, display: "inline-block", animation: "pulse 2s infinite" }} />
-              <span style={{ color: Y, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>Responde el 100% de tus reseñas en Google — automáticamente, con IA</span>
+              <span style={{ color: Y, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>Más clientes desde Google Maps · Sin esfuerzo · 7 días gratis</span>
             </div>
           </div>
           {/* GRID 2 columnas desktop, 1 columna móvil */}
@@ -615,33 +615,30 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* LOGOS BAR - TICKER */}
-      <div style={{ borderTop: "1px solid #2a2800", borderBottom: "1px solid #2a2800", padding: "14px 0", overflow: "hidden", position: "relative" }}>
-        {/* fade izquierda */}
-        <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 80, background: "linear-gradient(to right, #0A0A0A, transparent)", zIndex: 2 }} />
-        {/* fade derecha */}
-        <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 80, background: "linear-gradient(to left, #0A0A0A, transparent)", zIndex: 2 }} />
-        <div style={{ display: "flex", animation: "ticker 35s linear infinite", width: "max-content", alignItems: "center" }}>
-          {[
-            ["🏨","Hoteles"], ["🍽️","Restaurantes"], ["🦷","Clínicas dentales"], ["💆","Spas"], ["🏠","Inmobiliarias"],
-            ["🍰","Pastelerías"], ["💄","Salones de belleza"], ["🏋️","Gimnasios"], ["🐾","Veterinarias"], ["👗","Tiendas de ropa"],
-            ["🚗","Talleres mecánicos"], ["📚","Academias"], ["💊","Farmacias"], ["🧴","Clínicas estéticas"], ["☕","Cafeterías"],
-            ["🍕","Pizzerías"], ["🥗","Comida saludable"], ["🏥","Clínicas médicas"], ["👁️","Ópticas"], ["🧘","Centros de yoga"],
-            ["📸","Fotógrafos"], ["💅","Nail salons"], ["✂️","Barberías"], ["🌸","Floristerías"], ["🛋️","Tiendas de muebles"],
-            ["👟","Zapaterías"], ["🍱","Dark kitchens"], ["🚚","Mudanzas"],
-            // duplicado para loop infinito
-            ["🏨","Hoteles"], ["🍽️","Restaurantes"], ["🦷","Clínicas dentales"], ["💆","Spas"], ["🏠","Inmobiliarias"],
-            ["🍰","Pastelerías"], ["💄","Salones de belleza"], ["🏋️","Gimnasios"], ["🐾","Veterinarias"], ["👗","Tiendas de ropa"],
-            ["🚗","Talleres mecánicos"], ["📚","Academias"], ["💊","Farmacias"], ["🧴","Clínicas estéticas"], ["☕","Cafeterías"],
-            ["🍕","Pizzerías"], ["🥗","Comida saludable"], ["🏥","Clínicas médicas"], ["👁️","Ópticas"], ["🧘","Centros de yoga"],
-            ["📸","Fotógrafos"], ["💅","Nail salons"], ["✂️","Barberías"], ["🌸","Floristerías"], ["🛋️","Tiendas de muebles"],
-            ["👟","Zapaterías"], ["🍱","Dark kitchens"], ["🚚","Mudanzas"],
-          ].map(([icon, label], i) => (
-            <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 28px", whiteSpace: "nowrap" }}>
-              <span style={{ fontSize: 20 }}>{icon}</span>
-              <span style={{ fontSize: 13, color: MUTED }}>{label}</span>
-            </div>
-          ))}
+      {/* LOGOS BAR - APP ICONS TICKER */}
+      <div style={{ padding: "40px 6%", display: "flex", justifyContent: "center" }}>
+        <div style={{ width: "100%", maxWidth: 860, background: "#0f0f00", border: "1px solid #2a2800", borderRadius: 20, padding: "20px 0", overflow: "hidden", position: "relative" }}>
+          <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 50, background: "linear-gradient(to right, #0f0f00, transparent)", zIndex: 2 }} />
+          <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 50, background: "linear-gradient(to left, #0f0f00, transparent)", zIndex: 2 }} />
+          <div style={{ display: "flex", animation: "ticker 35s linear infinite", width: "max-content", gap: 12, padding: "0 20px" }}>
+            {[
+              ["🏨","Hoteles"], ["🍽️","Restaurantes"], ["🦷","Clínicas dentales"], ["💆","Spas"], ["🏠","Inmobiliarias"],
+              ["🍰","Pastelerías"], ["💄","Salones de belleza"], ["🏋️","Gimnasios"], ["🐾","Veterinarias"], ["👗","Tiendas de ropa"],
+              ["🚗","Talleres mecánicos"], ["📚","Academias"], ["💊","Farmacias"], ["🧴","Clínicas estéticas"], ["☕","Cafeterías"],
+              ["🍕","Pizzerías"], ["🥗","Comida saludable"], ["🏥","Clínicas médicas"], ["👁️","Ópticas"], ["🧘","Centros de yoga"],
+              ["📸","Fotógrafos"], ["💅","Nail salons"], ["✂️","Barberías"], ["🌸","Floristerías"], ["🚚","Mudanzas"],
+              ["🏨","Hoteles"], ["🍽️","Restaurantes"], ["🦷","Clínicas dentales"], ["💆","Spas"], ["🏠","Inmobiliarias"],
+              ["🍰","Pastelerías"], ["💄","Salones de belleza"], ["🏋️","Gimnasios"], ["🐾","Veterinarias"], ["👗","Tiendas de ropa"],
+              ["🚗","Talleres mecánicos"], ["📚","Academias"], ["💊","Farmacias"], ["🧴","Clínicas estéticas"], ["☕","Cafeterías"],
+              ["🍕","Pizzerías"], ["🥗","Comida saludable"], ["🏥","Clínicas médicas"], ["👁️","Ópticas"], ["🧘","Centros de yoga"],
+              ["📸","Fotógrafos"], ["💅","Nail salons"], ["✂️","Barberías"], ["🌸","Floristerías"], ["🚚","Mudanzas"],
+            ].map(([icon, label], i) => (
+              <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, flexShrink: 0 }}>
+                <div style={{ width: 54, height: 54, borderRadius: 14, background: "#161608", border: "1px solid #2a2800", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24 }}>{icon}</div>
+                <span style={{ fontSize: 10, color: Y, fontWeight: 700, whiteSpace: "nowrap", letterSpacing: "0.02em" }}>{label}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
