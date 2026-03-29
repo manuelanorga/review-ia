@@ -824,18 +824,43 @@ export default function Dashboard() {
             <div style={{ animation: "fadeIn 0.4s ease both" }}>
               <button onClick={() => setAccountSection(null)} style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", color: d.muted, fontSize: 13, cursor: "pointer", marginBottom: 20, padding: 0 }} onMouseOver={e => e.currentTarget.style.color = d.text} onMouseOut={e => e.currentTarget.style.color = d.muted}>← Volver</button>
               <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 14, overflow: "hidden" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 160px 120px 120px 100px", padding: "12px 20px", borderBottom: `1px solid ${d.border}`, background: d.surface }}>
-                  {["Descripción", "Fecha", "Estado", "Total", "Acciones"].map(h => <div key={h} style={{ fontSize: 11, fontWeight: 700, color: d.muted, textTransform: "uppercase", letterSpacing: "0.06em" }}>{h}</div>)}
-                </div>
-                {[{ id: "04811-49982808", date: "5 mar 2026", amount: "S/29.00" }, { id: "04783-48690067", date: "5 feb 2026", amount: "S/29.00" }, { id: "04752-39196969", date: "5 ene 2026", amount: "S/29.00" }, { id: "04721-43596554", date: "5 dic 2025", amount: "S/29.00" }, { id: "04691-43136295", date: "5 nov 2025", amount: "S/29.00" }, { id: "04660-31602700", date: "5 oct 2025", amount: "S/29.00" }].map((inv, i) => (
-                  <div key={i} style={{ display: "grid", gridTemplateColumns: "1fr 160px 120px 120px 100px", padding: "14px 20px", borderBottom: i < 5 ? `1px solid ${d.border}` : "none", alignItems: "center" }} onMouseOver={e => e.currentTarget.style.background = d.hover} onMouseOut={e => e.currentTarget.style.background = "transparent"}>
-                    <div><div style={{ fontSize: 13, fontWeight: 500, color: d.text }}>Suscripción RevGo {plan.charAt(0).toUpperCase() + plan.slice(1)}</div><div style={{ fontSize: 11, color: d.muted, marginTop: 2 }}>{inv.id}</div></div>
-                    <div style={{ fontSize: 13, color: d.muted }}>{inv.date}</div>
-                    <div><span style={{ fontSize: 11, fontWeight: 700, color: "#4ade80", background: dark ? "rgba(74,222,128,0.1)" : "#f0fdf4", padding: "3px 9px", borderRadius: 20 }}>Pagado</span></div>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: d.text }}>{inv.amount}</div>
-                    <button style={{ fontSize: 12, color: d.accent, background: "none", border: "none", cursor: "pointer", fontWeight: 600, textAlign: "left" }}>Ver factura</button>
-                  </div>
-                ))}
+                {isMobile ? (
+                  // MÓVIL: Cards apiladas
+                  [{ id: "04811-49982808", date: "5 mar 2026", amount: "S/29.00" }, { id: "04783-48690067", date: "5 feb 2026", amount: "S/29.00" }, { id: "04752-39196969", date: "5 ene 2026", amount: "S/29.00" }, { id: "04721-43596554", date: "5 dic 2025", amount: "S/29.00" }, { id: "04691-43136295", date: "5 nov 2025", amount: "S/29.00" }, { id: "04660-31602700", date: "5 oct 2025", amount: "S/29.00" }].map((inv, i, arr) => (
+                    <div key={i} style={{ padding: "16px", borderBottom: i < arr.length - 1 ? `1px solid ${d.border}` : "none" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
+                        <div>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: d.text }}>Suscripción RevGo {plan.charAt(0).toUpperCase() + plan.slice(1)}</div>
+                          <div style={{ fontSize: 11, color: d.muted, marginTop: 2 }}>{inv.id}</div>
+                        </div>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: "#4ade80", background: dark ? "rgba(74,222,128,0.1)" : "#f0fdf4", padding: "3px 9px", borderRadius: 20, flexShrink: 0 }}>Pagado</span>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <div style={{ display: "flex", gap: 12 }}>
+                          <span style={{ fontSize: 12, color: d.muted }}>{inv.date}</span>
+                          <span style={{ fontSize: 13, fontWeight: 600, color: d.text }}>{inv.amount}</span>
+                        </div>
+                        <button style={{ fontSize: 12, color: d.accent, background: "none", border: "none", cursor: "pointer", fontWeight: 600 }}>Ver factura</button>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  // DESKTOP: Tabla
+                  <>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 160px 120px 120px 100px", padding: "12px 20px", borderBottom: `1px solid ${d.border}`, background: d.surface }}>
+                      {["Descripción", "Fecha", "Estado", "Total", "Acciones"].map(h => <div key={h} style={{ fontSize: 11, fontWeight: 700, color: d.muted, textTransform: "uppercase", letterSpacing: "0.06em" }}>{h}</div>)}
+                    </div>
+                    {[{ id: "04811-49982808", date: "5 mar 2026", amount: "S/29.00" }, { id: "04783-48690067", date: "5 feb 2026", amount: "S/29.00" }, { id: "04752-39196969", date: "5 ene 2026", amount: "S/29.00" }, { id: "04721-43596554", date: "5 dic 2025", amount: "S/29.00" }, { id: "04691-43136295", date: "5 nov 2025", amount: "S/29.00" }, { id: "04660-31602700", date: "5 oct 2025", amount: "S/29.00" }].map((inv, i) => (
+                      <div key={i} style={{ display: "grid", gridTemplateColumns: "1fr 160px 120px 120px 100px", padding: "14px 20px", borderBottom: i < 5 ? `1px solid ${d.border}` : "none", alignItems: "center" }} onMouseOver={e => e.currentTarget.style.background = d.hover} onMouseOut={e => e.currentTarget.style.background = "transparent"}>
+                        <div><div style={{ fontSize: 13, fontWeight: 500, color: d.text }}>Suscripción RevGo {plan.charAt(0).toUpperCase() + plan.slice(1)}</div><div style={{ fontSize: 11, color: d.muted, marginTop: 2 }}>{inv.id}</div></div>
+                        <div style={{ fontSize: 13, color: d.muted }}>{inv.date}</div>
+                        <div><span style={{ fontSize: 11, fontWeight: 700, color: "#4ade80", background: dark ? "rgba(74,222,128,0.1)" : "#f0fdf4", padding: "3px 9px", borderRadius: 20 }}>Pagado</span></div>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: d.text }}>{inv.amount}</div>
+                        <button style={{ fontSize: 12, color: d.accent, background: "none", border: "none", cursor: "pointer", fontWeight: 600, textAlign: "left" }}>Ver factura</button>
+                      </div>
+                    ))}
+                  </>
+                )}
               </div>
             </div>
           )}
