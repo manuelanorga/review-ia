@@ -794,7 +794,7 @@ export default function Landing() {
         </div>
       </section>
       <section style={{ padding: "50px 6% 60px" }}>
-        <div style={{ maxWidth: 1160, margin: "0 auto" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 48 }}>
             <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>Testimonios</span>
             <h2 style={{ fontSize: "clamp(24px, 3vw, 40px)", fontWeight: 700, letterSpacing: "-0.03em", margin: "14px 0 0", color: TEXT }}>Negocios que ya respondieron el 100%</h2>
