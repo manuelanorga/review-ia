@@ -273,7 +273,30 @@ export default function Dashboard() {
         );
       })()}
 
-      {/* OVERLAY MÓVIL */}
+      {/* BOTTOM NAV MÓVIL */}
+      {isMobile && (
+        <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 200, background: d.sidebar, borderTop: `1px solid ${d.border}`, display: "flex", alignItems: "center", height: 60, paddingBottom: "env(safe-area-inset-bottom)" }}>
+          {[
+            { id: "dashboard", label: "Inicio", icon: "▦" },
+            { id: "reviews",   label: "Reseñas", icon: "★", badge: pendingCount },
+            { id: "autopilot", label: "Piloto", icon: "⚡" },
+            { id: "analytics", label: "Stats", icon: "◎" },
+            { id: "qr",        label: "QR", icon: "📱" },
+          ].map(item => {
+            const isActive = activeNav === item.id && !accountSection;
+            return (
+              <button key={item.id} onClick={() => { setActiveNav(item.id); setAccountSection(null); }} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 3, height: "100%", background: "none", border: "none", cursor: "pointer", position: "relative", color: isActive ? d.accent : d.muted }}>
+                <div style={{ position: "relative" }}>
+                  <span style={{ fontSize: 18, lineHeight: 1 }}>{item.icon}</span>
+                  {item.badge > 0 && <span style={{ position: "absolute", top: -4, right: -8, width: 14, height: 14, borderRadius: "50%", background: d.accent, color: d.accentFg, fontSize: 8, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{item.badge}</span>}
+                </div>
+                <span style={{ fontSize: 9, fontWeight: isActive ? 700 : 400, letterSpacing: "0.01em" }}>{item.label}</span>
+                {isActive && <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 24, height: 2, borderRadius: "0 0 2px 2px", background: d.accent }} />}
+              </button>
+            );
+          })}
+        </nav>
+      )}
       {isMobile && sidebarOpen && (
         <div onClick={() => setSidebarOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 300, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(2px)" }} />
       )}
@@ -362,9 +385,7 @@ export default function Dashboard() {
       <main style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
         <header style={{ height: 56, borderBottom: `1px solid ${d.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px", background: d.sidebar, flexShrink: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            {isMobile && (
-              <button onClick={() => setSidebarOpen(!sidebarOpen)} style={{ width: 36, height: 36, borderRadius: 8, border: `1px solid ${d.border}`, background: d.surface, color: d.text, fontSize: 16, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>☰</button>
-            )}
+            {isMobile && false && (
             <div>
             <h1 style={{ fontSize: 15, fontWeight: 700, color: d.text }}>
               {accountSection === "config" && "Mi cuenta"}{accountSection === "billing" && "Pagos y planes"}{accountSection === "invoices" && "Facturas"}
@@ -410,7 +431,7 @@ export default function Dashboard() {
           </div>
         </header>
 
-        <div style={{ flex: 1, overflow: "auto", padding: "20px 24px" }}>
+        <div style={{ flex: 1, overflow: "auto", padding: "20px 24px", paddingBottom: isMobile ? "80px" : "20px" }}>
 
           {!accountSection && activeNav === "dashboard" && (
             <div style={{ animation: "fadeIn 0.4s ease both" }}>
