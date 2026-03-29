@@ -799,7 +799,7 @@ export default function Landing() {
             <span style={{ fontSize: 11, color: Y, letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 700 }}>Testimonios</span>
             <h2 style={{ fontSize: "clamp(24px, 3vw, 40px)", fontWeight: 700, letterSpacing: "-0.03em", margin: "14px 0 0", color: TEXT }}>Negocios que ya respondieron el 100%</h2>
           </div>
-          <div className="carousel-track">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20, maxWidth: 860, margin: "0 auto" }}>
             {[
               { name: "Karla Acho", role: "Dueña · La Gran Fresa · Magdalena y San Miguel", avatar: "KA", color: "#34A853", text: "Antes tardábamos semanas en responder reseñas. Ahora RevGo las responde en segundos y nuestro rating subió de 3.8 a 4.4 en solo 1 mes. Los clientes lo notan." },
               { name: "Dra. Madeleine", role: "Dueña · Dental Beauty Care · Miraflores", avatar: "DM", color: "#4285F4", text: "Pensé que una IA no podría sonar humana para una clínica dental. Me equivoqué. Las respuestas son profesionales, empáticas y específicas para cada paciente. Mis clientes se sienten escuchados." },
