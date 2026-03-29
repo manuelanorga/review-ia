@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabase";
 
@@ -104,13 +104,11 @@ export default function Dashboard() {
   const [showBusinessMenu, setShowBusinessMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [accountSection, setAccountSection] = useState(null);
-  const [showTour, setShowTour] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return localStorage.getItem("tourCompleted") !== "true";
-  });
+  const [showTour, setShowTour] = useState(true);
   const [tourStep, setTourStep] = useState(0);
   const [spotlightRect, setSpotlightRect] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [plan, setPlan] = useState("starter");
   const [userName, setUserName] = useState("Usuario");
   const [userEmail, setUserEmail] = useState("");
@@ -152,11 +150,7 @@ export default function Dashboard() {
   }, []);
 
   const navRefs = { dashboard: React.useRef(null), reviews: React.useRef(null), autopilot: React.useRef(null), analytics: React.useRef(null) };
-  const closeTour = () => {
-    setShowTour(false);
-    setSpotlightRect(null);
-    localStorage.setItem("tourCompleted", "true");
-  };
+  const closeTour = () => { setShowTour(false); setSpotlightRect(null); };
   const currentStep = TOUR_STEPS[tourStep];
 
   React.useEffect(() => {
@@ -279,7 +273,12 @@ export default function Dashboard() {
         );
       })()}
 
-      <aside style={{ width: 220, background: d.sidebar, borderRight: `1px solid ${d.border}`, display: "flex", flexDirection: "column", flexShrink: 0 }}>
+      {/* OVERLAY MÓVIL */}
+      {isMobile && sidebarOpen && (
+        <div onClick={() => setSidebarOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 300, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(2px)" }} />
+      )}
+
+      <aside style={{ width: 220, background: d.sidebar, borderRight: `1px solid ${d.border}`, display: "flex", flexDirection: "column", flexShrink: 0, ...(isMobile ? { position: "fixed", top: 0, left: 0, bottom: 0, zIndex: 301, transform: sidebarOpen ? "translateX(0)" : "translateX(-100%)", transition: "transform 0.25s ease", boxShadow: sidebarOpen ? "4px 0 24px rgba(0,0,0,0.4)" : "none" } : {}) }}>
         <div style={{ padding: "18px 16px 14px", borderBottom: `1px solid ${d.border}` }}>
           <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
             <div style={{ width: 30, height: 30, background: d.accent, borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -327,7 +326,7 @@ export default function Dashboard() {
         </div>
         <nav style={{ padding: "4px 8px", display: "flex", flexDirection: "column", gap: 2 }}>
           {NAV.map(item => (
-            <button key={item.id} ref={navRefs[item.id]} onClick={() => { setActiveNav(item.id); setAccountSection(null); }} style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 10px", borderRadius: 7, cursor: "pointer", background: activeNav === item.id && !accountSection ? (dark ? "#262626" : "#f1f5f9") : "transparent", border: "none", color: activeNav === item.id && !accountSection ? d.text : d.muted, fontSize: 13, fontWeight: activeNav === item.id && !accountSection ? 600 : 400, width: "100%", textAlign: "left", transition: "all 0.15s" }}>
+            <button key={item.id} ref={navRefs[item.id]} onClick={() => { setActiveNav(item.id); setAccountSection(null); if (isMobile) setSidebarOpen(false); }} style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 10px", borderRadius: 7, cursor: "pointer", background: activeNav === item.id && !accountSection ? (dark ? "#262626" : "#f1f5f9") : "transparent", border: "none", color: activeNav === item.id && !accountSection ? d.text : d.muted, fontSize: 13, fontWeight: activeNav === item.id && !accountSection ? 600 : 400, width: "100%", textAlign: "left", transition: "all 0.15s" }}>
               <span style={{ fontSize: 14, width: 16, textAlign: "center" }}>{item.icon}</span>
               <span style={{ flex: 1 }}>{item.label}</span>
               {item.badge > 0 && <span style={{ background: d.accent, color: d.accentFg, fontSize: 10, fontWeight: 700, padding: "1px 6px", borderRadius: 10 }}>{item.badge}</span>}
@@ -362,7 +361,11 @@ export default function Dashboard() {
 
       <main style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
         <header style={{ height: 56, borderBottom: `1px solid ${d.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px", background: d.sidebar, flexShrink: 0 }}>
-          <div>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            {isMobile && (
+              <button onClick={() => setSidebarOpen(!sidebarOpen)} style={{ width: 36, height: 36, borderRadius: 8, border: `1px solid ${d.border}`, background: d.surface, color: d.text, fontSize: 16, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>☰</button>
+            )}
+            <div>
             <h1 style={{ fontSize: 15, fontWeight: 700, color: d.text }}>
               {accountSection === "config" && "Mi cuenta"}{accountSection === "billing" && "Pagos y planes"}{accountSection === "invoices" && "Facturas"}
               {!accountSection && activeNav === "dashboard" && "Resumen"}{!accountSection && activeNav === "reviews" && "Reseñas"}{!accountSection && activeNav === "analytics" && "Analytics"}{!accountSection && activeNav === "autopilot" && "Autopiloto"}{!accountSection && activeNav === "qr" && "Mi QR"}
@@ -371,6 +374,7 @@ export default function Dashboard() {
               {accountSection === "config" && "Gestiona tu información personal y conexiones"}{accountSection === "billing" && "Plan actual y método de pago"}{accountSection === "invoices" && "Historial de pagos"}
               {!accountSection && activeNav === "dashboard" && `${pendingCount} pendientes · ${respondedToday} respondidas`}{!accountSection && activeNav === "reviews" && `${pendingCount} sin responder`}{!accountSection && activeNav === "analytics" && "Últimos 30 días"}{!accountSection && activeNav === "qr" && "Tu código QR listo para imprimir"}{!accountSection && activeNav === "autopilot" && (autopilot ? `Activo · Tono ${tone}` : "Inactivo")}
             </p>
+          </div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             {autopilot && <div style={{ fontSize: 11, color: d.accent, padding: "4px 10px", background: dark ? "#1a1700" : "#fefce8", borderRadius: 7, border: `1px solid ${dark ? "#3a3400" : "#fde68a"}`, fontWeight: 600 }}>⚡ Autopiloto ON</div>}
@@ -398,7 +402,7 @@ export default function Dashboard() {
                     ))}
                   </div>
                   <div style={{ padding: "6px 8px" }}>
-                    <button onClick={() => signOut({ callbackUrl: "/" })} style={{ width: "100%", display: "flex", alignItems: "center", gap: 9, padding: "8px 10px", borderRadius: 7, border: "none", background: "transparent", color: "#f87171", fontSize: 13, cursor: "pointer", textAlign: "left" }} onMouseOver={e => e.currentTarget.style.background = dark ? "rgba(248,113,113,0.08)" : "#fef2f2"} onMouseOut={e => e.currentTarget.style.background = "transparent"}><span>🚪</span><span>Cerrar sesión</span></button>
+                    <button onClick={() => setShowUserMenu(false)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 9, padding: "8px 10px", borderRadius: 7, border: "none", background: "transparent", color: "#f87171", fontSize: 13, cursor: "pointer", textAlign: "left" }} onMouseOver={e => e.currentTarget.style.background = dark ? "rgba(248,113,113,0.08)" : "#fef2f2"} onMouseOut={e => e.currentTarget.style.background = "transparent"}><span>🚪</span><span>Cerrar sesión</span></button>
                   </div>
                 </div>
               )}
