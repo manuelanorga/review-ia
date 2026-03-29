@@ -446,6 +446,9 @@ export default function Landing() {
   const [scrolled, setScrolled] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     const t = setInterval(() => setTick(p => p + 1), 3000);
@@ -483,7 +486,7 @@ export default function Landing() {
       )}
 
       {/* BARRA SOCIAL PROOF FIJA */}
-      <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 199, background: "#0f0f00", borderTop: "1px solid #2a2800", height: 44, display: "flex", alignItems: "center", overflow: "hidden" }}>
+      {mounted && <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 199, background: "#0f0f00", borderTop: "1px solid #2a2800", height: 44, display: "flex", alignItems: "center", overflow: "hidden" }}>
         {/* En vivo */}
         <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "0 14px", borderRight: "1px solid #2a2800", flexShrink: 0, height: "100%" }}>
           <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#4ade80", animation: "pulse 1.5s infinite" }} />
@@ -523,7 +526,7 @@ export default function Landing() {
           </div>
           <span style={{ fontSize: 11, color: "#25D366", fontWeight: 600, whiteSpace: "nowrap" }} className="wa-label">¿Preguntas? Escríbenos</span>
         </a>
-      </div>
+      </div>}
 
       {/* MENÚ MÓVIL */}
       {mobileMenuOpen && (
