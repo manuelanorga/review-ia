@@ -755,13 +755,12 @@ export default function Dashboard() {
 
                       {/* QR */}
                       <div style={{ width: 180, height: 180, background: "#ffffff", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", padding: 12, border: `2px solid ${d.border}` }}>
-                        <QRCode
+                        <QRCodeCanvas
                           value={`https://revgo.app/r/${reviewSlug || "mi-negocio"}`}
                           size={156}
                           bgColor="#ffffff"
                           fgColor="#000000"
                           level="H"
-                          includeMargin={false}
                         />
                       </div>
 
