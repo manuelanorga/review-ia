@@ -140,6 +140,7 @@ export default function Dashboard() {
           const { data: firstBiz } = await supabase
             .from("businesses")
             .select("id, review_slug")
+            .eq("user_id", userData.id)
             .limit(1)
             .maybeSingle();
           if (firstBiz?.review_slug) setReviewSlug(firstBiz.review_slug);
