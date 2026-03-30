@@ -113,6 +113,9 @@ export default function Dashboard() {
   const [userName, setUserName] = useState("Usuario");
   const [userEmail, setUserEmail] = useState("");
   const [loadingPlan, setLoadingPlan] = useState(true);
+  const [complaints, setComplaints] = useState([]);
+  const [reviewSlug, setReviewSlug] = useState("");
+  const [qrTab, setQrTab] = useState("qr");
 
   useEffect(() => {
     const fetchUserPlan = async () => {
@@ -125,6 +128,23 @@ export default function Dashboard() {
           setPlan(userData.plan || "starter");
           setUserName(userData.full_name || session.user.name || "Usuario");
           setUserEmail(userData.email || session.user.email);
+          // Cargar negocio activo y su slug
+          const { data: bizData } = await supabase
+            .from("businesses")
+            .select("id, review_slug")
+            .eq("user_id", userData.id || session.user.id)
+            .limit(1)
+            .single();
+          if (bizData?.review_slug) setReviewSlug(bizData.review_slug);
+          // Cargar quejas internas
+          if (bizData?.id) {
+            const { data: complaintsData } = await supabase
+              .from("complaints")
+              .select("*")
+              .eq("business_id", bizData.id)
+              .order("created_at", { ascending: false });
+            if (complaintsData) setComplaints(complaintsData);
+          }
         } else {
           router.push("/onboarding");
         }
@@ -715,43 +735,140 @@ export default function Dashboard() {
 
           {!accountSection && activeNav === "qr" && (
             <UpgradeOverlay dark={dark} d={d} blur={!isPro}>
-              <div style={{ animation: "fadeIn 0.4s ease both", maxWidth: 900 }}>
-                <div style={{ display: "grid", gridTemplateColumns: "320px 1fr", gap: 24 }}>
-                  <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 16, padding: "28px", display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: d.text, marginBottom: 4 }}>Tu QR de reseñas</div>
-                    <div style={{ width: 180, height: 180, background: "#ffffff", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", padding: 12, border: `2px solid ${d.border}` }}>
-                      <svg viewBox="0 0 100 100" width="156" height="156"><rect width="100" height="100" fill="white"/>
-                        {[0,1,2,3,4,5,6].map(r => [0,1,2,3,4,5,6].map(c => { const p = [[1,1,1,1,1,1,1],[1,0,0,0,0,0,1],[1,0,1,1,1,0,1],[1,0,1,0,1,0,1],[1,0,1,1,1,0,1],[1,0,0,0,0,0,1],[1,1,1,1,1,1,1]]; return p[r][c] ? <rect key={`a${r}-${c}`} x={r*9+2} y={c*9+2} width="8" height="8" fill="black"/> : null; }))}
-                        {[...Array(20)].map((_, i) => <rect key={`d${i}`} x={Math.sin(i*7)*30+35} y={Math.cos(i*5)*30+35} width="5" height="5" fill="black"/>)}
-                        {[0,1,2,3,4,5,6].map(r => [0,1,2,3,4,5,6].map(c => { const p = [[1,1,1,1,1,1,1],[1,0,0,0,0,0,1],[1,0,1,1,1,0,1],[1,0,1,0,1,0,1],[1,0,1,1,1,0,1],[1,0,0,0,0,0,1],[1,1,1,1,1,1,1]]; return p[r][c] ? <rect key={`b${r}-${c}`} x={r*9+2} y={c*9+65} width="8" height="8" fill="black"/> : null; }))}
-                        {[0,1,2,3,4,5,6].map(r => [0,1,2,3,4,5,6].map(c => { const p = [[1,1,1,1,1,1,1],[1,0,0,0,0,0,1],[1,0,1,1,1,0,1],[1,0,1,0,1,0,1],[1,0,1,1,1,0,1],[1,0,0,0,0,0,1],[1,1,1,1,1,1,1]]; return p[r][c] ? <rect key={`t${r}-${c}`} x={r*9+65} y={c*9+2} width="8" height="8" fill="black"/> : null; }))}
-                      </svg>
-                    </div>
-                    <div style={{ textAlign: "center" }}><div style={{ fontSize: 13, fontWeight: 600, color: d.text, marginBottom: 4 }}>{currentBusiness?.name}</div><div style={{ fontSize: 11, color: d.muted }}>Escanea para dejar una reseña</div></div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 8, width: "100%" }}>
-                      <button onClick={() => showToast("Descargando QR... ✨")} style={{ width: "100%", padding: "11px", background: d.accent, border: "none", borderRadius: 9, color: d.accentFg, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>📥 Descargar QR</button>
-                      <button onClick={() => showToast("Generando kit PDF completo... 🎨")} style={{ width: "100%", padding: "10px", background: "transparent", border: `1px solid ${d.border}`, borderRadius: 9, color: d.muted, fontSize: 12, cursor: "pointer" }}>🖨️ Descargar kit imprimible</button>
-                    </div>
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12 }}>
-                      {[{ label: "Escaneos este mes", value: "0", icon: "📲" }, { label: "Reseñas por QR", value: "0", icon: "⭐" }, { label: "Conversión", value: "0%", icon: "📈" }].map((s, i) => (
-                        <div key={i} style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 12, padding: "16px", textAlign: "center" }}><div style={{ fontSize: 20, marginBottom: 8 }}>{s.icon}</div><div style={{ fontSize: 22, fontWeight: 700, color: d.accent, marginBottom: 4 }}>{s.value}</div><div style={{ fontSize: 11, color: d.muted }}>{s.label}</div></div>
-                      ))}
-                    </div>
-                    <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 14, padding: "20px" }}>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: d.text, marginBottom: 14 }}>💡 ¿Dónde ponerlo?</div>
-                      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                        {[{ icon: "🧾", place: "Cuenta o boleta", tip: "El momento perfecto — el cliente acaba de pagar satisfecho" }, { icon: "🪧", place: "Carpa de mesa", tip: "Visible durante toda la experiencia del cliente" }, { icon: "🚪", place: "Puerta de salida", tip: "El cliente satisfecho sale y escanea en segundos" }, { icon: "📦", place: "Empaque o bolsa", tip: "Ideal para delivery — lo ven cuando abren el pedido" }].map((item, i) => (
-                          <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}><span style={{ fontSize: 20, flexShrink: 0 }}>{item.icon}</span><div><div style={{ fontSize: 13, fontWeight: 600, color: d.text }}>{item.place}</div><div style={{ fontSize: 12, color: d.muted, marginTop: 2 }}>{item.tip}</div></div></div>
-                        ))}
+              <div style={{ animation: "fadeIn 0.4s ease both" }}>
+
+                {/* Tabs: QR / Quejas */}
+                <div style={{ display: "flex", gap: 4, borderBottom: `1px solid ${d.border}`, marginBottom: 20 }}>
+                  {[{ key: "qr", label: "📱 Mi QR inteligente" }, { key: "complaints", label: `💬 Quejas internas ${complaints.length > 0 ? `(${complaints.length})` : ""}` }].map(tab => (
+                    <button key={tab.key} onClick={() => setQrTab(tab.key)} style={{ padding: "10px 16px", border: "none", background: "none", fontSize: 13, fontWeight: qrTab === tab.key ? 600 : 400, color: qrTab === tab.key ? d.text : d.muted, borderBottom: `2px solid ${qrTab === tab.key ? d.accent : "transparent"}`, cursor: "pointer" }}>
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* TAB: QR */}
+                {qrTab === "qr" && (
+                  <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "300px 1fr", gap: 24 }}>
+                    <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 16, padding: "28px", display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: d.text, marginBottom: 4 }}>Tu QR inteligente</div>
+
+                      {/* QR */}
+                      <div style={{ width: 180, height: 180, background: "#ffffff", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", padding: 12, border: `2px solid ${d.border}` }}>
+                        <svg viewBox="0 0 100 100" width="156" height="156"><rect width="100" height="100" fill="white"/>
+                          {[0,1,2,3,4,5,6].map(r => [0,1,2,3,4,5,6].map(c => { const p = [[1,1,1,1,1,1,1],[1,0,0,0,0,0,1],[1,0,1,1,1,0,1],[1,0,1,0,1,0,1],[1,0,1,1,1,0,1],[1,0,0,0,0,0,1],[1,1,1,1,1,1,1]]; return p[r][c] ? <rect key={`a${r}-${c}`} x={r*9+2} y={c*9+2} width="8" height="8" fill="black"/> : null; }))}
+                          {[...Array(20)].map((_, i) => <rect key={`d${i}`} x={Math.sin(i*7)*30+35} y={Math.cos(i*5)*30+35} width="5" height="5" fill="black"/>)}
+                          {[0,1,2,3,4,5,6].map(r => [0,1,2,3,4,5,6].map(c => { const p = [[1,1,1,1,1,1,1],[1,0,0,0,0,0,1],[1,0,1,1,1,0,1],[1,0,1,0,1,0,1],[1,0,1,1,1,0,1],[1,0,0,0,0,0,1],[1,1,1,1,1,1,1]]; return p[r][c] ? <rect key={`b${r}-${c}`} x={r*9+2} y={c*9+65} width="8" height="8" fill="black"/> : null; }))}
+                          {[0,1,2,3,4,5,6].map(r => [0,1,2,3,4,5,6].map(c => { const p = [[1,1,1,1,1,1,1],[1,0,0,0,0,0,1],[1,0,1,1,1,0,1],[1,0,1,0,1,0,1],[1,0,1,1,1,0,1],[1,0,0,0,0,0,1],[1,1,1,1,1,1,1]]; return p[r][c] ? <rect key={`t${r}-${c}`} x={r*9+65} y={c*9+2} width="8" height="8" fill="black"/> : null; }))}
+                        </svg>
+                      </div>
+
+                      {/* Link */}
+                      <div style={{ width: "100%", background: d.surface, border: `1px solid ${d.border}`, borderRadius: 8, padding: "10px 12px" }}>
+                        <div style={{ fontSize: 10, color: d.muted, marginBottom: 3 }}>Tu link de reseñas</div>
+                        <div style={{ fontSize: 12, color: d.accent, fontWeight: 600, wordBreak: "break-all" }}>
+                          revgo.app/r/{reviewSlug || currentBusiness?.name?.toLowerCase().replace(/\s+/g, "-") || "mi-negocio"}
+                        </div>
+                      </div>
+
+                      <div style={{ display: "flex", flexDirection: "column", gap: 8, width: "100%" }}>
+                        <button onClick={() => showToast("Descargando QR... ✨")} style={{ width: "100%", padding: "11px", background: d.accent, border: "none", borderRadius: 9, color: d.accentFg, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>📥 Descargar QR</button>
+                        <button onClick={() => { navigator.clipboard?.writeText(`https://revgo.app/r/${reviewSlug}`); showToast("Link copiado ✓"); }} style={{ width: "100%", padding: "10px", background: "transparent", border: `1px solid ${d.border}`, borderRadius: 9, color: d.muted, fontSize: 12, cursor: "pointer" }}>🔗 Copiar link</button>
+                        <button onClick={() => showToast("Generando kit PDF completo... 🎨")} style={{ width: "100%", padding: "10px", background: "transparent", border: `1px solid ${d.border}`, borderRadius: 9, color: d.muted, fontSize: 12, cursor: "pointer" }}>🖨️ Descargar kit imprimible</button>
                       </div>
                     </div>
-                    <div style={{ background: dark ? "#1a1700" : "#fefce8", border: `1px solid ${dark ? "#3a3400" : "#fde68a"}`, borderRadius: 12, padding: "16px 18px" }}>
-                      <p style={{ fontSize: 14, color: dark ? "#c0b870" : "#713f12", lineHeight: 1.7 }}>📊 <strong>El 72% de los clientes dejan una reseña cuando se lo piden directamente.</strong> Un QR visible en tu local puede duplicar tus reseñas en Google en menos de 30 días.</p>
+
+                    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                      {/* Cómo funciona */}
+                      <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 14, padding: "20px" }}>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: d.text, marginBottom: 14 }}>⚡ Cómo funciona tu QR inteligente</div>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                          {[
+                            { icon: "1️⃣", title: "Cliente escanea el QR", desc: "Se abre una página con la pregunta: ¿Cómo fue tu experiencia?" },
+                            { icon: "2️⃣", title: "Filtro inteligente", desc: "Experiencia buena → va directo a Google Maps. Mala → formulario interno." },
+                            { icon: "3️⃣", title: "Más reseñas 5 estrellas", desc: "Solo los clientes felices llegan a Google. Las quejas las recibes tú primero." },
+                          ].map((item, i) => (
+                            <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                              <span style={{ fontSize: 18, flexShrink: 0 }}>{item.icon}</span>
+                              <div>
+                                <div style={{ fontSize: 13, fontWeight: 600, color: d.text, marginBottom: 2 }}>{item.title}</div>
+                                <div style={{ fontSize: 12, color: d.muted, lineHeight: 1.5 }}>{item.desc}</div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Stats */}
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12 }}>
+                        {[{ label: "Escaneos este mes", value: "0", icon: "📲" }, { label: "Reseñas por QR", value: "0", icon: "⭐" }, { label: "Quejas filtradas", value: complaints.length.toString(), icon: "🛡️" }].map((s, i) => (
+                          <div key={i} style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 12, padding: "16px", textAlign: "center" }}>
+                            <div style={{ fontSize: 20, marginBottom: 8 }}>{s.icon}</div>
+                            <div style={{ fontSize: 22, fontWeight: 700, color: d.accent, marginBottom: 4 }}>{s.value}</div>
+                            <div style={{ fontSize: 11, color: d.muted }}>{s.label}</div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Dónde ponerlo */}
+                      <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 14, padding: "20px" }}>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: d.text, marginBottom: 14 }}>💡 ¿Dónde ponerlo?</div>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                          {[
+                            { icon: "🧾", place: "Cuenta o boleta", tip: "El momento perfecto — el cliente acaba de pagar satisfecho" },
+                            { icon: "🪧", place: "Carpa de mesa", tip: "Visible durante toda la experiencia del cliente" },
+                            { icon: "🚪", place: "Puerta de salida", tip: "El cliente satisfecho sale y escanea en segundos" },
+                            { icon: "📦", place: "Empaque o bolsa", tip: "Ideal para delivery — lo ven cuando abren el pedido" },
+                          ].map((item, i) => (
+                            <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+                              <span style={{ fontSize: 20, flexShrink: 0 }}>{item.icon}</span>
+                              <div>
+                                <div style={{ fontSize: 13, fontWeight: 600, color: d.text }}>{item.place}</div>
+                                <div style={{ fontSize: 12, color: d.muted, marginTop: 2 }}>{item.tip}</div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
+
+                {/* TAB: Quejas */}
+                {qrTab === "complaints" && (
+                  <div>
+                    {complaints.length === 0 ? (
+                      <div style={{ textAlign: "center", padding: "48px 20px", background: d.card, border: `1px solid ${d.border}`, borderRadius: 14 }}>
+                        <div style={{ fontSize: 40, marginBottom: 12 }}>🛡️</div>
+                        <div style={{ fontSize: 15, fontWeight: 700, color: d.text, marginBottom: 6 }}>Sin quejas por ahora</div>
+                        <div style={{ fontSize: 13, color: d.muted }}>Cuando un cliente deje una queja interna a través del QR, aparecerá aquí.</div>
+                      </div>
+                    ) : (
+                      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                        {complaints.map((c, i) => (
+                          <div key={i} style={{ background: d.card, border: `1px solid ${c.status === "pending" ? (dark ? "rgba(248,113,113,0.3)" : "#fecaca") : d.border}`, borderRadius: 14, padding: "18px 20px" }}>
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
+                              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                <div style={{ fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 20, background: c.status === "pending" ? (dark ? "rgba(248,113,113,0.15)" : "#fef2f2") : (dark ? "rgba(74,222,128,0.1)" : "#f0fdf4"), color: c.status === "pending" ? "#f87171" : "#4ade80" }}>
+                                  {c.status === "pending" ? "Sin leer" : "Resuelto"}
+                                </div>
+                                <div style={{ display: "flex", gap: 1 }}>
+                                  {[1,2,3,4,5].map(s => <span key={s} style={{ fontSize: 11, color: s <= (c.stars || 1) ? "#FBBC04" : "#2a2a2a" }}>★</span>)}
+                                </div>
+                              </div>
+                              <span style={{ fontSize: 11, color: d.muted }}>{new Date(c.created_at).toLocaleDateString("es-PE", { day: "numeric", month: "short", year: "numeric" })}</span>
+                            </div>
+                            <p style={{ fontSize: 13, color: d.text, lineHeight: 1.65, marginBottom: 12 }}>"{c.message}"</p>
+                            <div style={{ display: "flex", gap: 8 }}>
+                              <button onClick={() => showToast("Marcado como resuelto ✓")} style={{ padding: "7px 14px", background: "transparent", border: `1px solid ${d.border}`, borderRadius: 8, color: d.muted, fontSize: 12, cursor: "pointer" }}>✓ Marcar resuelto</button>
+                              <button onClick={() => showToast("Respuesta enviada ✓")} style={{ padding: "7px 14px", background: d.accent, border: "none", borderRadius: 8, color: d.accentFg, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>Responder →</button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
               </div>
             </UpgradeOverlay>
           )}
