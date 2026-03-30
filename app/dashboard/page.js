@@ -231,18 +231,93 @@ export default function Dashboard() {
   ];
 
   if (loadingPlan || status === "loading") {
-    return (
-      <div style={{ minHeight: "100vh", background: "#0f0f0f", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'DM Sans', sans-serif" }}>
-        <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');`}</style>
-        <div style={{ textAlign: "center" }}>
-          <div style={{ width: 36, height: 36, background: "#FFE600", borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
-            <span style={{ color: "#000", fontSize: 16, fontWeight: 700 }}>R</span>
-          </div>
-          <p style={{ color: "#737373", fontSize: 14 }}>Cargando tu panel...</p>
+  return (
+    <div style={{ display: "flex", height: "100vh", background: "#0f0f0f", fontFamily: "'DM Sans', sans-serif", overflow: "hidden" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');
+        @keyframes shimmer { 0% { background-position: -600px 0; } 100% { background-position: 600px 0; } }
+        .sk { background: linear-gradient(90deg, #1a1a1a 25%, #242424 50%, #1a1a1a 75%); background-size: 1200px 100%; animation: shimmer 1.5s infinite; border-radius: 6px; }
+      `}</style>
+      {/* Sidebar skeleton */}
+      <div style={{ width: 220, background: "#141414", borderRight: "1px solid #262626", padding: "18px 16px", flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 20, paddingBottom: 14, borderBottom: "1px solid #262626" }}>
+          <div className="sk" style={{ width: 30, height: 30, borderRadius: 7 }} />
+          <div className="sk" style={{ width: 80, height: 16 }} />
+        </div>
+        <div className="sk" style={{ height: 52, borderRadius: 8, marginBottom: 16 }} />
+        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+          {[100, 80, 90, 70, 75].map((w, i) => (
+            <div key={i} className="sk" style={{ height: 34, borderRadius: 7, width: `${w}%` }} />
+          ))}
         </div>
       </div>
-    );
-  }
+      {/* Main skeleton */}
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        {/* Header skeleton */}
+        <div style={{ height: 56, background: "#141414", borderBottom: "1px solid #262626", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px" }}>
+          <div>
+            <div className="sk" style={{ width: 100, height: 15, marginBottom: 6 }} />
+            <div className="sk" style={{ width: 160, height: 11 }} />
+          </div>
+          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            <div className="sk" style={{ width: 110, height: 28, borderRadius: 7 }} />
+            <div className="sk" style={{ width: 36, height: 36, borderRadius: 8 }} />
+            <div className="sk" style={{ width: 32, height: 32, borderRadius: "50%" }} />
+          </div>
+        </div>
+        {/* Content skeleton */}
+        <div style={{ flex: 1, padding: "20px 24px", overflow: "hidden" }}>
+          {/* Stats grid */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 20 }}>
+            {[0,1,2,3].map(i => (
+              <div key={i} style={{ background: "#1a1a1a", border: "1px solid #262626", borderRadius: 12, padding: "16px 18px" }}>
+                <div className="sk" style={{ width: 28, height: 28, borderRadius: "50%", marginBottom: 10 }} />
+                <div className="sk" style={{ width: "70%", height: 26, marginBottom: 6 }} />
+                <div className="sk" style={{ width: "90%", height: 12 }} />
+              </div>
+            ))}
+          </div>
+          {/* Two columns */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            <div style={{ background: "#1a1a1a", border: "1px solid #262626", borderRadius: 14, overflow: "hidden" }}>
+              <div style={{ padding: "14px 16px", borderBottom: "1px solid #262626" }}>
+                <div className="sk" style={{ width: 120, height: 14 }} />
+              </div>
+              {[0,1,2,3].map(i => (
+                <div key={i} style={{ padding: "11px 16px", borderBottom: "1px solid #262626", display: "flex", gap: 10, alignItems: "center" }}>
+                  <div className="sk" style={{ width: 32, height: 32, borderRadius: "50%", flexShrink: 0 }} />
+                  <div style={{ flex: 1 }}>
+                    <div className="sk" style={{ width: "60%", height: 12, marginBottom: 6 }} />
+                    <div className="sk" style={{ width: "90%", height: 11 }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <div style={{ background: "#1a1a1a", border: "1px solid #262626", borderRadius: 14, padding: 16 }}>
+                <div className="sk" style={{ width: 130, height: 14, marginBottom: 14 }} />
+                {[0,1,2,3].map(i => (
+                  <div key={i} style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
+                    <div className="sk" style={{ width: "40%", height: 12 }} />
+                    <div className="sk" style={{ width: "25%", height: 12 }} />
+                  </div>
+                ))}
+              </div>
+              <div style={{ background: "#1a1a1a", border: "1px solid #262626", borderRadius: 14, padding: 16, flex: 1 }}>
+                <div className="sk" style={{ width: 140, height: 14, marginBottom: 14 }} />
+                {[0,1,2].map(i => (
+                  <div key={i} style={{ marginBottom: 10 }}>
+                    <div className="sk" style={{ width: "100%", height: 4, borderRadius: 4 }} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
   return (
     <div style={{ display: "flex", height: "100vh", background: d.bg, fontFamily: "'DM Sans', sans-serif", overflow: "hidden", color: d.text }} onClick={() => { showBusinessMenu && setShowBusinessMenu(false); showUserMenu && setShowUserMenu(false); }}>
