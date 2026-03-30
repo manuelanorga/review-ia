@@ -225,9 +225,9 @@ export default function Dashboard() {
   const NAV = [
     { id: "dashboard", label: "Dashboard", icon: "▦" },
     { id: "reviews", label: "Reseñas", icon: "★", badge: pendingCount },
-    { id: "autopilot", label: "Autopiloto", icon: "⚡" },
-    { id: "analytics", label: "Analytics", icon: "◎", pro: true },
-    { id: "qr", label: "Mi QR", icon: "📱", pro: true },
+    { id: "autopilot", label: "Autopiloto IA", icon: "⚡" },
+    { id: "analytics", label: "Estadísticas", icon: "◎", pro: true },
+    { id: "qr", label: "Captar reseñas", icon: "📱", pro: true },
   ];
 
   if (loadingPlan || status === "loading") {
@@ -377,9 +377,9 @@ export default function Dashboard() {
           {[
             { id: "dashboard", label: "Inicio", icon: "▦" },
             { id: "reviews",   label: "Reseñas", icon: "★", badge: pendingCount },
-            { id: "autopilot", label: "Piloto", icon: "⚡" },
-            { id: "analytics", label: "Stats", icon: "◎" },
-            { id: "qr",        label: "QR", icon: "📱" },
+            { id: "autopilot", label: "IA", icon: "⚡" },
+            { id: "analytics", label: "Datos", icon: "◎" },
+            { id: "qr",        label: "Crece", icon: "📱" },
           ].map(item => {
             const isActive = activeNav === item.id && !accountSection;
             return (
