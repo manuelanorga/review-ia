@@ -21,7 +21,7 @@ export default function ReviewPage() {
       try {
         const { data } = await supabase
           .from("businesses")
-          .select("id, name, google_maps_url, email, tone")
+          .select("id, name, google_maps_url, complaint_email, tone")
           .eq("review_slug", id)
           .single();
         if (data) setBusiness(data);
