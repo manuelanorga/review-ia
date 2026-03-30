@@ -132,7 +132,7 @@ export default function Dashboard() {
       if (!session?.user?.email) { setLoadingPlan(false); return; }
       try {
         const { data: userData } = await supabase
-          .from("users").select("plan, full_name, email").eq("email", session.user.email).single();
+          .from("users").select("plan, full_name, email, id").eq("email", session.user.email).single();
         if (userData) {
           setPlan(userData.plan || "starter");
           setUserName(userData.full_name || session.user.name || "Usuario");
