@@ -1,7 +1,7 @@
 "use client";
 import { QRCodeCanvas } from "qrcode.react";
 import React, { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabase";
 
@@ -105,7 +105,10 @@ export default function Dashboard() {
   const [showBusinessMenu, setShowBusinessMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [accountSection, setAccountSection] = useState(null);
-  const [showTour, setShowTour] = useState(true);
+  const [showTour, setShowTour] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("tourCompleted") !== "true";
+  });
   const [tourStep, setTourStep] = useState(0);
   const [spotlightRect, setSpotlightRect] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -170,7 +173,7 @@ export default function Dashboard() {
   }, []);
 
   const navRefs = { dashboard: React.useRef(null), reviews: React.useRef(null), autopilot: React.useRef(null), analytics: React.useRef(null) };
-  const closeTour = () => { setShowTour(false); setSpotlightRect(null); };
+  const closeTour = () => { setShowTour(false); setSpotlightRect(null); localStorage.setItem("tourCompleted", "true"); };
   const currentStep = TOUR_STEPS[tourStep];
 
   React.useEffect(() => {
@@ -440,7 +443,7 @@ export default function Dashboard() {
                     ))}
                   </div>
                   <div style={{ padding: "6px 8px" }}>
-                    <button onClick={() => setShowUserMenu(false)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 9, padding: "8px 10px", borderRadius: 7, border: "none", background: "transparent", color: "#f87171", fontSize: 13, cursor: "pointer", textAlign: "left" }} onMouseOver={e => e.currentTarget.style.background = dark ? "rgba(248,113,113,0.08)" : "#fef2f2"} onMouseOut={e => e.currentTarget.style.background = "transparent"}><span>🚪</span><span>Cerrar sesión</span></button>
+                    <button onClick={() => signOut({ callbackUrl: "/" })} style={{ width: "100%", display: "flex", alignItems: "center", gap: 9, padding: "8px 10px", borderRadius: 7, border: "none", background: "transparent", color: "#f87171", fontSize: 13, cursor: "pointer", textAlign: "left" }} onMouseOver={e => e.currentTarget.style.background = dark ? "rgba(248,113,113,0.08)" : "#fef2f2"} onMouseOut={e => e.currentTarget.style.background = "transparent"}><span>🚪</span><span>Cerrar sesión</span></button>
                   </div>
                 </div>
               )}
