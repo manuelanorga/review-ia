@@ -130,15 +130,14 @@ export default function Dashboard() {
           setUserName(userData.full_name || session.user.name || "Usuario");
           setUserEmail(userData.email || session.user.email);
           // Cargar negocio activo y su slug
-          const { data: bizData } = await supabase
+          const { data: firstBiz } = await supabase
             .from("businesses")
             .select("id, review_slug")
-            .eq("user_id", userData.id || session.user.id)
             .limit(1)
-            .single();
-          if (bizData?.review_slug) setReviewSlug(bizData.review_slug);
+            .maybeSingle();
+            if (firstBiz?.review_slug) setReviewSlug(firstBiz.review_slug);
           // Cargar quejas internas
-          if (bizData?.id) {
+          if (firstBiz?.id) {
             const { data: complaintsData } = await supabase
               .from("complaints")
               .select("*")
