@@ -1,4 +1,5 @@
 "use client";
+import QRCode from "qrcode.react";
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -754,12 +755,14 @@ export default function Dashboard() {
 
                       {/* QR */}
                       <div style={{ width: 180, height: 180, background: "#ffffff", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", padding: 12, border: `2px solid ${d.border}` }}>
-                        <svg viewBox="0 0 100 100" width="156" height="156"><rect width="100" height="100" fill="white"/>
-                          {[0,1,2,3,4,5,6].map(r => [0,1,2,3,4,5,6].map(c => { const p = [[1,1,1,1,1,1,1],[1,0,0,0,0,0,1],[1,0,1,1,1,0,1],[1,0,1,0,1,0,1],[1,0,1,1,1,0,1],[1,0,0,0,0,0,1],[1,1,1,1,1,1,1]]; return p[r][c] ? <rect key={`a${r}-${c}`} x={r*9+2} y={c*9+2} width="8" height="8" fill="black"/> : null; }))}
-                          {[...Array(20)].map((_, i) => <rect key={`d${i}`} x={Math.sin(i*7)*30+35} y={Math.cos(i*5)*30+35} width="5" height="5" fill="black"/>)}
-                          {[0,1,2,3,4,5,6].map(r => [0,1,2,3,4,5,6].map(c => { const p = [[1,1,1,1,1,1,1],[1,0,0,0,0,0,1],[1,0,1,1,1,0,1],[1,0,1,0,1,0,1],[1,0,1,1,1,0,1],[1,0,0,0,0,0,1],[1,1,1,1,1,1,1]]; return p[r][c] ? <rect key={`b${r}-${c}`} x={r*9+2} y={c*9+65} width="8" height="8" fill="black"/> : null; }))}
-                          {[0,1,2,3,4,5,6].map(r => [0,1,2,3,4,5,6].map(c => { const p = [[1,1,1,1,1,1,1],[1,0,0,0,0,0,1],[1,0,1,1,1,0,1],[1,0,1,0,1,0,1],[1,0,1,1,1,0,1],[1,0,0,0,0,0,1],[1,1,1,1,1,1,1]]; return p[r][c] ? <rect key={`t${r}-${c}`} x={r*9+65} y={c*9+2} width="8" height="8" fill="black"/> : null; }))}
-                        </svg>
+                        <QRCode
+                          value={`https://revgo.app/r/${reviewSlug || "mi-negocio"}`}
+                          size={156}
+                          bgColor="#ffffff"
+                          fgColor="#000000"
+                          level="H"
+                          includeMargin={false}
+                        />
                       </div>
 
                       {/* Link */}
