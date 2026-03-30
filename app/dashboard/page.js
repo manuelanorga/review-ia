@@ -1,7 +1,7 @@
 "use client";
 import { QRCodeCanvas } from "qrcode.react";
 import React, { useState, useEffect } from "react";
-import { useSession, signOut } from "next-auth/react";
+import { useSession, signOut, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabase";
 
@@ -91,6 +91,7 @@ export default function Dashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
+  const [showConnectModal, setShowConnectModal] = useState(false);
   const [dark, setDark] = useState(true);
   const [reviews, setReviews] = useState(REVIEWS);
   const [selected, setSelected] = useState(null);
@@ -121,6 +122,10 @@ export default function Dashboard() {
   const [reviewSlug, setReviewSlug] = useState("");
   const [qrTab, setQrTab] = useState("qr");
 
+  async function handleConnectBusiness() {
+    await signIn("google", { callbackUrl: "/dashboard" });
+  }
+
   useEffect(() => {
     const fetchUserPlan = async () => {
       if (status === "loading") return;
@@ -132,19 +137,17 @@ export default function Dashboard() {
           setPlan(userData.plan || "starter");
           setUserName(userData.full_name || session.user.name || "Usuario");
           setUserEmail(userData.email || session.user.email);
-          // Cargar negocio activo y su slug
           const { data: firstBiz } = await supabase
             .from("businesses")
             .select("id, review_slug")
             .limit(1)
             .maybeSingle();
-            if (firstBiz?.review_slug) setReviewSlug(firstBiz.review_slug);
-          // Cargar quejas internas
+          if (firstBiz?.review_slug) setReviewSlug(firstBiz.review_slug);
           if (firstBiz?.id) {
             const { data: complaintsData } = await supabase
               .from("complaints")
               .select("*")
-              .eq("business_id", bizData.id)
+              .eq("business_id", firstBiz.id)
               .order("created_at", { ascending: false });
             if (complaintsData) setComplaints(complaintsData);
           }
@@ -198,6 +201,9 @@ export default function Dashboard() {
     accent: "#1d4ed8", accentFg: "#ffffff", surface: "#f1f5f9", hover: "#f8fafc",
   };
 
+  // ── Modo demo: activo cuando no hay negocio conectado ──
+  const isDemo = !reviewSlug;
+
   const currentBusiness = BUSINESSES.find(b => b.id === activeBusiness);
   const pendingCount = reviews.filter(r => r.status === "pending").length;
   const respondedToday = reviews.filter(r => r.status === "responded").length;
@@ -231,93 +237,83 @@ export default function Dashboard() {
   ];
 
   if (loadingPlan || status === "loading") {
-  return (
-    <div style={{ display: "flex", height: "100vh", background: "#0f0f0f", fontFamily: "'DM Sans', sans-serif", overflow: "hidden" }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');
-        @keyframes shimmer { 0% { background-position: -600px 0; } 100% { background-position: 600px 0; } }
-        .sk { background: linear-gradient(90deg, #1a1a1a 25%, #242424 50%, #1a1a1a 75%); background-size: 1200px 100%; animation: shimmer 1.5s infinite; border-radius: 6px; }
-      `}</style>
-      {/* Sidebar skeleton */}
-      <div style={{ width: 220, background: "#141414", borderRight: "1px solid #262626", padding: "18px 16px", flexShrink: 0 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 20, paddingBottom: 14, borderBottom: "1px solid #262626" }}>
-          <div className="sk" style={{ width: 30, height: 30, borderRadius: 7 }} />
-          <div className="sk" style={{ width: 80, height: 16 }} />
-        </div>
-        <div className="sk" style={{ height: 52, borderRadius: 8, marginBottom: 16 }} />
-        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-          {[100, 80, 90, 70, 75].map((w, i) => (
-            <div key={i} className="sk" style={{ height: 34, borderRadius: 7, width: `${w}%` }} />
-          ))}
-        </div>
-      </div>
-      {/* Main skeleton */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-        {/* Header skeleton */}
-        <div style={{ height: 56, background: "#141414", borderBottom: "1px solid #262626", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px" }}>
-          <div>
-            <div className="sk" style={{ width: 100, height: 15, marginBottom: 6 }} />
-            <div className="sk" style={{ width: 160, height: 11 }} />
+    return (
+      <div style={{ display: "flex", height: "100vh", background: "#0f0f0f", fontFamily: "'DM Sans', sans-serif", overflow: "hidden" }}>
+        <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');@keyframes shimmer{0%{background-position:-600px 0}100%{background-position:600px 0}}.sk{background:linear-gradient(90deg,#1a1a1a 25%,#242424 50%,#1a1a1a 75%);background-size:1200px 100%;animation:shimmer 1.5s infinite;border-radius:6px}`}</style>
+        <div style={{ width: 220, background: "#141414", borderRight: "1px solid #262626", padding: "18px 16px", flexShrink: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 20, paddingBottom: 14, borderBottom: "1px solid #262626" }}>
+            <div className="sk" style={{ width: 30, height: 30, borderRadius: 7 }} />
+            <div className="sk" style={{ width: 80, height: 16 }} />
           </div>
-          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-            <div className="sk" style={{ width: 110, height: 28, borderRadius: 7 }} />
-            <div className="sk" style={{ width: 36, height: 36, borderRadius: 8 }} />
-            <div className="sk" style={{ width: 32, height: 32, borderRadius: "50%" }} />
-          </div>
-        </div>
-        {/* Content skeleton */}
-        <div style={{ flex: 1, padding: "20px 24px", overflow: "hidden" }}>
-          {/* Stats grid */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 20 }}>
-            {[0,1,2,3].map(i => (
-              <div key={i} style={{ background: "#1a1a1a", border: "1px solid #262626", borderRadius: 12, padding: "16px 18px" }}>
-                <div className="sk" style={{ width: 28, height: 28, borderRadius: "50%", marginBottom: 10 }} />
-                <div className="sk" style={{ width: "70%", height: 26, marginBottom: 6 }} />
-                <div className="sk" style={{ width: "90%", height: 12 }} />
-              </div>
+          <div className="sk" style={{ height: 52, borderRadius: 8, marginBottom: 16 }} />
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            {[100, 80, 90, 70, 75].map((w, i) => (
+              <div key={i} className="sk" style={{ height: 34, borderRadius: 7, width: `${w}%` }} />
             ))}
           </div>
-          {/* Two columns */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-            <div style={{ background: "#1a1a1a", border: "1px solid #262626", borderRadius: 14, overflow: "hidden" }}>
-              <div style={{ padding: "14px 16px", borderBottom: "1px solid #262626" }}>
-                <div className="sk" style={{ width: 120, height: 14 }} />
-              </div>
+        </div>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+          <div style={{ height: 56, background: "#141414", borderBottom: "1px solid #262626", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px" }}>
+            <div>
+              <div className="sk" style={{ width: 100, height: 15, marginBottom: 6 }} />
+              <div className="sk" style={{ width: 160, height: 11 }} />
+            </div>
+            <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+              <div className="sk" style={{ width: 110, height: 28, borderRadius: 7 }} />
+              <div className="sk" style={{ width: 36, height: 36, borderRadius: 8 }} />
+              <div className="sk" style={{ width: 32, height: 32, borderRadius: "50%" }} />
+            </div>
+          </div>
+          <div style={{ flex: 1, padding: "20px 24px", overflow: "hidden" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 20 }}>
               {[0,1,2,3].map(i => (
-                <div key={i} style={{ padding: "11px 16px", borderBottom: "1px solid #262626", display: "flex", gap: 10, alignItems: "center" }}>
-                  <div className="sk" style={{ width: 32, height: 32, borderRadius: "50%", flexShrink: 0 }} />
-                  <div style={{ flex: 1 }}>
-                    <div className="sk" style={{ width: "60%", height: 12, marginBottom: 6 }} />
-                    <div className="sk" style={{ width: "90%", height: 11 }} />
-                  </div>
+                <div key={i} style={{ background: "#1a1a1a", border: "1px solid #262626", borderRadius: 12, padding: "16px 18px" }}>
+                  <div className="sk" style={{ width: 28, height: 28, borderRadius: "50%", marginBottom: 10 }} />
+                  <div className="sk" style={{ width: "70%", height: 26, marginBottom: 6 }} />
+                  <div className="sk" style={{ width: "90%", height: 12 }} />
                 </div>
               ))}
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              <div style={{ background: "#1a1a1a", border: "1px solid #262626", borderRadius: 14, padding: 16 }}>
-                <div className="sk" style={{ width: 130, height: 14, marginBottom: 14 }} />
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+              <div style={{ background: "#1a1a1a", border: "1px solid #262626", borderRadius: 14, overflow: "hidden" }}>
+                <div style={{ padding: "14px 16px", borderBottom: "1px solid #262626" }}>
+                  <div className="sk" style={{ width: 120, height: 14 }} />
+                </div>
                 {[0,1,2,3].map(i => (
-                  <div key={i} style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-                    <div className="sk" style={{ width: "40%", height: 12 }} />
-                    <div className="sk" style={{ width: "25%", height: 12 }} />
+                  <div key={i} style={{ padding: "11px 16px", borderBottom: "1px solid #262626", display: "flex", gap: 10, alignItems: "center" }}>
+                    <div className="sk" style={{ width: 32, height: 32, borderRadius: "50%", flexShrink: 0 }} />
+                    <div style={{ flex: 1 }}>
+                      <div className="sk" style={{ width: "60%", height: 12, marginBottom: 6 }} />
+                      <div className="sk" style={{ width: "90%", height: 11 }} />
+                    </div>
                   </div>
                 ))}
               </div>
-              <div style={{ background: "#1a1a1a", border: "1px solid #262626", borderRadius: 14, padding: 16, flex: 1 }}>
-                <div className="sk" style={{ width: 140, height: 14, marginBottom: 14 }} />
-                {[0,1,2].map(i => (
-                  <div key={i} style={{ marginBottom: 10 }}>
-                    <div className="sk" style={{ width: "100%", height: 4, borderRadius: 4 }} />
-                  </div>
-                ))}
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                <div style={{ background: "#1a1a1a", border: "1px solid #262626", borderRadius: 14, padding: 16 }}>
+                  <div className="sk" style={{ width: 130, height: 14, marginBottom: 14 }} />
+                  {[0,1,2,3].map(i => (
+                    <div key={i} style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
+                      <div className="sk" style={{ width: "40%", height: 12 }} />
+                      <div className="sk" style={{ width: "25%", height: 12 }} />
+                    </div>
+                  ))}
+                </div>
+                <div style={{ background: "#1a1a1a", border: "1px solid #262626", borderRadius: 14, padding: 16, flex: 1 }}>
+                  <div className="sk" style={{ width: 140, height: 14, marginBottom: 14 }} />
+                  {[0,1,2].map(i => (
+                    <div key={i} style={{ marginBottom: 10 }}>
+                      <div className="sk" style={{ width: "100%", height: 4, borderRadius: 4 }} />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
   return (
     <div style={{ display: "flex", height: "100vh", background: d.bg, fontFamily: "'DM Sans', sans-serif", overflow: "hidden", color: d.text }} onClick={() => { showBusinessMenu && setShowBusinessMenu(false); showUserMenu && setShowUserMenu(false); }}>
@@ -329,6 +325,7 @@ export default function Dashboard() {
         @keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
         @keyframes tourPulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.04); } }
         @keyframes slideDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes connectModalIn { from { opacity:0; transform:scale(0.93) translateY(12px); } to { opacity:1; transform:scale(1) translateY(0); } }
         ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: #404040; border-radius: 4px; }
         textarea:focus { outline: none; }
       `}</style>
@@ -395,11 +392,14 @@ export default function Dashboard() {
           })}
         </nav>
       )}
+
       {isMobile && sidebarOpen && (
         <div onClick={() => setSidebarOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 300, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(2px)" }} />
       )}
 
       <aside style={{ width: 220, background: d.sidebar, borderRight: `1px solid ${d.border}`, display: "flex", flexDirection: "column", flexShrink: 0, ...(isMobile ? { position: "fixed", top: 0, left: 0, bottom: 0, zIndex: 301, transform: sidebarOpen ? "translateX(0)" : "translateX(-100%)", transition: "transform 0.25s ease", boxShadow: sidebarOpen ? "4px 0 24px rgba(0,0,0,0.4)" : "none" } : {}) }}>
+
+        {/* Logo */}
         <div style={{ padding: "18px 16px 14px", borderBottom: `1px solid ${d.border}` }}>
           <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
             <div style={{ width: 30, height: 30, background: d.accent, borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -408,43 +408,75 @@ export default function Dashboard() {
             <span style={{ fontSize: 15, fontWeight: 700, color: d.text }}>RevGo<span style={{ color: d.accent }}>.app</span></span>
           </div>
         </div>
+
+        {/* ── Selector de negocio / Botón conectar ── */}
         <div style={{ padding: "10px 12px 6px", position: "relative" }}>
-          <div onClick={e => { e.stopPropagation(); setShowBusinessMenu(!showBusinessMenu); }} style={{ background: d.surface, borderRadius: 8, padding: "10px 12px", cursor: "pointer", border: `1px solid ${showBusinessMenu ? d.accent : d.border}` }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#4ade80", flexShrink: 0 }} />
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 12, fontWeight: 600, color: d.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{currentBusiness?.name}</div>
-                <div style={{ fontSize: 10, color: d.muted, marginTop: 1 }}>Plan {currentBusiness?.plan} · Activo</div>
-              </div>
-              <span style={{ color: d.muted, fontSize: 10, display: "inline-block", transform: showBusinessMenu ? "rotate(180deg)" : "rotate(0)" }}>▾</span>
-            </div>
-          </div>
-          {showBusinessMenu && (
-            <div onClick={e => e.stopPropagation()} style={{ position: "absolute", top: "calc(100% - 4px)", left: 12, right: 12, background: d.card, border: `1px solid ${d.border}`, borderRadius: 10, zIndex: 50, overflow: "hidden", animation: "slideDown 0.2s ease", boxShadow: "0 8px 24px rgba(0,0,0,0.3)" }}>
-              {BUSINESSES.map(biz => (
-                <div key={biz.id} style={{ position: "relative" }}>
-                  <div onClick={() => { if (!biz.locked) { setActiveBusiness(biz.id); setShowBusinessMenu(false); } }} style={{ padding: "10px 12px", display: "flex", alignItems: "center", gap: 9, cursor: biz.locked ? "default" : "pointer", background: activeBusiness === biz.id ? d.hover : "transparent", opacity: biz.locked ? 0.5 : 1, filter: biz.locked ? "blur(1px)" : "none" }}>
-                    <div style={{ width: 7, height: 7, borderRadius: "50%", background: biz.locked ? d.subtle : (activeBusiness === biz.id ? "#4ade80" : d.muted), flexShrink: 0 }} />
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 12, fontWeight: 500, color: d.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{biz.name}</div>
-                      <div style={{ fontSize: 10, color: d.muted }}>Plan {biz.plan}</div>
-                    </div>
-                    {activeBusiness === biz.id && <span style={{ color: d.accent, fontSize: 10 }}>✓</span>}
-                    {biz.locked && <span style={{ fontSize: 11 }}>🔒</span>}
+          {reviewSlug ? (
+            <>
+              <div
+                onClick={e => { e.stopPropagation(); setShowBusinessMenu(!showBusinessMenu); }}
+                style={{ background: d.surface, borderRadius: 8, padding: "10px 12px", cursor: "pointer", border: `1px solid ${showBusinessMenu ? d.accent : d.border}` }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#4ade80", flexShrink: 0 }} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: d.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{currentBusiness?.name}</div>
+                    <div style={{ fontSize: 10, color: d.muted, marginTop: 1 }}>Plan {currentBusiness?.plan} · Activo</div>
                   </div>
-                  {biz.locked && (
-                    <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "flex-end", paddingRight: 10 }}>
-                      <button onClick={() => setShowBusinessMenu(false)} style={{ fontSize: 10, fontWeight: 700, color: d.accent, background: dark ? "rgba(255,230,0,0.1)" : "#fefce8", border: `1px solid ${dark ? "rgba(255,230,0,0.2)" : "#fde68a"}`, borderRadius: 6, padding: "3px 8px", cursor: "pointer", whiteSpace: "nowrap" }}>Suscribirse</button>
-                    </div>
-                  )}
+                  <span style={{ color: d.muted, fontSize: 10, display: "inline-block", transform: showBusinessMenu ? "rotate(180deg)" : "rotate(0)" }}>▾</span>
                 </div>
-              ))}
-              <div style={{ padding: "8px 12px", borderTop: `1px solid ${d.border}` }}>
-                <button style={{ width: "100%", padding: "7px", background: "transparent", border: `1px dashed ${d.border}`, borderRadius: 7, color: d.muted, fontSize: 11, cursor: "pointer" }}>+ Agregar negocio</button>
               </div>
-            </div>
+              {showBusinessMenu && (
+                <div onClick={e => e.stopPropagation()} style={{ position: "absolute", top: "calc(100% - 4px)", left: 12, right: 12, background: d.card, border: `1px solid ${d.border}`, borderRadius: 10, zIndex: 50, overflow: "hidden", animation: "slideDown 0.2s ease", boxShadow: "0 8px 24px rgba(0,0,0,0.3)" }}>
+                  {BUSINESSES.map(biz => (
+                    <div key={biz.id} style={{ position: "relative" }}>
+                      <div onClick={() => { if (!biz.locked) { setActiveBusiness(biz.id); setShowBusinessMenu(false); } }} style={{ padding: "10px 12px", display: "flex", alignItems: "center", gap: 9, cursor: biz.locked ? "default" : "pointer", background: activeBusiness === biz.id ? d.hover : "transparent", opacity: biz.locked ? 0.5 : 1, filter: biz.locked ? "blur(1px)" : "none" }}>
+                        <div style={{ width: 7, height: 7, borderRadius: "50%", background: biz.locked ? d.subtle : (activeBusiness === biz.id ? "#4ade80" : d.muted), flexShrink: 0 }} />
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontSize: 12, fontWeight: 500, color: d.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{biz.name}</div>
+                          <div style={{ fontSize: 10, color: d.muted }}>Plan {biz.plan}</div>
+                        </div>
+                        {activeBusiness === biz.id && <span style={{ color: d.accent, fontSize: 10 }}>✓</span>}
+                        {biz.locked && <span style={{ fontSize: 11 }}>🔒</span>}
+                      </div>
+                      {biz.locked && (
+                        <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "flex-end", paddingRight: 10 }}>
+                          <button onClick={() => setShowBusinessMenu(false)} style={{ fontSize: 10, fontWeight: 700, color: d.accent, background: dark ? "rgba(255,230,0,0.1)" : "#fefce8", border: `1px solid ${dark ? "rgba(255,230,0,0.2)" : "#fde68a"}`, borderRadius: 6, padding: "3px 8px", cursor: "pointer", whiteSpace: "nowrap" }}>Suscribirse</button>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  <div style={{ padding: "8px 12px", borderTop: `1px solid ${d.border}` }}>
+                    <button style={{ width: "100%", padding: "7px", background: "transparent", border: `1px dashed ${d.border}`, borderRadius: 7, color: d.muted, fontSize: 11, cursor: "pointer" }}>+ Agregar negocio</button>
+                  </div>
+                </div>
+              )}
+            </>
+          ) : (
+            // ── Sin negocio conectado: botón conectar ──
+            <button
+              onClick={() => setShowConnectModal(true)}
+              style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, background: dark ? "rgba(66,133,244,0.08)" : "#eff6ff", border: `1px solid ${dark ? "rgba(66,133,244,0.25)" : "#bfdbfe"}`, borderRadius: 8, padding: "10px 12px", cursor: "pointer", transition: "all 0.15s" }}
+              onMouseOver={e => e.currentTarget.style.borderColor = "#4285F4"}
+              onMouseOut={e => e.currentTarget.style.borderColor = dark ? "rgba(66,133,244,0.25)" : "#bfdbfe"}
+            >
+              <div style={{ width: 28, height: 28, borderRadius: 7, background: "#fff", border: "1px solid #e0e0e0", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+              </div>
+              <div style={{ textAlign: "left" }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#4285F4" }}>+ Conectar negocio</div>
+                <div style={{ fontSize: 10, color: d.muted, marginTop: 2 }}>Google Business Profile</div>
+              </div>
+            </button>
           )}
         </div>
+
+        {/* Nav */}
         <nav style={{ padding: "4px 8px", display: "flex", flexDirection: "column", gap: 2 }}>
           {NAV.map(item => (
             <button key={item.id} ref={navRefs[item.id]} onClick={() => { setActiveNav(item.id); setAccountSection(null); if (isMobile) setSidebarOpen(false); }} style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 10px", borderRadius: 7, cursor: "pointer", background: activeNav === item.id && !accountSection ? (dark ? "#262626" : "#f1f5f9") : "transparent", border: "none", color: activeNav === item.id && !accountSection ? d.text : d.muted, fontSize: 13, fontWeight: activeNav === item.id && !accountSection ? 600 : 400, width: "100%", textAlign: "left", transition: "all 0.15s" }}>
@@ -455,6 +487,8 @@ export default function Dashboard() {
             </button>
           ))}
         </nav>
+
+        {/* Autopiloto widget */}
         <div style={{ padding: "8px 12px 12px" }}>
           <div style={{ background: autopilot ? (dark ? "#1a1700" : "#fefce8") : d.surface, border: `1px solid ${autopilot ? (dark ? "#3a3400" : "#fde68a") : d.border}`, borderRadius: 9, padding: "10px 12px" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -528,6 +562,25 @@ export default function Dashboard() {
 
         <div style={{ flex: 1, overflow: "auto", padding: "20px 24px", paddingBottom: isMobile ? "80px" : "20px" }}>
 
+          {/* ── Banner modo demo ── */}
+          {isDemo && (
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: dark ? "#1a1700" : "#fefce8", border: `1px solid ${dark ? "#3a3400" : "#fde68a"}`, borderRadius: 12, padding: "10px 16px", marginBottom: 20, flexWrap: "wrap", gap: 10 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <span style={{ fontSize: 16 }}>👀</span>
+                <div>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: d.accent }}>Estás viendo datos de ejemplo </span>
+                  <span style={{ fontSize: 13, color: dark ? "#a89060" : "#854d0e" }}>— conecta tu negocio para ver los tuyos reales.</span>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowConnectModal(true)}
+                style={{ flexShrink: 0, padding: "7px 14px", background: d.accent, border: "none", borderRadius: 8, color: d.accentFg, fontSize: 12, fontWeight: 700, cursor: "pointer" }}
+              >
+                Conectar ahora →
+              </button>
+            </div>
+          )}
+
           {!accountSection && activeNav === "dashboard" && (
             <div style={{ animation: "fadeIn 0.4s ease both" }}>
               {urgentReview && (
@@ -578,7 +631,12 @@ export default function Dashboard() {
                   <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 14, padding: "16px" }}>
                     <div style={{ fontSize: 13, fontWeight: 700, color: d.text, marginBottom: 12 }}>Estado del sistema</div>
                     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                      {[{ label: "Autopiloto", value: autopilot ? `ON · ${tone}` : "OFF · Manual", color: autopilot ? "#4ade80" : "#FBBC04", dot: autopilot ? "#4ade80" : "#FBBC04" }, { label: "Google Business", value: "Conectado", color: "#4ade80", dot: "#4ade80" }, { label: "Pendientes", value: `${pendingCount} reseñas`, color: pendingCount > 0 ? "#FBBC04" : "#4ade80", dot: pendingCount > 0 ? "#FBBC04" : "#4ade80" }, { label: "Plan activo", value: plan.charAt(0).toUpperCase() + plan.slice(1), color: d.accent, dot: "#4ade80" }].map((item, i) => (
+                      {[
+                        { label: "Autopiloto", value: autopilot ? `ON · ${tone}` : "OFF · Manual", color: autopilot ? "#4ade80" : "#FBBC04", dot: autopilot ? "#4ade80" : "#FBBC04" },
+                        { label: "Google Business", value: reviewSlug ? "Conectado" : "No conectado", color: reviewSlug ? "#4ade80" : "#f87171", dot: reviewSlug ? "#4ade80" : "#f87171" },
+                        { label: "Pendientes", value: `${pendingCount} reseñas`, color: pendingCount > 0 ? "#FBBC04" : "#4ade80", dot: pendingCount > 0 ? "#FBBC04" : "#4ade80" },
+                        { label: "Plan activo", value: plan.charAt(0).toUpperCase() + plan.slice(1), color: d.accent, dot: "#4ade80" },
+                      ].map((item, i) => (
                         <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                           <div style={{ display: "flex", alignItems: "center", gap: 8 }}><div style={{ width: 8, height: 8, borderRadius: "50%", background: item.dot }} /><span style={{ fontSize: 12, color: d.text }}>{item.label}</span></div>
                           <span style={{ fontSize: 12, fontWeight: 600, color: item.color }}>{item.value}</span>
@@ -662,7 +720,21 @@ export default function Dashboard() {
                     <div style={{ fontSize: 10, color: d.muted, textAlign: "right", marginTop: 3 }}>{editText.length} caracteres</div>
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-                    <button onClick={() => editText && publish(selected)} disabled={!editText || generating} style={{ padding: "11px", background: editText && !generating ? d.accent : d.subtle, border: "none", borderRadius: 9, color: editText && !generating ? d.accentFg : d.muted, fontSize: 13, fontWeight: 700, cursor: editText && !generating ? "pointer" : "not-allowed" }}>Publicar en Google →</button>
+                    <div style={{ position: "relative" }}>
+                      <button
+                        onClick={() => !isDemo && editText && publish(selected)}
+                        disabled={!editText || generating || isDemo}
+                        style={{ width: "100%", padding: "11px", background: editText && !generating && !isDemo ? d.accent : d.subtle, border: "none", borderRadius: 9, color: editText && !generating && !isDemo ? d.accentFg : d.muted, fontSize: 13, fontWeight: 700, cursor: editText && !generating && !isDemo ? "pointer" : "not-allowed" }}
+                      >
+                        {isDemo ? "🔒 Conecta tu negocio para publicar" : "Publicar en Google →"}
+                      </button>
+                      {isDemo && (
+                        <div
+                          onClick={() => setShowConnectModal(true)}
+                          style={{ position: "absolute", inset: 0, borderRadius: 9, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
+                        />
+                      )}
+                    </div>
                     <button onClick={() => { setSelected(null); setEditText(""); }} style={{ padding: "9px", background: "transparent", border: `1px solid ${d.border}`, borderRadius: 9, color: d.muted, fontSize: 12, cursor: "pointer" }}>Cancelar</button>
                   </div>
                 </div>
@@ -798,9 +870,15 @@ export default function Dashboard() {
                     <div style={{ width: 36, height: 36, borderRadius: 9, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #e0e0e0" }}>
                       <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.7-.4-4z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2A12 12 0 0 1 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20H24v8h11.3a12 12 0 0 1-4.1 5.6l6.2 5.2C40.9 35.2 44 30 44 24c0-1.3-.1-2.7-.4-4z"/></svg>
                     </div>
-                    <div><div style={{ fontSize: 13, fontWeight: 600, color: d.text }}>Google Business Profile</div><div style={{ fontSize: 11, color: "#4ade80", marginTop: 1 }}>✓ Conectado · {currentBusiness?.name}</div></div>
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: d.text }}>Google Business Profile</div>
+                      <div style={{ fontSize: 11, color: reviewSlug ? "#4ade80" : "#f87171", marginTop: 1 }}>{reviewSlug ? `✓ Conectado · ${currentBusiness?.name}` : "✗ No conectado"}</div>
+                    </div>
                   </div>
-                  <button style={{ fontSize: 12, color: "#f87171", background: "none", border: `1px solid ${dark ? "rgba(248,113,113,0.3)" : "#fca5a5"}`, borderRadius: 7, padding: "6px 12px", cursor: "pointer" }}>Desconectar</button>
+                  {reviewSlug
+                    ? <button style={{ fontSize: 12, color: "#f87171", background: "none", border: `1px solid ${dark ? "rgba(248,113,113,0.3)" : "#fca5a5"}`, borderRadius: 7, padding: "6px 12px", cursor: "pointer" }}>Desconectar</button>
+                    : <button onClick={() => setShowConnectModal(true)} style={{ fontSize: 12, color: d.accentFg, background: "#4285F4", border: "none", borderRadius: 7, padding: "6px 12px", cursor: "pointer", fontWeight: 600 }}>Conectar</button>
+                  }
                 </div>
               </div>
               <div style={{ background: dark ? "rgba(248,113,113,0.06)" : "#fef2f2", border: `1px solid ${dark ? "rgba(248,113,113,0.2)" : "#fecaca"}`, borderRadius: 14, padding: "18px 20px" }}>
@@ -814,8 +892,6 @@ export default function Dashboard() {
           {!accountSection && activeNav === "qr" && (
             <UpgradeOverlay dark={dark} d={d} blur={!isPro}>
               <div style={{ animation: "fadeIn 0.4s ease both" }}>
-
-                {/* Tabs: QR / Quejas */}
                 <div style={{ display: "flex", gap: 4, borderBottom: `1px solid ${d.border}`, marginBottom: 20 }}>
                   {[{ key: "qr", label: "📱 Mi QR inteligente" }, { key: "complaints", label: `💬 Quejas internas ${complaints.length > 0 ? `(${complaints.length})` : ""}` }].map(tab => (
                     <button key={tab.key} onClick={() => setQrTab(tab.key)} style={{ padding: "10px 16px", border: "none", background: "none", fontSize: 13, fontWeight: qrTab === tab.key ? 600 : 400, color: qrTab === tab.key ? d.text : d.muted, borderBottom: `2px solid ${qrTab === tab.key ? d.accent : "transparent"}`, cursor: "pointer" }}>
@@ -823,61 +899,50 @@ export default function Dashboard() {
                     </button>
                   ))}
                 </div>
-
-                {/* TAB: QR */}
                 {qrTab === "qr" && (
                   <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "300px 1fr", gap: 24 }}>
                     <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 16, padding: "28px", display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
                       <div style={{ fontSize: 13, fontWeight: 700, color: d.text, marginBottom: 4 }}>Tu QR inteligente</div>
-
-                      {/* QR */}
                       <div style={{ width: 180, height: 180, background: "#ffffff", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", padding: 12, border: `2px solid ${d.border}` }}>
-                        <QRCodeCanvas
-                          value={`https://revgo.app/r/${reviewSlug || "mi-negocio"}`}
-                          size={156}
-                          bgColor="#ffffff"
-                          fgColor="#000000"
-                          level="H"
-                        />
+                        <QRCodeCanvas value={`https://revgo.app/r/${reviewSlug || "mi-negocio"}`} size={156} bgColor="#ffffff" fgColor="#000000" level="H" />
                       </div>
-
-                      {/* Link */}
                       <div style={{ width: "100%", background: d.surface, border: `1px solid ${d.border}`, borderRadius: 8, padding: "10px 12px" }}>
                         <div style={{ fontSize: 10, color: d.muted, marginBottom: 3 }}>Tu link de reseñas</div>
-                        <div style={{ fontSize: 12, color: d.accent, fontWeight: 600, wordBreak: "break-all" }}>
-                          revgo.app/r/{reviewSlug || currentBusiness?.name?.toLowerCase().replace(/\s+/g, "-") || "mi-negocio"}
-                        </div>
+                        <div style={{ fontSize: 12, color: d.accent, fontWeight: 600, wordBreak: "break-all" }}>revgo.app/r/{reviewSlug || currentBusiness?.name?.toLowerCase().replace(/\s+/g, "-") || "mi-negocio"}</div>
                       </div>
-
                       <div style={{ display: "flex", flexDirection: "column", gap: 8, width: "100%" }}>
-                        <button onClick={() => showToast("Descargando QR... ✨")} style={{ width: "100%", padding: "11px", background: d.accent, border: "none", borderRadius: 9, color: d.accentFg, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>📥 Descargar QR</button>
-                        <button onClick={() => { navigator.clipboard?.writeText(`https://revgo.app/r/${reviewSlug}`); showToast("Link copiado ✓"); }} style={{ width: "100%", padding: "10px", background: "transparent", border: `1px solid ${d.border}`, borderRadius: 9, color: d.muted, fontSize: 12, cursor: "pointer" }}>🔗 Copiar link</button>
-                        <button onClick={() => showToast("Generando kit PDF completo... 🎨")} style={{ width: "100%", padding: "10px", background: "transparent", border: `1px solid ${d.border}`, borderRadius: 9, color: d.muted, fontSize: 12, cursor: "pointer" }}>🖨️ Descargar kit imprimible</button>
+                        <button
+                          onClick={() => isDemo ? setShowConnectModal(true) : showToast("Descargando QR... ✨")}
+                          style={{ width: "100%", padding: "11px", background: isDemo ? d.subtle : d.accent, border: "none", borderRadius: 9, color: isDemo ? d.muted : d.accentFg, fontSize: 13, fontWeight: 700, cursor: "pointer" }}
+                        >
+                          {isDemo ? "🔒 Conecta para descargar" : "📥 Descargar QR"}
+                        </button>
+                        <button
+                          onClick={() => isDemo ? setShowConnectModal(true) : (navigator.clipboard?.writeText(`https://revgo.app/r/${reviewSlug}`), showToast("Link copiado ✓"))}
+                          style={{ width: "100%", padding: "10px", background: "transparent", border: `1px solid ${d.border}`, borderRadius: 9, color: isDemo ? d.muted : d.muted, fontSize: 12, cursor: "pointer", opacity: isDemo ? 0.5 : 1 }}
+                        >
+                          🔗 Copiar link
+                        </button>
+                        <button
+                          onClick={() => isDemo ? setShowConnectModal(true) : showToast("Generando kit PDF completo... 🎨")}
+                          style={{ width: "100%", padding: "10px", background: "transparent", border: `1px solid ${d.border}`, borderRadius: 9, color: d.muted, fontSize: 12, cursor: "pointer", opacity: isDemo ? 0.5 : 1 }}
+                        >
+                          🖨️ Descargar kit imprimible
+                        </button>
                       </div>
                     </div>
-
                     <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-                      {/* Cómo funciona */}
                       <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 14, padding: "20px" }}>
                         <div style={{ fontSize: 14, fontWeight: 700, color: d.text, marginBottom: 14 }}>⚡ Cómo funciona tu QR inteligente</div>
                         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                          {[
-                            { icon: "1️⃣", title: "Cliente escanea el QR", desc: "Se abre una página con la pregunta: ¿Cómo fue tu experiencia?" },
-                            { icon: "2️⃣", title: "Filtro inteligente", desc: "Experiencia buena → va directo a Google Maps. Mala → formulario interno." },
-                            { icon: "3️⃣", title: "Más reseñas 5 estrellas", desc: "Solo los clientes felices llegan a Google. Las quejas las recibes tú primero." },
-                          ].map((item, i) => (
+                          {[{ icon: "1️⃣", title: "Cliente escanea el QR", desc: "Se abre una página con la pregunta: ¿Cómo fue tu experiencia?" }, { icon: "2️⃣", title: "Filtro inteligente", desc: "Experiencia buena → va directo a Google Maps. Mala → formulario interno." }, { icon: "3️⃣", title: "Más reseñas 5 estrellas", desc: "Solo los clientes felices llegan a Google. Las quejas las recibes tú primero." }].map((item, i) => (
                             <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
                               <span style={{ fontSize: 18, flexShrink: 0 }}>{item.icon}</span>
-                              <div>
-                                <div style={{ fontSize: 13, fontWeight: 600, color: d.text, marginBottom: 2 }}>{item.title}</div>
-                                <div style={{ fontSize: 12, color: d.muted, lineHeight: 1.5 }}>{item.desc}</div>
-                              </div>
+                              <div><div style={{ fontSize: 13, fontWeight: 600, color: d.text, marginBottom: 2 }}>{item.title}</div><div style={{ fontSize: 12, color: d.muted, lineHeight: 1.5 }}>{item.desc}</div></div>
                             </div>
                           ))}
                         </div>
                       </div>
-
-                      {/* Stats */}
                       <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12 }}>
                         {[{ label: "Escaneos este mes", value: "0", icon: "📲" }, { label: "Reseñas por QR", value: "0", icon: "⭐" }, { label: "Quejas filtradas", value: complaints.length.toString(), icon: "🛡️" }].map((s, i) => (
                           <div key={i} style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 12, padding: "16px", textAlign: "center" }}>
@@ -887,23 +952,13 @@ export default function Dashboard() {
                           </div>
                         ))}
                       </div>
-
-                      {/* Dónde ponerlo */}
                       <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 14, padding: "20px" }}>
                         <div style={{ fontSize: 14, fontWeight: 700, color: d.text, marginBottom: 14 }}>💡 ¿Dónde ponerlo?</div>
                         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                          {[
-                            { icon: "🧾", place: "Cuenta o boleta", tip: "El momento perfecto — el cliente acaba de pagar satisfecho" },
-                            { icon: "🪧", place: "Carpa de mesa", tip: "Visible durante toda la experiencia del cliente" },
-                            { icon: "🚪", place: "Puerta de salida", tip: "El cliente satisfecho sale y escanea en segundos" },
-                            { icon: "📦", place: "Empaque o bolsa", tip: "Ideal para delivery — lo ven cuando abren el pedido" },
-                          ].map((item, i) => (
+                          {[{ icon: "🧾", place: "Cuenta o boleta", tip: "El momento perfecto — el cliente acaba de pagar satisfecho" }, { icon: "🪧", place: "Carpa de mesa", tip: "Visible durante toda la experiencia del cliente" }, { icon: "🚪", place: "Puerta de salida", tip: "El cliente satisfecho sale y escanea en segundos" }, { icon: "📦", place: "Empaque o bolsa", tip: "Ideal para delivery — lo ven cuando abren el pedido" }].map((item, i) => (
                             <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
                               <span style={{ fontSize: 20, flexShrink: 0 }}>{item.icon}</span>
-                              <div>
-                                <div style={{ fontSize: 13, fontWeight: 600, color: d.text }}>{item.place}</div>
-                                <div style={{ fontSize: 12, color: d.muted, marginTop: 2 }}>{item.tip}</div>
-                              </div>
+                              <div><div style={{ fontSize: 13, fontWeight: 600, color: d.text }}>{item.place}</div><div style={{ fontSize: 12, color: d.muted, marginTop: 2 }}>{item.tip}</div></div>
                             </div>
                           ))}
                         </div>
@@ -911,8 +966,6 @@ export default function Dashboard() {
                     </div>
                   </div>
                 )}
-
-                {/* TAB: Quejas */}
                 {qrTab === "complaints" && (
                   <div>
                     {complaints.length === 0 ? (
@@ -927,12 +980,8 @@ export default function Dashboard() {
                           <div key={i} style={{ background: d.card, border: `1px solid ${c.status === "pending" ? (dark ? "rgba(248,113,113,0.3)" : "#fecaca") : d.border}`, borderRadius: 14, padding: "18px 20px" }}>
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
                               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                                <div style={{ fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 20, background: c.status === "pending" ? (dark ? "rgba(248,113,113,0.15)" : "#fef2f2") : (dark ? "rgba(74,222,128,0.1)" : "#f0fdf4"), color: c.status === "pending" ? "#f87171" : "#4ade80" }}>
-                                  {c.status === "pending" ? "Sin leer" : "Resuelto"}
-                                </div>
-                                <div style={{ display: "flex", gap: 1 }}>
-                                  {[1,2,3,4,5].map(s => <span key={s} style={{ fontSize: 11, color: s <= (c.stars || 1) ? "#FBBC04" : "#2a2a2a" }}>★</span>)}
-                                </div>
+                                <div style={{ fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 20, background: c.status === "pending" ? (dark ? "rgba(248,113,113,0.15)" : "#fef2f2") : (dark ? "rgba(74,222,128,0.1)" : "#f0fdf4"), color: c.status === "pending" ? "#f87171" : "#4ade80" }}>{c.status === "pending" ? "Sin leer" : "Resuelto"}</div>
+                                <div style={{ display: "flex", gap: 1 }}>{[1,2,3,4,5].map(s => <span key={s} style={{ fontSize: 11, color: s <= (c.stars || 1) ? "#FBBC04" : "#2a2a2a" }}>★</span>)}</div>
                               </div>
                               <span style={{ fontSize: 11, color: d.muted }}>{new Date(c.created_at).toLocaleDateString("es-PE", { day: "numeric", month: "short", year: "numeric" })}</span>
                             </div>
@@ -947,17 +996,13 @@ export default function Dashboard() {
                     )}
                   </div>
                 )}
-
               </div>
             </UpgradeOverlay>
           )}
 
-          {/* ✅ FACTURACIÓN — con selector de planes integrado */}
           {accountSection === "billing" && (
             <div style={{ animation: "fadeIn 0.4s ease both", maxWidth: 640 }}>
               <button onClick={() => setAccountSection(null)} style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", color: d.muted, fontSize: 13, cursor: "pointer", marginBottom: 20, padding: 0 }} onMouseOver={e => e.currentTarget.style.color = d.text} onMouseOut={e => e.currentTarget.style.color = d.muted}>← Volver</button>
-
-              {/* Plan actual */}
               <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 14, padding: "22px", marginBottom: 14 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
                   <div>
@@ -979,17 +1024,15 @@ export default function Dashboard() {
                   </div>
                 </div>
               </div>
-
-              {/* ✅ Selector de planes */}
               <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 14, padding: "22px", marginBottom: 14 }}>
                 <div style={{ fontSize: 14, fontWeight: 700, color: d.text, marginBottom: 6 }}>Cambiar de plan</div>
                 <div style={{ fontSize: 12, color: d.muted, marginBottom: 18 }}>El cambio se aplica de inmediato. LemonSqueezy prorratea la diferencia automáticamente.</div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                   {[
-                    { key: "starter",  label: "Starter",  price: "S/39",  desc: "1 negocio · 50 respuestas/mes",   icon: "🌱" },
-                    { key: "growth",   label: "Growth",   price: "S/79",  desc: "3 negocios · 200 respuestas/mes", icon: "🚀" },
-                    { key: "pro",      label: "Pro",      price: "S/149", desc: "5 negocios · ilimitado",          icon: "⚡" },
-                    { key: "agencia",  label: "Agencia",  price: "S/349", desc: "20 negocios · white-label",       icon: "🏢" },
+                    { key: "starter", label: "Starter", price: "S/39", desc: "1 negocio · 50 respuestas/mes", icon: "🌱" },
+                    { key: "growth", label: "Growth", price: "S/79", desc: "3 negocios · 200 respuestas/mes", icon: "🚀" },
+                    { key: "pro", label: "Pro", price: "S/149", desc: "5 negocios · ilimitado", icon: "⚡" },
+                    { key: "agencia", label: "Agencia", price: "S/349", desc: "20 negocios · white-label", icon: "🏢" },
                   ].map(p => {
                     const isCurrent = plan === p.key;
                     return (
@@ -1008,8 +1051,6 @@ export default function Dashboard() {
                   })}
                 </div>
               </div>
-
-              {/* Uso IA */}
               <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 14, padding: "22px", marginBottom: 14 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
                   <div style={{ fontSize: 14, fontWeight: 700, color: d.text }}>Capacidad de uso IA</div>
@@ -1019,8 +1060,6 @@ export default function Dashboard() {
                 <div style={{ height: 6, background: d.surface, borderRadius: 4, overflow: "hidden" }}><div style={{ height: "100%", width: "24%", background: d.accent, borderRadius: 4 }} /></div>
                 <div style={{ fontSize: 11, color: d.muted, marginTop: 6 }}>24% de uso mensual</div>
               </div>
-
-              {/* Método de pago */}
               <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 14, padding: "22px" }}>
                 <div style={{ fontSize: 14, fontWeight: 700, color: d.text, marginBottom: 16 }}>Método de pago</div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: d.surface, borderRadius: 10, padding: "14px" }}>
@@ -1039,7 +1078,6 @@ export default function Dashboard() {
               <button onClick={() => setAccountSection(null)} style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", color: d.muted, fontSize: 13, cursor: "pointer", marginBottom: 20, padding: 0 }} onMouseOver={e => e.currentTarget.style.color = d.text} onMouseOut={e => e.currentTarget.style.color = d.muted}>← Volver</button>
               <div style={{ background: d.card, border: `1px solid ${d.border}`, borderRadius: 14, overflow: "hidden" }}>
                 {isMobile ? (
-                  // MÓVIL: Cards apiladas
                   [{ id: "04811-49982808", date: "5 mar 2026", amount: "S/29.00" }, { id: "04783-48690067", date: "5 feb 2026", amount: "S/29.00" }, { id: "04752-39196969", date: "5 ene 2026", amount: "S/29.00" }, { id: "04721-43596554", date: "5 dic 2025", amount: "S/29.00" }, { id: "04691-43136295", date: "5 nov 2025", amount: "S/29.00" }, { id: "04660-31602700", date: "5 oct 2025", amount: "S/29.00" }].map((inv, i, arr) => (
                     <div key={i} style={{ padding: "16px", borderBottom: i < arr.length - 1 ? `1px solid ${d.border}` : "none" }}>
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
@@ -1059,7 +1097,6 @@ export default function Dashboard() {
                     </div>
                   ))
                 ) : (
-                  // DESKTOP: Tabla
                   <>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 160px 120px 120px 100px", padding: "12px 20px", borderBottom: `1px solid ${d.border}`, background: d.surface }}>
                       {["Descripción", "Fecha", "Estado", "Total", "Acciones"].map(h => <div key={h} style={{ fontSize: 11, fontWeight: 700, color: d.muted, textTransform: "uppercase", letterSpacing: "0.06em" }}>{h}</div>)}
@@ -1081,6 +1118,65 @@ export default function Dashboard() {
 
         </div>
       </main>
+
+      {/* ── Modal: Conectar Google Business ── */}
+      {showConnectModal && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 9000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+          <div onClick={() => setShowConnectModal(false)} style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.65)", backdropFilter: "blur(4px)" }} />
+          <div style={{ position: "relative", background: d.card, border: `1px solid ${d.border}`, borderRadius: 20, width: "100%", maxWidth: 420, padding: "28px 28px 24px", boxShadow: "0 24px 64px rgba(0,0,0,0.5)", animation: "connectModalIn 0.22s cubic-bezier(0.34,1.56,0.64,1)" }}>
+            <button onClick={() => setShowConnectModal(false)} style={{ position: "absolute", top: 16, right: 16, background: "none", border: "none", color: d.muted, fontSize: 22, cursor: "pointer", lineHeight: 1 }}>×</button>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", marginBottom: 24 }}>
+              <div style={{ width: 60, height: 60, background: dark ? "#1e1e1e" : "#f8fafc", border: `1px solid ${d.border}`, borderRadius: 16, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14, boxShadow: "0 2px 12px rgba(0,0,0,0.12)" }}>
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
+                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+              </div>
+              <h2 style={{ fontSize: 18, fontWeight: 700, color: d.text, marginBottom: 6 }}>Conecta tu Google Business</h2>
+              <p style={{ fontSize: 13, color: d.muted, lineHeight: 1.6, maxWidth: 320 }}>Sigue estos 3 pasos para empezar a ver y responder tus reseñas.</p>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 20 }}>
+              {[
+                { icon: "🔐", title: "Autoriza el acceso", desc: "Se abrirá Google para que nos des permiso de leer y responder tus reseñas." },
+                { icon: "🏢", title: "Elige tu negocio", desc: "Selecciona el perfil de Google Business Profile que quieres conectar." },
+                { icon: "✅", title: "¡Listo!", desc: "Tus reseñas aparecerán automáticamente. Puedes activar el Autopiloto cuando quieras." },
+              ].map((step, i) => (
+                <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                  <div style={{ width: 36, height: 36, borderRadius: 10, background: dark ? "#262626" : "#f1f5f9", border: `1px solid ${d.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0 }}>{step.icon}</div>
+                  <div style={{ paddingTop: 2 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: d.text, marginBottom: 2 }}>{step.title}</div>
+                    <div style={{ fontSize: 12, color: d.muted, lineHeight: 1.55 }}>{step.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div style={{ background: dark ? "rgba(251,188,4,0.07)" : "#fefce8", border: `1px solid ${dark ? "rgba(251,188,4,0.2)" : "#fde68a"}`, borderRadius: 10, padding: "10px 14px", marginBottom: 20, display: "flex", gap: 10 }}>
+              <span style={{ fontSize: 14, flexShrink: 0 }}>ℹ️</span>
+              <p style={{ fontSize: 12, color: dark ? "#c0b060" : "#854d0e", lineHeight: 1.6 }}>
+                Solo pedimos acceso de <strong>lectura y respuesta de reseñas</strong>. Nunca publicamos nada sin tu aprobación.
+              </p>
+            </div>
+            <button
+              onClick={handleConnectBusiness}
+              style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, padding: "13px", background: d.text, border: "none", borderRadius: 12, color: d.bg, fontSize: 14, fontWeight: 700, cursor: "pointer" }}
+              onMouseOver={e => e.currentTarget.style.opacity = "0.88"}
+              onMouseOut={e => e.currentTarget.style.opacity = "1"}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              </svg>
+              Conectar con Google Business
+            </button>
+            <p style={{ textAlign: "center", fontSize: 11, color: d.muted, marginTop: 10 }}>Serás redirigido a Google de forma segura</p>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
