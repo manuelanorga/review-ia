@@ -2,7 +2,6 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { createClient } from "@supabase/supabase-js";
-import bcrypt from "bcryptjs";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -11,7 +10,6 @@ const supabase = createClient(
 
 export const authOptions = {
   providers: [
-    // ── Google OAuth ──────────────────────────────────────────────────────────
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -23,29 +21,38 @@ export const authOptions = {
         },
       },
     }),
-
-    // ── Email + Contraseña ────────────────────────────────────────────────────
     CredentialsProvider({
       name: "credentials",
       credentials: {
         email: { label: "Email", type: "email" },
-        password: { label: "Contraseña", type: "password" },
+        otp: { label: "OTP", type: "text" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
+        if (!credentials?.email || !credentials?.otp) return null;
 
-        // Buscar usuario en Supabase
-        const { data: user, error } = await supabase
+        const { data: otpRecord } = await supabase
+          .from("otp_codes")
+          .select("*")
+          .eq("email", credentials.email.toLowerCase())
+          .eq("code", credentials.otp)
+          .eq("used", false)
+          .gte("expires_at", new Date().toISOString())
+          .single();
+
+        if (!otpRecord) return null;
+
+        await supabase
+          .from("otp_codes")
+          .update({ used: true })
+          .eq("id", otpRecord.id);
+
+        const { data: user } = await supabase
           .from("users")
-          .select("id, email, full_name, password, plan")
+          .select("id, email, full_name")
           .eq("email", credentials.email.toLowerCase())
           .single();
 
-        if (error || !user) return null;
-
-        // Verificar contraseña
-        const valid = await bcrypt.compare(credentials.password, user.password || "");
-        if (!valid) return null;
+        if (!user) return null;
 
         return {
           id: user.id,
@@ -55,7 +62,6 @@ export const authOptions = {
       },
     }),
   ],
-
   callbacks: {
     async jwt({ token, account, user }) {
       if (account) {
@@ -73,7 +79,6 @@ export const authOptions = {
       return session;
     },
     async signIn({ user, account }) {
-      // Para Google: crear usuario en Supabase si no existe
       if (account?.provider === "google") {
         const { data: existing } = await supabase
           .from("users")
@@ -93,16 +98,13 @@ export const authOptions = {
       return true;
     },
   },
-
   pages: {
-    signIn: "/login",
-    error: "/login",
+    signIn: "/",
+    error: "/",
   },
-
   session: {
     strategy: "jwt",
   },
-
   secret: process.env.NEXTAUTH_SECRET,
 };
 

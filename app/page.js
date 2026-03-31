@@ -248,47 +248,82 @@ function DemoAnimation() {
 // Copia todo este bloque y reemplaza la función SignupModal existente
 
 function SignupModal({ onClose }) {
-  const [mode, setMode] = useState("options"); // "options" | "register" | "login"
+  const [mode, setMode] = useState("email"); // "email" | "otp"
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [resending, setResending] = useState(false);
+  const [countdown, setCountdown] = useState(0);
 
-  async function handleRegister() {
+  // Cuenta regresiva para reenviar
+  useEffect(() => {
+    if (countdown <= 0) return;
+    const t = setTimeout(() => setCountdown(c => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [countdown]);
+
+  async function handleSendOTP() {
     setError("");
-    if (!email || !password) { setError("Completa todos los campos"); return; }
-    if (password.length < 6) { setError("La contraseña debe tener al menos 6 caracteres"); return; }
+    if (!email || !email.includes("@")) { setError("Ingresa un email válido"); return; }
     setLoading(true);
     try {
-      const res = await fetch("/api/auth/register", {
+      const res = await fetch("/api/send-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, name }),
+        body: JSON.stringify({ email }),
       });
       const data = await res.json();
-      if (!res.ok) { setError(data.error || "Error al registrarse"); setLoading(false); return; }
-      // Registro exitoso → iniciar sesión automáticamente
-      const { signIn } = await import("next-auth/react");
-      await signIn("credentials", { email, password, callbackUrl: "/onboarding" });
-    } catch (e) {
+      if (!res.ok) { setError(data.error || "Error enviando el código"); setLoading(false); return; }
+      setMode("otp");
+      setCountdown(60);
+    } catch {
       setError("Error de conexión. Intenta de nuevo.");
-      setLoading(false);
     }
+    setLoading(false);
   }
 
-  async function handleLogin() {
+  async function handleResend() {
+    setResending(true);
     setError("");
-    if (!email || !password) { setError("Completa todos los campos"); return; }
-    setLoading(true);
-    const { signIn } = await import("next-auth/react");
-    const result = await signIn("credentials", {
-      email, password, callbackUrl: "/dashboard", redirect: false,
-    });
-    if (result?.error) {
-      setError("Email o contraseña incorrectos");
-      setLoading(false);
+    try {
+      await fetch("/api/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      setCountdown(60);
+    } catch {
+      setError("Error reenviando el código.");
     }
+    setResending(false);
+  }
+
+  async function handleVerifyOTP() {
+    setError("");
+    if (code.length !== 6) { setError("El código debe tener 6 dígitos"); return; }
+    setLoading(true);
+    try {
+      const res = await fetch("/api/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, code }),
+      });
+      const data = await res.json();
+      if (!res.ok) { setError(data.error || "Código inválido"); setLoading(false); return; }
+
+      // OTP válido → iniciar sesión con NextAuth credentials
+      const { signIn } = await import("next-auth/react");
+      const result = await signIn("credentials", {
+        email,
+        otp: code,
+        callbackUrl: data.isNewUser ? "/onboarding" : "/dashboard",
+        redirect: true,
+      });
+    } catch {
+      setError("Error verificando el código.");
+    }
+    setLoading(false);
   }
 
   return (
@@ -304,15 +339,15 @@ function SignupModal({ onClose }) {
           <span style={{ fontSize: 17, fontWeight: 700, color: TEXT }}>RevGo<span style={{ color: Y }}>.app</span></span>
         </div>
 
-        {/* ── VISTA: Opciones ── */}
-        {mode === "options" && (
+        {/* ── VISTA: Ingresar email ── */}
+        {mode === "email" && (
           <>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: TEXT, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 8 }}>Crea tu cuenta gratis</h2>
-            <p style={{ fontSize: 14, color: MUTED, lineHeight: 1.6, marginBottom: 24 }}>Empieza a responder tus reseñas de Google con IA en menos de 3 minutos.</p>
+            <h2 style={{ fontSize: 24, fontWeight: 700, color: TEXT, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 8 }}>Accede a tu cuenta</h2>
+            <p style={{ fontSize: 14, color: MUTED, lineHeight: 1.6, marginBottom: 24 }}>Te enviamos un código de 6 dígitos a tu correo. Sin contraseñas.</p>
 
             {/* Google */}
             <button
-              onClick={() => { const { signIn } = require("next-auth/react"); signIn("google", { callbackUrl: "/onboarding" }); }}
+              onClick={() => signIn("google", { callbackUrl: "/onboarding" })}
               style={{ width: "100%", padding: "14px 20px", background: "#fff", border: "1.5px solid #e0e0e0", borderRadius: 10, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 12, fontSize: 14, fontWeight: 600, color: "#1a1a1a", fontFamily: "'DM Sans', sans-serif", marginBottom: 12, transition: "box-shadow 0.2s" }}
               onMouseOver={e => { e.currentTarget.style.boxShadow = "0 0 0 2px " + Y; }}
               onMouseOut={e => { e.currentTarget.style.boxShadow = "none"; }}
@@ -323,7 +358,7 @@ function SignupModal({ onClose }) {
                 <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2A12 12 0 0 1 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z" />
                 <path fill="#1976D2" d="M43.6 20H24v8h11.3a12 12 0 0 1-4.1 5.6l6.2 5.2C40.9 35.2 44 30 44 24c0-1.3-.1-2.7-.4-4z" />
               </svg>
-              Registrarme con Google
+              Continuar con Google
             </button>
 
             {/* Divisor */}
@@ -333,144 +368,90 @@ function SignupModal({ onClose }) {
               <div style={{ flex: 1, height: 1, background: "#2a2800" }} />
             </div>
 
-            {/* Email */}
-            <button
-              onClick={() => setMode("register")}
-              style={{ width: "100%", padding: "14px 20px", background: "transparent", border: "1.5px solid #2a2800", borderRadius: 10, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontSize: 14, fontWeight: 600, color: MUTED, fontFamily: "'DM Sans', sans-serif", marginBottom: 14, transition: "all 0.2s" }}
-              onMouseOver={e => { e.currentTarget.style.borderColor = Y; e.currentTarget.style.color = Y; }}
-              onMouseOut={e => { e.currentTarget.style.borderColor = "#2a2800"; e.currentTarget.style.color = MUTED; }}
-            >
-              ✉️ Registrarme con email
-            </button>
-
-            <p style={{ fontSize: 12, color: "#444430", textAlign: "center" }}>
-              ¿Ya tienes cuenta?{" "}
-              <span onClick={() => setMode("login")} style={{ color: Y, cursor: "pointer", fontWeight: 600 }}>Iniciar sesión</span>
-            </p>
-            <p style={{ fontSize: 11, color: "#333320", textAlign: "center", marginTop: 10, lineHeight: 1.6 }}>
-              Al registrarte aceptas nuestros <span style={{ color: "#666650", cursor: "pointer" }}>Términos</span> y <span style={{ color: "#666650", cursor: "pointer" }}>Privacidad</span>
-            </p>
-          </>
-        )}
-
-        {/* ── VISTA: Registro con email ── */}
-        {mode === "register" && (
-          <>
-            <button onClick={() => { setMode("options"); setError(""); }} style={{ background: "none", border: "none", color: MUTED, fontSize: 13, cursor: "pointer", marginBottom: 16, padding: 0, display: "flex", alignItems: "center", gap: 6 }}>← Volver</button>
-            <h2 style={{ fontSize: 22, fontWeight: 700, color: TEXT, letterSpacing: "-0.03em", marginBottom: 20 }}>Crear cuenta con email</h2>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 16 }}>
-              <div>
-                <label style={{ fontSize: 12, color: MUTED, display: "block", marginBottom: 6 }}>Tu nombre</label>
-                <input
-                  type="text" value={name} onChange={e => setName(e.target.value)}
-                  placeholder="María González"
-                  style={{ width: "100%", padding: "12px 14px", background: "#1a1900", border: "1px solid #2a2800", borderRadius: 9, color: TEXT, fontSize: 14, outline: "none", fontFamily: "'DM Sans', sans-serif" }}
-                  onFocus={e => e.target.style.borderColor = Y}
-                  onBlur={e => e.target.style.borderColor = "#2a2800"}
-                />
-              </div>
-              <div>
-                <label style={{ fontSize: 12, color: MUTED, display: "block", marginBottom: 6 }}>Correo electrónico</label>
-                <input
-                  type="email" value={email} onChange={e => setEmail(e.target.value)}
-                  placeholder="tu@correo.com"
-                  style={{ width: "100%", padding: "12px 14px", background: "#1a1900", border: "1px solid #2a2800", borderRadius: 9, color: TEXT, fontSize: 14, outline: "none", fontFamily: "'DM Sans', sans-serif" }}
-                  onFocus={e => e.target.style.borderColor = Y}
-                  onBlur={e => e.target.style.borderColor = "#2a2800"}
-                />
-              </div>
-              <div>
-                <label style={{ fontSize: 12, color: MUTED, display: "block", marginBottom: 6 }}>Contraseña</label>
-                <input
-                  type="password" value={password} onChange={e => setPassword(e.target.value)}
-                  placeholder="Mínimo 6 caracteres"
-                  style={{ width: "100%", padding: "12px 14px", background: "#1a1900", border: "1px solid #2a2800", borderRadius: 9, color: TEXT, fontSize: 14, outline: "none", fontFamily: "'DM Sans', sans-serif" }}
-                  onFocus={e => e.target.style.borderColor = Y}
-                  onBlur={e => e.target.style.borderColor = "#2a2800"}
-                  onKeyDown={e => e.key === "Enter" && handleRegister()}
-                />
-              </div>
+            {/* Email input */}
+            <div style={{ marginBottom: 12 }}>
+              <label style={{ fontSize: 12, color: MUTED, display: "block", marginBottom: 6 }}>Tu correo electrónico</label>
+              <input
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="tu@correo.com"
+                onKeyDown={e => e.key === "Enter" && handleSendOTP()}
+                style={{ width: "100%", padding: "12px 14px", background: "#1a1900", border: "1px solid #2a2800", borderRadius: 9, color: TEXT, fontSize: 14, outline: "none", fontFamily: "'DM Sans', sans-serif" }}
+                onFocus={e => e.target.style.borderColor = Y}
+                onBlur={e => e.target.style.borderColor = "#2a2800"}
+              />
             </div>
 
             {error && <p style={{ fontSize: 12, color: "#f87171", marginBottom: 12, textAlign: "center" }}>{error}</p>}
 
             <button
-              onClick={handleRegister} disabled={loading}
-              style={{ width: "100%", padding: "14px", background: loading ? "#2a2800" : Y, border: "none", borderRadius: 10, color: loading ? MUTED : BG, fontSize: 14, fontWeight: 700, cursor: loading ? "not-allowed" : "pointer", fontFamily: "'DM Sans', sans-serif", marginBottom: 12 }}
+              onClick={handleSendOTP}
+              disabled={loading}
+              style={{ width: "100%", padding: "14px", background: loading ? "#2a2800" : Y, border: "none", borderRadius: 10, color: loading ? MUTED : BG, fontSize: 14, fontWeight: 700, cursor: loading ? "not-allowed" : "pointer", fontFamily: "'DM Sans', sans-serif", marginBottom: 14 }}
             >
-              {loading ? "Creando cuenta..." : "Crear cuenta →"}
+              {loading ? "Enviando código..." : "Enviar código →"}
             </button>
 
-            <p style={{ fontSize: 12, color: "#444430", textAlign: "center" }}>
-              ¿Ya tienes cuenta?{" "}
-              <span onClick={() => { setMode("login"); setError(""); }} style={{ color: Y, cursor: "pointer", fontWeight: 600 }}>Iniciar sesión</span>
+            <p style={{ fontSize: 11, color: "#333320", textAlign: "center", lineHeight: 1.6 }}>
+              Al continuar aceptas nuestros <span style={{ color: "#666650", cursor: "pointer" }}>Términos</span> y <span style={{ color: "#666650", cursor: "pointer" }}>Privacidad</span>
             </p>
           </>
         )}
 
-        {/* ── VISTA: Login con email ── */}
-        {mode === "login" && (
+        {/* ── VISTA: Ingresar código OTP ── */}
+        {mode === "otp" && (
           <>
-            <button onClick={() => { setMode("options"); setError(""); }} style={{ background: "none", border: "none", color: MUTED, fontSize: 13, cursor: "pointer", marginBottom: 16, padding: 0, display: "flex", alignItems: "center", gap: 6 }}>← Volver</button>
-            <h2 style={{ fontSize: 22, fontWeight: 700, color: TEXT, letterSpacing: "-0.03em", marginBottom: 20 }}>Iniciar sesión</h2>
+            <button
+              onClick={() => { setMode("email"); setCode(""); setError(""); }}
+              style={{ background: "none", border: "none", color: MUTED, fontSize: 13, cursor: "pointer", marginBottom: 16, padding: 0, display: "flex", alignItems: "center", gap: 6 }}
+            >← Volver</button>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 16 }}>
-              <div>
-                <label style={{ fontSize: 12, color: MUTED, display: "block", marginBottom: 6 }}>Correo electrónico</label>
-                <input
-                  type="email" value={email} onChange={e => setEmail(e.target.value)}
-                  placeholder="tu@correo.com"
-                  style={{ width: "100%", padding: "12px 14px", background: "#1a1900", border: "1px solid #2a2800", borderRadius: 9, color: TEXT, fontSize: 14, outline: "none", fontFamily: "'DM Sans', sans-serif" }}
-                  onFocus={e => e.target.style.borderColor = Y}
-                  onBlur={e => e.target.style.borderColor = "#2a2800"}
-                />
-              </div>
-              <div>
-                <label style={{ fontSize: 12, color: MUTED, display: "block", marginBottom: 6 }}>Contraseña</label>
-                <input
-                  type="password" value={password} onChange={e => setPassword(e.target.value)}
-                  placeholder="Tu contraseña"
-                  style={{ width: "100%", padding: "12px 14px", background: "#1a1900", border: "1px solid #2a2800", borderRadius: 9, color: TEXT, fontSize: 14, outline: "none", fontFamily: "'DM Sans', sans-serif" }}
-                  onFocus={e => e.target.style.borderColor = Y}
-                  onBlur={e => e.target.style.borderColor = "#2a2800"}
-                  onKeyDown={e => e.key === "Enter" && handleLogin()}
-                />
-              </div>
+            <h2 style={{ fontSize: 22, fontWeight: 700, color: TEXT, letterSpacing: "-0.03em", marginBottom: 8 }}>Revisa tu correo</h2>
+            <p style={{ fontSize: 14, color: MUTED, lineHeight: 1.6, marginBottom: 24 }}>
+              Enviamos un código de 6 dígitos a <span style={{ color: Y, fontWeight: 600 }}>{email}</span>. Expira en 10 minutos.
+            </p>
+
+            {/* Input del código */}
+            <div style={{ marginBottom: 16 }}>
+              <label style={{ fontSize: 12, color: MUTED, display: "block", marginBottom: 6 }}>Código de verificación</label>
+              <input
+                type="text"
+                value={code}
+                onChange={e => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                placeholder="000000"
+                onKeyDown={e => e.key === "Enter" && handleVerifyOTP()}
+                style={{ width: "100%", padding: "16px 14px", background: "#1a1900", border: `1px solid ${code.length === 6 ? Y : "#2a2800"}`, borderRadius: 9, color: Y, fontSize: 28, fontWeight: 700, letterSpacing: "0.3em", outline: "none", fontFamily: "monospace", textAlign: "center", transition: "border-color 0.2s" }}
+                onFocus={e => e.target.style.borderColor = Y}
+                onBlur={e => e.target.style.borderColor = code.length === 6 ? Y : "#2a2800"}
+                autoFocus
+              />
             </div>
 
             {error && <p style={{ fontSize: 12, color: "#f87171", marginBottom: 12, textAlign: "center" }}>{error}</p>}
 
             <button
-              onClick={handleLogin} disabled={loading}
-              style={{ width: "100%", padding: "14px", background: loading ? "#2a2800" : Y, border: "none", borderRadius: 10, color: loading ? MUTED : BG, fontSize: 14, fontWeight: 700, cursor: loading ? "not-allowed" : "pointer", fontFamily: "'DM Sans', sans-serif", marginBottom: 12 }}
+              onClick={handleVerifyOTP}
+              disabled={loading || code.length !== 6}
+              style={{ width: "100%", padding: "14px", background: code.length === 6 && !loading ? Y : "#2a2800", border: "none", borderRadius: 10, color: code.length === 6 && !loading ? BG : MUTED, fontSize: 14, fontWeight: 700, cursor: code.length === 6 && !loading ? "pointer" : "not-allowed", fontFamily: "'DM Sans', sans-serif", marginBottom: 16 }}
             >
-              {loading ? "Ingresando..." : "Iniciar sesión →"}
+              {loading ? "Verificando..." : "Ingresar →"}
             </button>
 
-            {/* Google también en login */}
-            <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "4px 0 12px" }}>
-              <div style={{ flex: 1, height: 1, background: "#2a2800" }} />
-              <span style={{ fontSize: 12, color: MUTED }}>o</span>
-              <div style={{ flex: 1, height: 1, background: "#2a2800" }} />
+            {/* Reenviar */}
+            <div style={{ textAlign: "center" }}>
+              {countdown > 0 ? (
+                <p style={{ fontSize: 12, color: MUTED }}>Reenviar código en <span style={{ color: Y, fontWeight: 600 }}>{countdown}s</span></p>
+              ) : (
+                <button
+                  onClick={handleResend}
+                  disabled={resending}
+                  style={{ background: "none", border: "none", color: Y, fontSize: 12, cursor: "pointer", fontWeight: 600, fontFamily: "'DM Sans', sans-serif" }}
+                >
+                  {resending ? "Reenviando..." : "Reenviar código"}
+                </button>
+              )}
             </div>
-            <button
-              onClick={() => { const { signIn } = require("next-auth/react"); signIn("google", { callbackUrl: "/dashboard" }); }}
-              style={{ width: "100%", padding: "12px 20px", background: "#fff", border: "1.5px solid #e0e0e0", borderRadius: 10, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, fontSize: 13, fontWeight: 600, color: "#1a1a1a", fontFamily: "'DM Sans', sans-serif" }}
-            >
-              <svg width="16" height="16" viewBox="0 0 48 48">
-                <path fill="#FFC107" d="M43.6 20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.7-.4-4z"/>
-                <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
-                <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2A12 12 0 0 1 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/>
-                <path fill="#1976D2" d="M43.6 20H24v8h11.3a12 12 0 0 1-4.1 5.6l6.2 5.2C40.9 35.2 44 30 44 24c0-1.3-.1-2.7-.4-4z"/>
-              </svg>
-              Continuar con Google
-            </button>
-
-            <p style={{ fontSize: 12, color: "#444430", textAlign: "center", marginTop: 12 }}>
-              ¿No tienes cuenta?{" "}
-              <span onClick={() => { setMode("register"); setError(""); }} style={{ color: Y, cursor: "pointer", fontWeight: 600 }}>Regístrate gratis</span>
-            </p>
           </>
         )}
       </div>
