@@ -1030,10 +1030,10 @@ export default function Dashboard() {
                 <div style={{ fontSize: 12, color: d.muted, marginBottom: 18 }}>El cambio se aplica de inmediato. LemonSqueezy prorratea la diferencia automáticamente.</div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                   {[
-                    { key: "starter", label: "Starter", price: "S/39", desc: "1 negocio · 50 respuestas/mes", icon: "🌱" },
-                    { key: "growth", label: "Growth", price: "S/79", desc: "3 negocios · 200 respuestas/mes", icon: "🚀" },
-                    { key: "pro", label: "Pro", price: "S/149", desc: "5 negocios · ilimitado", icon: "⚡" },
-                    { key: "agencia", label: "Agencia", price: "S/349", desc: "20 negocios · white-label", icon: "🏢" },
+                    { key: "starter", label: "Starter", price: "$9", desc: "1 negocio · 50 respuestas/mes", icon: "🌱" },
+                    { key: "growth", label: "Growth", price: "$29", desc: "3 negocios · 200 respuestas/mes", icon: "🚀" },
+                    { key: "pro", label: "Pro", price: "$59", desc: "5 negocios · ilimitado", icon: "⚡" },
+                    { key: "agencia", label: "Agencia", price: "$160", desc: "20 negocios · white-label", icon: "🏢" },
                   ].map(p => {
                     const isCurrent = plan === p.key;
                     return (
