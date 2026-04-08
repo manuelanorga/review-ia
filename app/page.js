@@ -230,7 +230,6 @@ function DemoAnimation() {
             <span style={{ color: "#9aa0a6", fontStyle: "italic" }}>Escribe o genera una respuesta con IA...</span>
           )}
         </div>
-        {/* Botón siempre visible — evita layout shift */}
         <div style={{ marginTop: 10, padding: "10px", background: showPublish ? "#1a73e8" : "#dadce0", borderRadius: 8, fontSize: 13, fontWeight: 700, color: showPublish ? "#fff" : "#9aa0a6", textAlign: "center", transition: "background 0.4s, color 0.4s" }}>
           Publicar en Google →
         </div>
@@ -244,11 +243,8 @@ function DemoAnimation() {
   );
 }
 
-// ─── Reemplaza la función SignupModal en app/page.js ─────────────────────────
-// Copia todo este bloque y reemplaza la función SignupModal existente
-
 function SignupModal({ onClose }) {
-  const [mode, setMode] = useState("email"); // "email" | "otp"
+  const [mode, setMode] = useState("email");
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
@@ -256,7 +252,6 @@ function SignupModal({ onClose }) {
   const [resending, setResending] = useState(false);
   const [countdown, setCountdown] = useState(0);
 
-  // Cuenta regresiva para reenviar
   useEffect(() => {
     if (countdown <= 0) return;
     const t = setTimeout(() => setCountdown(c => c - 1), 1000);
@@ -311,10 +306,8 @@ function SignupModal({ onClose }) {
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error || "Código inválido"); setLoading(false); return; }
-
-      // OTP válido → iniciar sesión con NextAuth credentials
       const { signIn } = await import("next-auth/react");
-      const result = await signIn("credentials", {
+      await signIn("credentials", {
         email,
         otp: code,
         callbackUrl: data.isNewUser ? "/onboarding" : "/dashboard",
@@ -330,22 +323,16 @@ function SignupModal({ onClose }) {
     <div onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 999, background: "rgba(0,0,0,0.88)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
       <div onClick={e => e.stopPropagation()} style={{ background: "#111100", border: "1px solid #3a3800", borderRadius: 20, padding: "40px 36px", maxWidth: 420, width: "100%", position: "relative", animation: "fadeUp 0.25s ease both" }}>
         <button onClick={onClose} style={{ position: "absolute", top: 14, right: 18, background: "none", border: "none", color: MUTED, fontSize: 24, cursor: "pointer", lineHeight: 1 }}>×</button>
-
-        {/* Logo */}
         <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 24 }}>
           <div style={{ width: 32, height: 32, background: Y, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center" }}>
             <span style={{ color: BG, fontSize: 15, fontWeight: 700 }}>R</span>
           </div>
           <span style={{ fontSize: 17, fontWeight: 700, color: TEXT }}>RevGo<span style={{ color: Y }}>.app</span></span>
         </div>
-
-        {/* ── VISTA: Ingresar email ── */}
         {mode === "email" && (
           <>
             <h2 style={{ fontSize: 24, fontWeight: 700, color: TEXT, letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 8 }}>Accede a tu cuenta</h2>
             <p style={{ fontSize: 14, color: MUTED, lineHeight: 1.6, marginBottom: 24 }}>Te enviamos un código de 6 dígitos a tu correo. Sin contraseñas.</p>
-
-            {/* Google */}
             <button
               onClick={() => signIn("google", { callbackUrl: "/onboarding" })}
               style={{ width: "100%", padding: "14px 20px", background: "#fff", border: "1.5px solid #e0e0e0", borderRadius: 10, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 12, fontSize: 14, fontWeight: 600, color: "#1a1a1a", fontFamily: "'DM Sans', sans-serif", marginBottom: 12, transition: "box-shadow 0.2s" }}
@@ -360,94 +347,56 @@ function SignupModal({ onClose }) {
               </svg>
               Continuar con Google
             </button>
-
-            {/* Divisor */}
             <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "4px 0 12px" }}>
               <div style={{ flex: 1, height: 1, background: "#2a2800" }} />
               <span style={{ fontSize: 12, color: MUTED }}>o</span>
               <div style={{ flex: 1, height: 1, background: "#2a2800" }} />
             </div>
-
-            {/* Email input */}
             <div style={{ marginBottom: 12 }}>
               <label style={{ fontSize: 12, color: MUTED, display: "block", marginBottom: 6 }}>Tu correo electrónico</label>
               <input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="tu@correo.com"
-                onKeyDown={e => e.key === "Enter" && handleSendOTP()}
+                type="email" value={email} onChange={e => setEmail(e.target.value)}
+                placeholder="tu@correo.com" onKeyDown={e => e.key === "Enter" && handleSendOTP()}
                 style={{ width: "100%", padding: "12px 14px", background: "#1a1900", border: "1px solid #2a2800", borderRadius: 9, color: TEXT, fontSize: 14, outline: "none", fontFamily: "'DM Sans', sans-serif" }}
-                onFocus={e => e.target.style.borderColor = Y}
-                onBlur={e => e.target.style.borderColor = "#2a2800"}
+                onFocus={e => e.target.style.borderColor = Y} onBlur={e => e.target.style.borderColor = "#2a2800"}
               />
             </div>
-
             {error && <p style={{ fontSize: 12, color: "#f87171", marginBottom: 12, textAlign: "center" }}>{error}</p>}
-
-            <button
-              onClick={handleSendOTP}
-              disabled={loading}
-              style={{ width: "100%", padding: "14px", background: loading ? "#2a2800" : Y, border: "none", borderRadius: 10, color: loading ? MUTED : BG, fontSize: 14, fontWeight: 700, cursor: loading ? "not-allowed" : "pointer", fontFamily: "'DM Sans', sans-serif", marginBottom: 14 }}
-            >
+            <button onClick={handleSendOTP} disabled={loading}
+              style={{ width: "100%", padding: "14px", background: loading ? "#2a2800" : Y, border: "none", borderRadius: 10, color: loading ? MUTED : BG, fontSize: 14, fontWeight: 700, cursor: loading ? "not-allowed" : "pointer", fontFamily: "'DM Sans', sans-serif", marginBottom: 14 }}>
               {loading ? "Enviando código..." : "Enviar código →"}
             </button>
-
             <p style={{ fontSize: 11, color: "#333320", textAlign: "center", lineHeight: 1.6 }}>
               Al continuar aceptas nuestros <span style={{ color: "#666650", cursor: "pointer" }}>Términos</span> y <span style={{ color: "#666650", cursor: "pointer" }}>Privacidad</span>
             </p>
           </>
         )}
-
-        {/* ── VISTA: Ingresar código OTP ── */}
         {mode === "otp" && (
           <>
-            <button
-              onClick={() => { setMode("email"); setCode(""); setError(""); }}
-              style={{ background: "none", border: "none", color: MUTED, fontSize: 13, cursor: "pointer", marginBottom: 16, padding: 0, display: "flex", alignItems: "center", gap: 6 }}
-            >← Volver</button>
-
+            <button onClick={() => { setMode("email"); setCode(""); setError(""); }}
+              style={{ background: "none", border: "none", color: MUTED, fontSize: 13, cursor: "pointer", marginBottom: 16, padding: 0, display: "flex", alignItems: "center", gap: 6 }}>← Volver</button>
             <h2 style={{ fontSize: 22, fontWeight: 700, color: TEXT, letterSpacing: "-0.03em", marginBottom: 8 }}>Revisa tu correo</h2>
             <p style={{ fontSize: 14, color: MUTED, lineHeight: 1.6, marginBottom: 24 }}>
               Enviamos un código de 6 dígitos a <span style={{ color: Y, fontWeight: 600 }}>{email}</span>. Expira en 10 minutos.
             </p>
-
-            {/* Input del código */}
             <div style={{ marginBottom: 16 }}>
               <label style={{ fontSize: 12, color: MUTED, display: "block", marginBottom: 6 }}>Código de verificación</label>
-              <input
-                type="text"
-                value={code}
-                onChange={e => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                placeholder="000000"
-                onKeyDown={e => e.key === "Enter" && handleVerifyOTP()}
+              <input type="text" value={code} onChange={e => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                placeholder="000000" onKeyDown={e => e.key === "Enter" && handleVerifyOTP()}
                 style={{ width: "100%", padding: "16px 14px", background: "#1a1900", border: `1px solid ${code.length === 6 ? Y : "#2a2800"}`, borderRadius: 9, color: Y, fontSize: 28, fontWeight: 700, letterSpacing: "0.3em", outline: "none", fontFamily: "monospace", textAlign: "center", transition: "border-color 0.2s" }}
-                onFocus={e => e.target.style.borderColor = Y}
-                onBlur={e => e.target.style.borderColor = code.length === 6 ? Y : "#2a2800"}
-                autoFocus
-              />
+                onFocus={e => e.target.style.borderColor = Y} onBlur={e => e.target.style.borderColor = code.length === 6 ? Y : "#2a2800"} autoFocus />
             </div>
-
             {error && <p style={{ fontSize: 12, color: "#f87171", marginBottom: 12, textAlign: "center" }}>{error}</p>}
-
-            <button
-              onClick={handleVerifyOTP}
-              disabled={loading || code.length !== 6}
-              style={{ width: "100%", padding: "14px", background: code.length === 6 && !loading ? Y : "#2a2800", border: "none", borderRadius: 10, color: code.length === 6 && !loading ? BG : MUTED, fontSize: 14, fontWeight: 700, cursor: code.length === 6 && !loading ? "pointer" : "not-allowed", fontFamily: "'DM Sans', sans-serif", marginBottom: 16 }}
-            >
+            <button onClick={handleVerifyOTP} disabled={loading || code.length !== 6}
+              style={{ width: "100%", padding: "14px", background: code.length === 6 && !loading ? Y : "#2a2800", border: "none", borderRadius: 10, color: code.length === 6 && !loading ? BG : MUTED, fontSize: 14, fontWeight: 700, cursor: code.length === 6 && !loading ? "pointer" : "not-allowed", fontFamily: "'DM Sans', sans-serif", marginBottom: 16 }}>
               {loading ? "Verificando..." : "Ingresar →"}
             </button>
-
-            {/* Reenviar */}
             <div style={{ textAlign: "center" }}>
               {countdown > 0 ? (
                 <p style={{ fontSize: 12, color: MUTED }}>Reenviar código en <span style={{ color: Y, fontWeight: 600 }}>{countdown}s</span></p>
               ) : (
-                <button
-                  onClick={handleResend}
-                  disabled={resending}
-                  style={{ background: "none", border: "none", color: Y, fontSize: 12, cursor: "pointer", fontWeight: 600, fontFamily: "'DM Sans', sans-serif" }}
-                >
+                <button onClick={handleResend} disabled={resending}
+                  style={{ background: "none", border: "none", color: Y, fontSize: 12, cursor: "pointer", fontWeight: 600, fontFamily: "'DM Sans', sans-serif" }}>
                   {resending ? "Reenviando..." : "Reenviar código"}
                 </button>
               )}
@@ -488,18 +437,11 @@ function AutopilotDemo() {
   const [autopilot, setAutopilot] = useState(true);
   const [hinted, setHinted] = useState(false);
   const reviews = TONE_PREVIEWS[activeTone];
-
-  // Marca como "ya interactuó" al primer clic
-  const handleTone = (key) => {
-    setActiveTone(key);
-    setHinted(true);
-  };
+  const handleTone = (key) => { setActiveTone(key); setHinted(true); };
 
   return (
     <div style={{ display: "grid", gridTemplateColumns: "320px 1fr", gap: 24, alignItems: "start" }} className="bgrid">
-      {/* PANEL IZQUIERDO */}
       <div style={{ background: SURF2, border: `1px solid ${BORDER}`, borderRadius: 16, overflow: "hidden" }}>
-        {/* Header */}
         <div style={{ padding: "18px 20px", borderBottom: `1px solid ${BORDER}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div>
             <div style={{ fontSize: 15, fontWeight: 700, color: TEXT }}>⚡ Autopiloto</div>
@@ -509,8 +451,6 @@ function AutopilotDemo() {
             <div style={{ position: "absolute", top: 2, left: autopilot ? 22 : 2, width: 20, height: 20, borderRadius: "50%", background: "#fff", transition: "left 0.3s", boxShadow: "0 1px 4px rgba(0,0,0,0.3)" }} />
           </div>
         </div>
-
-        {/* Tono */}
         <div style={{ padding: "16px 20px", borderBottom: `1px solid ${BORDER}` }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
             <div style={{ fontSize: 11, color: MUTED, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em" }}>Tono de respuesta</div>
@@ -524,23 +464,7 @@ function AutopilotDemo() {
             {Object.entries(TONE_CONFIG).map(([key, { label, desc }]) => {
               const isActive = activeTone === key;
               return (
-                <div
-                  key={key}
-                  onClick={() => handleTone(key)}
-                  style={{
-                    padding: "12px 14px",
-                    borderRadius: 10,
-                    border: `1.5px solid ${isActive ? Y : BORDER}`,
-                    background: isActive ? "rgba(255,230,0,0.06)" : "transparent",
-                    cursor: "pointer",
-                    transition: "all 0.2s",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    boxShadow: isActive ? "0 0 12px rgba(255,230,0,0.25), 0 0 24px rgba(255,230,0,0.1)" : "none",
-                    animation: isActive ? "tonePulse 2.5s ease-in-out infinite" : "none",
-                  }}
-                >
+                <div key={key} onClick={() => handleTone(key)} style={{ padding: "12px 14px", borderRadius: 10, border: `1.5px solid ${isActive ? Y : BORDER}`, background: isActive ? "rgba(255,230,0,0.06)" : "transparent", cursor: "pointer", transition: "all 0.2s", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: isActive ? "0 0 12px rgba(255,230,0,0.25), 0 0 24px rgba(255,230,0,0.1)" : "none", animation: isActive ? "tonePulse 2.5s ease-in-out infinite" : "none" }}>
                   <div>
                     <div style={{ fontSize: 13, fontWeight: isActive ? 700 : 400, color: isActive ? Y : LIGHT }}>{label}</div>
                     <div style={{ fontSize: 11, color: MUTED, marginTop: 2 }}>{desc}</div>
@@ -551,8 +475,6 @@ function AutopilotDemo() {
             })}
           </div>
         </div>
-
-        {/* Reglas */}
         <div style={{ padding: "16px 20px" }}>
           <div style={{ fontSize: 11, color: MUTED, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>Reglas de autopiloto</div>
           {[["Reseñas de 5 estrellas", true], ["Reseñas de 4 estrellas", true], ["Reseñas de 3 estrellas", true], ["Reseñas de 1-2 estrellas", false]].map(([label, on]) => (
@@ -568,8 +490,6 @@ function AutopilotDemo() {
           </div>
         </div>
       </div>
-
-      {/* PANEL DERECHO — Respuestas */}
       <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
           <div style={{ fontSize: 13, color: MUTED }}>Vista previa del tono</div>
@@ -649,10 +569,10 @@ export default function Landing() {
   }, [showSignup]);
 
   const open = (plan = "starter") => {
-  if (typeof window !== "undefined") { localStorage.setItem("selectedPlan", plan); }
-  setShowSignup(true);
-};
-const login = () => { setShowSignup(true); };
+    if (typeof window !== "undefined") { localStorage.setItem("selectedPlan", plan); }
+    setShowSignup(true);
+  };
+  const login = () => { setShowSignup(true); };
 
   return (
     <div suppressHydrationWarning style={{ background: BG, minHeight: "100vh", color: TEXT, fontFamily: "'DM Sans', sans-serif" }}>
@@ -666,12 +586,12 @@ const login = () => { setShowSignup(true); };
         </button>
       )}
 
-      {/* BARRA SOCIAL PROOF FIJA */}
+      {/* BARRA RESULTADOS FIJA */}
       <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 199, background: "#0f0f00", borderTop: "1px solid #2a2800", height: 44, display: "flex", alignItems: "center", overflow: "hidden" }}>
-        {/* En vivo */}
+        {/* Resultados */}
         <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "0 14px", borderRight: "1px solid #2a2800", flexShrink: 0, height: "100%" }}>
           <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#4ade80", animation: "pulse 1.5s infinite" }} />
-          <span style={{ fontSize: 10, fontWeight: 700, color: "#4ade80", textTransform: "uppercase", letterSpacing: "0.08em", whiteSpace: "nowrap" }}>En vivo</span>
+          <span style={{ fontSize: 10, fontWeight: 700, color: "#4ade80", textTransform: "uppercase", letterSpacing: "0.08em", whiteSpace: "nowrap" }}>Resultados</span>
         </div>
         {/* Ticker */}
         <div style={{ flex: 1, overflow: "hidden", position: "relative" }}>
@@ -679,23 +599,22 @@ const login = () => { setShowSignup(true); };
           <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 30, background: "linear-gradient(to left, #0f0f00, transparent)", zIndex: 2 }} />
           <div style={{ display: "flex", width: "max-content", animation: "ticker 28s linear infinite" }}>
             {[
-              { initials: "KA", bg: "#34A853", plan: "Growth", msg: "Karla de Lima activó su plan · negocio de repostería" },
-              { initials: "RV", bg: "#FBBC04", plan: "Starter", msg: "Rodrigo de Chiclayo activó su plan · gimnasio" },
-              { initials: "DM", bg: "#4285F4", plan: "Growth", msg: "Dra. Madeleine de Miraflores · clínica dental" },
-              { initials: "JC", bg: "#EA4335", plan: "Starter", msg: "Juan de Arequipa · restaurante criollo" },
-              { initials: "SB", bg: "#9C27B0", plan: "Pro",     msg: "Sofía de Bogotá · salones de belleza" },
-              { initials: "MQ", bg: "#00BCD4", plan: "Growth", msg: "Martín de Lima · hotel boutique" },
-              { initials: "KA", bg: "#34A853", plan: "Growth", msg: "Karla de Lima activó su plan · negocio de repostería" },
-              { initials: "RV", bg: "#FBBC04", plan: "Starter", msg: "Rodrigo de Chiclayo activó su plan · gimnasio" },
-              { initials: "DM", bg: "#4285F4", plan: "Growth", msg: "Dra. Madeleine de Miraflores · clínica dental" },
-              { initials: "JC", bg: "#EA4335", plan: "Starter", msg: "Juan de Arequipa · restaurante criollo" },
-              { initials: "SB", bg: "#9C27B0", plan: "Pro",     msg: "Sofía de Bogotá · salones de belleza" },
-              { initials: "MQ", bg: "#00BCD4", plan: "Growth", msg: "Martín de Lima · hotel boutique" },
+              { icon: "🏨", msg: "Hotel · Lima respondió 47 reseñas este mes con IA" },
+              { icon: "🦷", msg: "Clínica dental · Miraflores mejoró su rating de 4.1 a 4.6" },
+              { icon: "🍽️", msg: "Restaurante · Barranco respondió el 100% de sus reseñas" },
+              { icon: "💆", msg: "Spa · San Isidro activó el Autopiloto y ahorra 3h/semana" },
+              { icon: "🏋️", msg: "Gimnasio · Surco respondió reseña negativa en menos de 1 hora" },
+              { icon: "🍰", msg: "Pastelería · Magdalena subió de 4.2 a 4.7 estrellas en Google" },
+              { icon: "🏨", msg: "Hotel · Lima respondió 47 reseñas este mes con IA" },
+              { icon: "🦷", msg: "Clínica dental · Miraflores mejoró su rating de 4.1 a 4.6" },
+              { icon: "🍽️", msg: "Restaurante · Barranco respondió el 100% de sus reseñas" },
+              { icon: "💆", msg: "Spa · San Isidro activó el Autopiloto y ahorra 3h/semana" },
+              { icon: "🏋️", msg: "Gimnasio · Surco respondió reseña negativa en menos de 1 hora" },
+              { icon: "🍰", msg: "Pastelería · Magdalena subió de 4.2 a 4.7 estrellas en Google" },
             ].map((t, i) => (
               <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 24px", whiteSpace: "nowrap", borderRight: "1px solid #1a1800" }}>
-                <div style={{ width: 20, height: 20, borderRadius: "50%", background: t.bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8, fontWeight: 700, color: "#fff", flexShrink: 0 }}>{t.initials}</div>
+                <span style={{ fontSize: 14, flexShrink: 0 }}>{t.icon}</span>
                 <span style={{ fontSize: 11, color: "#888870" }}>{t.msg}</span>
-                <span style={{ background: "rgba(255,230,0,0.1)", color: Y, fontSize: 9, fontWeight: 700, padding: "1px 6px", borderRadius: 20 }}>{t.plan}</span>
               </div>
             ))}
           </div>
@@ -757,16 +676,13 @@ const login = () => { setShowSignup(true); };
       {/* HERO */}
       <section style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: "80px 6% 60px" }}>
         <div style={{ maxWidth: 1160, margin: "0 auto", width: "100%" }}>
-          {/* BADGE centrado */}
           <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#1a1700", border: "1px solid #3a3400", borderRadius: 20, padding: "5px 14px" }}>
               <span style={{ width: 6, height: 6, borderRadius: "50%", background: Y, display: "inline-block", animation: "pulse 2s infinite" }} />
               <span style={{ color: Y, fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>Responde el 100% de tus reseñas en Google — automáticamente, con IA</span>
             </div>
           </div>
-          {/* GRID 2 columnas desktop, 1 columna móvil */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "56px", alignItems: "center" }} className="hgrid">
-            {/* IZQUIERDA */}
             <div className="hero-copy">
               <h1 style={{ fontSize: "clamp(32px, 4vw, 54px)", fontWeight: 700, lineHeight: 1.12, letterSpacing: "-0.03em", marginBottom: 20, color: TEXT }}>
                 Estás ocupado haciendo<br />crecer tu negocio.<br />
@@ -791,7 +707,6 @@ const login = () => { setShowSignup(true); };
               <p style={{ fontSize: 14, fontWeight: 700, color: Y, marginBottom: 8 }}>👉 Sin esfuerzo. Sin contratar a nadie.</p>
               <p style={{ fontSize: 14, color: MUTED, lineHeight: 1.7 }}>Convierte cada reseña en una oportunidad de crecimiento con IA.</p>
             </div>
-            {/* DERECHA: demo */}
             <div className="hero-demo" style={{ width: "100%" }}>
               <DemoAnimation />
             </div>
@@ -799,32 +714,32 @@ const login = () => { setShowSignup(true); };
         </div>
       </section>
 
-      {/* LOGOS BAR - APP ICONS */}
+      {/* LOGOS BAR */}
       <div style={{ padding: "40px 6%", display: "flex", justifyContent: "center" }}>
-       <div style={{ width: "100%", maxWidth: 860, background: "#0f0f00", border: "1px solid #2a2800", borderRadius: 20, padding: "20px 0", overflow: "hidden", position: "relative" }}>
-         <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 50, background: "linear-gradient(to right, #0f0f00, transparent)", zIndex: 2 }} />
-         <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 50, background: "linear-gradient(to left, #0f0f00, transparent)", zIndex: 2 }} />
-        <div style={{ display: "flex", animation: "ticker 35s linear infinite", width: "max-content", gap: 12, padding: "0 20px" }}>
-          {[
-            ["🏨","Hoteles"],["🍽️","Restaurantes"],["🦷","Clínicas dentales"],["💆","Spas"],["🏠","Inmobiliarias"],
-            ["🍰","Pastelerías"],["💄","Salones de belleza"],["🏋️","Gimnasios"],["🐾","Veterinarias"],["👗","Tiendas de ropa"],
-            ["🚗","Talleres mecánicos"],["📚","Academias"],["💊","Farmacias"],["🧴","Clínicas estéticas"],["☕","Cafeterías"],
-            ["🍕","Pizzerías"],["🥗","Comida saludable"],["🏥","Clínicas médicas"],["👁️","Ópticas"],["🧘","Centros de yoga"],
-            ["📸","Fotógrafos"],["💅","Nail salons"],["✂️","Barberías"],["🌸","Floristerías"],["🚚","Mudanzas"],
-            ["🏨","Hoteles"],["🍽️","Restaurantes"],["🦷","Clínicas dentales"],["💆","Spas"],["🏠","Inmobiliarias"],
-            ["🍰","Pastelerías"],["💄","Salones de belleza"],["🏋️","Gimnasios"],["🐾","Veterinarias"],["👗","Tiendas de ropa"],
-            ["🚗","Talleres mecánicos"],["📚","Academias"],["💊","Farmacias"],["🧴","Clínicas estéticas"],["☕","Cafeterías"],
-            ["🍕","Pizzerías"],["🥗","Comida saludable"],["🏥","Clínicas médicas"],["👁️","Ópticas"],["🧘","Centros de yoga"],
-            ["📸","Fotógrafos"],["💅","Nail salons"],["✂️","Barberías"],["🌸","Floristerías"],["🚚","Mudanzas"],
-          ].map(([icon, label], i) => (
-            <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, flexShrink: 0 }}>
-             <div style={{ width: 54, height: 54, borderRadius: 14, background: "#161608", border: "1px solid #2a2800", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24 }}>{icon}</div>
-            <span style={{ fontSize: 10, color: Y, fontWeight: 700, whiteSpace: "nowrap", letterSpacing: "0.02em" }}>{label}</span>
-            </div>
-         ))}
-       </div>
-     </div>
-   </div>
+        <div style={{ width: "100%", maxWidth: 860, background: "#0f0f00", border: "1px solid #2a2800", borderRadius: 20, padding: "20px 0", overflow: "hidden", position: "relative" }}>
+          <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 50, background: "linear-gradient(to right, #0f0f00, transparent)", zIndex: 2 }} />
+          <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 50, background: "linear-gradient(to left, #0f0f00, transparent)", zIndex: 2 }} />
+          <div style={{ display: "flex", animation: "ticker 35s linear infinite", width: "max-content", gap: 12, padding: "0 20px" }}>
+            {[
+              ["🏨","Hoteles"],["🍽️","Restaurantes"],["🦷","Clínicas dentales"],["💆","Spas"],["🏠","Inmobiliarias"],
+              ["🍰","Pastelerías"],["💄","Salones de belleza"],["🏋️","Gimnasios"],["🐾","Veterinarias"],["👗","Tiendas de ropa"],
+              ["🚗","Talleres mecánicos"],["📚","Academias"],["💊","Farmacias"],["🧴","Clínicas estéticas"],["☕","Cafeterías"],
+              ["🍕","Pizzerías"],["🥗","Comida saludable"],["🏥","Clínicas médicas"],["👁️","Ópticas"],["🧘","Centros de yoga"],
+              ["📸","Fotógrafos"],["💅","Nail salons"],["✂️","Barberías"],["🌸","Floristerías"],["🚚","Mudanzas"],
+              ["🏨","Hoteles"],["🍽️","Restaurantes"],["🦷","Clínicas dentales"],["💆","Spas"],["🏠","Inmobiliarias"],
+              ["🍰","Pastelerías"],["💄","Salones de belleza"],["🏋️","Gimnasios"],["🐾","Veterinarias"],["👗","Tiendas de ropa"],
+              ["🚗","Talleres mecánicos"],["📚","Academias"],["💊","Farmacias"],["🧴","Clínicas estéticas"],["☕","Cafeterías"],
+              ["🍕","Pizzerías"],["🥗","Comida saludable"],["🏥","Clínicas médicas"],["👁️","Ópticas"],["🧘","Centros de yoga"],
+              ["📸","Fotógrafos"],["💅","Nail salons"],["✂️","Barberías"],["🌸","Floristerías"],["🚚","Mudanzas"],
+            ].map(([icon, label], i) => (
+              <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, flexShrink: 0 }}>
+                <div style={{ width: 54, height: 54, borderRadius: 14, background: "#161608", border: "1px solid #2a2800", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24 }}>{icon}</div>
+                <span style={{ fontSize: 10, color: Y, fontWeight: 700, whiteSpace: "nowrap", letterSpacing: "0.02em" }}>{label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
       {/* EL PROBLEMA */}
       <section style={{ padding: "50px 6% 60px", background: SURF }}>
@@ -927,8 +842,6 @@ const login = () => { setShowSignup(true); };
             <h2 style={{ fontSize: "clamp(24px, 3vw, 40px)", fontWeight: 700, letterSpacing: "-0.03em", margin: "14px 0 0", color: TEXT }}>Listo en 3 minutos</h2>
           </div>
           <div className="carousel-track">
-
-            {/* CARD 1 — Google Business */}
             <div className="carousel-card hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 16, overflow: "hidden", flexShrink: 0, boxSizing: "border-box" }}>
               <div style={{ padding: "24px 20px 16px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
@@ -958,8 +871,6 @@ const login = () => { setShowSignup(true); };
                 </div>
               </div>
             </div>
-
-            {/* CARD 2 — Tono */}
             <div className="carousel-card hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 16, overflow: "hidden", flexShrink: 0, boxSizing: "border-box" }}>
               <div style={{ padding: "24px 20px 16px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
@@ -985,8 +896,6 @@ const login = () => { setShowSignup(true); };
                 ))}
               </div>
             </div>
-
-            {/* CARD 3 — Autopiloto */}
             <div className="carousel-card hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 16, overflow: "hidden", flexShrink: 0, boxSizing: "border-box" }}>
               <div style={{ padding: "24px 20px 16px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
@@ -1016,7 +925,6 @@ const login = () => { setShowSignup(true); };
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </section>
@@ -1032,6 +940,8 @@ const login = () => { setShowSignup(true); };
           <AutopilotDemo />
         </div>
       </section>
+
+      {/* TESTIMONIOS */}
       <section style={{ padding: "50px 6% 60px" }}>
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 48 }}>
@@ -1083,7 +993,6 @@ const login = () => { setShowSignup(true); };
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }} className="fgrid">
             {FEATURES.map((f, i) => (
               <div key={i} className="hl" style={{ background: SURF2, border: "1px solid #2a2800", borderRadius: 16, padding: "28px 24px", display: "flex", flexDirection: "column", gap: 10, position: "relative", overflow: "hidden" }}>
-                {/* Número de fondo decorativo */}
                 <div style={{ position: "absolute", top: 12, right: 16, fontSize: 56, fontWeight: 700, color: "#1a1800", lineHeight: 1, userSelect: "none" }}>0{i+1}</div>
                 <div style={{ fontSize: 28, marginBottom: 4 }}>{f.icon}</div>
                 <h3 style={{ fontSize: 15, fontWeight: 700, color: TEXT, letterSpacing: "-0.02em", lineHeight: 1.3 }}>{f.title}</h3>
