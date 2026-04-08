@@ -62,7 +62,7 @@ const CHECKOUT_URLS = {
   agencia: "https://revgo.lemonsqueezy.com/checkout/buy/9b3d706b-84e5-4998-b58e-09aff23929e2?embed=1",
 };
 
-const PLAN_PRICES = { starter: "S/39", growth: "S/79", pro: "S/149", agencia: "S/349" };
+const PLAN_PRICES = { starter: "$9", growth: "$29", pro: "$59", agencia: "$160" };
 
 function Stars({ count, size = 12 }) {
   return (
